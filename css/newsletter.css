@@ -1,0 +1,75 @@
+.mc-newsletter-form {
+  margin-top: 12px;
+}
+
+.mc-newsletter-form .mc-field-group {
+  margin-top: 8px;
+}
+
+.mc-newsletter-form label {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: #000;
+}
+
+.mc-newsletter-form .asterisk {
+  color: #a10f0f;
+}
+
+.mc-newsletter-form .form-control {
+  margin-top: 0;
+  height: 40px;
+}
+
+.mc-hidden-field {
+  position: absolute;
+  left: -5000px;
+}
+
+.mc-newsletter-form .mc-submit {
+  margin-top: 10px;
+  border: 1px solid #fff;
+  background: #fff;
+  color: #000;
+  display: inline-block;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mc-newsletter-form .mc-submit i {
+  background: #000;
+  color: #fff;
+  padding: 12px 15px;
+}
+
+.mc-newsletter-form .mc-submit span {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mc-newsletter-note {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+#newsletter_strip {
+  padding: 25px 0;
+  background: #f1d68f;
+  margin-top: 35px;
+}
+
+.newsletter_strip_card {
+  background: #f1c756;
+  padding: 18px;
+}
+
+@media screen and (max-width: 767px) {
+  #newsletter_strip {
+    text-align: center;
+  }
+
+  .mc-newsletter-form .mc-submit {
+    width: 100%;
+  }
+}
