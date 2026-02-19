@@ -6,6 +6,8 @@ export function json(data: unknown, status = 200): Response {
     headers: {
       ...corsHeaders,
       "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

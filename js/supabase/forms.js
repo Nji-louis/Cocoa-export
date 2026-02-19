@@ -53,6 +53,28 @@
     button.style.opacity = "";
   }
 
+  function setFormSubmitBusy(form, busy, busyLabel) {
+    if (!form) return;
+    const submitButton = form.querySelector("button[type='submit'], .mc-submit");
+    if (!submitButton) return;
+
+    if (busy) {
+      submitButton.dataset.prevLabel = submitButton.innerHTML;
+      submitButton.innerHTML = busyLabel || "Submitting...";
+      submitButton.disabled = true;
+      submitButton.style.pointerEvents = "none";
+      submitButton.style.opacity = "0.6";
+      return;
+    }
+
+    if (submitButton.dataset.prevLabel) {
+      submitButton.innerHTML = submitButton.dataset.prevLabel;
+    }
+    submitButton.disabled = false;
+    submitButton.style.pointerEvents = "";
+    submitButton.style.opacity = "";
+  }
+
   async function submitContactInquiry(button) {
     const root = button.closest("#contact_page");
     if (!root) return false;
@@ -73,7 +95,10 @@
       ns.notify("Inquiry submitted. Our export desk will contact you shortly.");
       return true;
     } catch (error) {
-      ns.notify(ns.normalizeError(error, "Failed to submit inquiry"), true);
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to submit inquiry")
+        : ns.normalizeError(error, "Failed to submit inquiry");
+      ns.notify(message, true);
       return true;
     } finally {
       setBusy(button, false);
@@ -100,7 +125,10 @@
       ns.notify("Product inquiry submitted successfully.");
       return true;
     } catch (error) {
-      ns.notify(ns.normalizeError(error, "Failed to submit product inquiry"), true);
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to submit product inquiry")
+        : ns.normalizeError(error, "Failed to submit product inquiry");
+      ns.notify(message, true);
       return true;
     } finally {
       setBusy(button, false);
@@ -130,7 +158,10 @@
       ns.notify("Inquiry submitted. We will respond by email.");
       return true;
     } catch (error) {
-      ns.notify(ns.normalizeError(error, "Failed to submit inquiry"), true);
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to submit inquiry")
+        : ns.normalizeError(error, "Failed to submit inquiry");
+      ns.notify(message, true);
       return true;
     } finally {
       setBusy(button, false);
@@ -155,7 +186,10 @@
       ns.notify("Comment submitted for moderation.");
       return true;
     } catch (error) {
-      ns.notify(ns.normalizeError(error, "Failed to submit comment"), true);
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to submit comment")
+        : ns.normalizeError(error, "Failed to submit comment");
+      ns.notify(message, true);
       return true;
     } finally {
       setBusy(button, false);
@@ -186,10 +220,43 @@
       ns.notify("Subscription updated successfully.");
       return true;
     } catch (error) {
-      ns.notify(ns.normalizeError(error, "Failed to subscribe"), true);
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to subscribe")
+        : ns.normalizeError(error, "Failed to subscribe");
+      ns.notify(message, true);
       return true;
     } finally {
       setBusy(button, false);
+    }
+  }
+
+  function inferNewsletterSourceChannel() {
+    const page = (location.pathname.split("/").pop() || "unknown").replace(".html", "").toLowerCase();
+    return "newsletter_" + (page || "unknown");
+  }
+
+  async function submitNewsletterForm(form) {
+    const emailField = form.querySelector("input[name='EMAIL'], input[type='email']");
+    const firstNameField = form.querySelector("input[name='FNAME']");
+
+    const payload = {
+      fullName: firstNameField ? (firstNameField.value || "").trim() : "",
+      email: emailField ? (emailField.value || "").trim() : "",
+      sourceChannel: inferNewsletterSourceChannel(),
+    };
+
+    setFormSubmitBusy(form, true, "Subscribing...");
+    try {
+      await ns.subscriptionApi.subscribe(payload);
+      ns.notify("Subscription updated successfully.");
+      form.reset();
+    } catch (error) {
+      const message = ns.resolveErrorMessage
+        ? await ns.resolveErrorMessage(error, "Failed to subscribe")
+        : ns.normalizeError(error, "Failed to subscribe");
+      ns.notify(message, true);
+    } finally {
+      setFormSubmitBusy(form, false);
     }
   }
 
@@ -241,5 +308,21 @@
     }
   }
 
+  function onFormSubmit(event) {
+    const form = event.target && event.target.closest ? event.target.closest("form.mc-newsletter-form") : null;
+    if (!form) return;
+
+    if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
+      return;
+    }
+    if (!ns.subscriptionApi || !ns.notify || !ns.normalizeError) {
+      return;
+    }
+
+    event.preventDefault();
+    void submitNewsletterForm(form);
+  }
+
   document.addEventListener("click", onClick, false);
+  document.addEventListener("submit", onFormSubmit, false);
 })(window);

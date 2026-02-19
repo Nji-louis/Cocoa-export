@@ -84,6 +84,12 @@ All tables include `created_at`/`updated_at`; updates are handled with trigger `
 - `generate-document-signed-url`: staff/admin signed URL generation for private docs.
 - `admin-upsert-listing`: protected inventory/listing mutation.
 
+Hardening applied:
+- origin allowlist enforcement via `ALLOWED_ORIGINS`
+- payload/content-type validation for all function endpoints
+- honeypot support (`website` field must stay empty)
+- DB-backed rate limiting (`edge_rate_limits` + `consume_edge_rate_limit`)
+
 ## 7) Frontend Data Layer
 
 Added under `js/supabase/`:
@@ -119,14 +125,14 @@ Create `js/supabase/config.js` from `js/supabase/config.example.js`.
 ## 9) Deploy Steps (Supabase CLI)
 
 ```bash
-supabase link --project-ref YOUR_PROJECT_REF
-supabase db push
-supabase secrets set --env-file supabase/.env.example
-supabase functions deploy submit-inquiry
-supabase functions deploy subscribe-buyer-updates
-supabase functions deploy submit-blog-comment
-supabase functions deploy generate-document-signed-url
-supabase functions deploy admin-upsert-listing
+npx supabase link --project-ref YOUR_PROJECT_REF
+npx supabase db push
+npx supabase secrets set --env-file supabase/.env
+npx supabase functions deploy submit-inquiry
+npx supabase functions deploy subscribe-buyer-updates
+npx supabase functions deploy submit-blog-comment
+npx supabase functions deploy generate-document-signed-url
+npx supabase functions deploy admin-upsert-listing
 ```
 
 ## 10) Production Notes
@@ -134,4 +140,5 @@ supabase functions deploy admin-upsert-listing
 - Keep `SUPABASE_SERVICE_ROLE_KEY` only in Edge Function secrets.
 - Keep only anon key on frontend (`config.js`).
 - Enable PITR backups and monitor query performance/index usage in Supabase dashboard.
-- Add WAF/rate-limit and optional CAPTCHA in front of public submission flows.
+- Set `ALLOWED_ORIGINS` and `RATE_LIMIT_PEPPER` in `supabase/.env` before `supabase secrets set`.
+- Rotate any keys that were previously exposed in chat/logs.

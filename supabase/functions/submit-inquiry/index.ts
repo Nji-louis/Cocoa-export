@@ -1,7 +1,15 @@
 import { handleCors } from "../_shared/cors.ts";
 import { fail, json } from "../_shared/http.ts";
 import { getOptionalUser } from "../_shared/auth.ts";
-import { asEmail, asOptionalPositiveNumber, asOptionalString, asString } from "../_shared/validation.ts";
+import { enforceIpRateLimit, enforceRateLimit, RateLimitExceededError } from "../_shared/rate-limit.ts";
+import { assertAllowedOrigin, assertHoneypot, readJsonObject } from "../_shared/security.ts";
+import {
+  asEmail,
+  asOptionalEmail,
+  asOptionalPositiveNumber,
+  asOptionalString,
+  asString,
+} from "../_shared/validation.ts";
 import { createServiceClient } from "../_shared/supabase.ts";
 import { serveHttp } from "../_shared/runtime.ts";
 
@@ -14,24 +22,44 @@ serveHttp(async (req: Request) => {
   }
 
   try {
-    const body = await req.json();
+    assertAllowedOrigin(req);
+    const body = await readJsonObject(req);
+    assertHoneypot(body);
 
-    const companyName = asString(body.companyName, "companyName", 180);
-    const workEmail = asEmail(body.workEmail, "workEmail");
-    const contactName = asOptionalString(body.contactName, 180);
-    const phoneWhatsApp = asOptionalString(body.phoneWhatsApp, 80);
-    const countryRegion = asOptionalString(body.countryRegion, 120);
+    const contactName = asOptionalString(body.contactName ?? body.buyerName ?? body.name, 180);
+    const companyName = asOptionalString(body.companyName, 180) ?? contactName ?? "Website Buyer";
+
+    const workEmail =
+      asOptionalEmail(body.workEmail, "workEmail") ??
+      asOptionalEmail(body.buyerEmail, "buyerEmail") ??
+      asEmail(body.email, "email");
+
+    const phoneWhatsApp = asOptionalString(body.phoneWhatsApp ?? body.phone, 80);
+    const countryRegion = asOptionalString(body.countryRegion ?? body.country, 120);
     const destinationPort = asOptionalString(body.destinationPort, 160);
-    const preferredIncoterm = asOptionalString(body.preferredIncoterm, 40);
+    const preferredIncoterm = asOptionalString(body.preferredIncoterm ?? body.incoterm, 40);
     const qualitySpecs = asOptionalString(body.qualitySpecs, 1000);
-    const message = asOptionalString(body.message, 3000);
-    const inquiryTopic = asOptionalString(body.inquiryTopic, 120);
-    const requiredVolumeMt = asOptionalPositiveNumber(body.requiredVolumeMt, "requiredVolumeMt");
+    const message = asOptionalString(body.message ?? body.quoteMessage, 3000);
+    const inquiryTopic =
+      asOptionalString(body.inquiryTopic ?? body.topic, 120) ??
+      asOptionalString(body.productSelect, 120);
+    const requiredVolumeMt = asOptionalPositiveNumber(
+      body.requiredVolumeMt ?? body.quantity,
+      "requiredVolumeMt",
+    );
     const sourceChannel = asOptionalString(body.sourceChannel, 80) ?? "unknown";
     const productSlug = asOptionalString(body.productSlug, 120);
 
     const user = await getOptionalUser(req);
     const admin = createServiceClient();
+
+    await enforceIpRateLimit(admin, req, "submit-inquiry-ip", 20, 3600);
+    await enforceRateLimit(admin, {
+      functionName: "submit-inquiry-email",
+      identifier: workEmail,
+      maxHits: 6,
+      windowSeconds: 3600,
+    });
 
     let productId: string | null = null;
     if (productSlug) {
@@ -92,6 +120,22 @@ serveHttp(async (req: Request) => {
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unexpected server error";
-    return fail(message, message === "Unauthorized" ? 401 : 400);
+    const status =
+      message === "Unauthorized"
+        ? 401
+        : message === "Origin is not allowed"
+          ? 403
+          : error instanceof RateLimitExceededError
+            ? 429
+            : 400;
+    return fail(
+      message,
+      status,
+      error instanceof RateLimitExceededError
+        ? {
+            retryAfterSeconds: error.retryAfterSeconds,
+          }
+        : undefined,
+    );
   }
 });

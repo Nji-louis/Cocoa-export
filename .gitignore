@@ -5,3 +5,4 @@ coverage/
 .DS_Store
 js/supabase/config.js
 supabase/.env
+supabase/.temp/
