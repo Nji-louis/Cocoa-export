@@ -311,6 +311,83 @@
  </div>
 </section>
 
+<!-- Quote (Request a Quote form using Formspree) -->
+<section id="quote" class="quote-section">
+  <div class="container">
+    <h4>Request a Quote</h4>
+    <p>
+      Complete the form below - we will reply with specifications, availability, and a formal quotation.
+    </p>
+    <form
+      action="https://formspree.io/f/mzzyprqp"
+      method="POST"
+      id="quoteForm"
+      class="quote-form"
+    >
+      <div class="form-row">
+        <div class="form-group floating-label">
+          <input type="text" id="buyerName" name="buyerName" placeholder=" " required>
+          <label for="buyerName">Company / Buyer Name</label>
+        </div>
+        <div class="form-group floating-label">
+          <input type="email" id="buyerEmail" name="buyerEmail" placeholder=" " required>
+          <label for="buyerEmail">Email</label>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group floating-label">
+          <select id="productSelect" name="productSelect" required>
+            <option value="" disabled selected></option>
+            <option value="premium-beans">Amelonado</option>
+            <option value="organic-beans">Bresilien</option>
+            <option value="mixed-beans">Criollo</option>
+			<option value="mixed-beans">Cundeamor</option>
+			<option value="mixed-beans">Forastero</option>
+			<option value="mixed-beans">Trinitario</option>
+            <option value="cocoa-butter">Cocoa Butter (bulk)</option>
+          </select>
+          <label for="productSelect">Product</label>
+        </div>
+        <div class="form-group floating-label">
+          <input
+            type="number"
+            id="quantity"
+            name="quantity"
+            min="19"
+            value="19"
+            placeholder=" "
+            required
+          >
+          <label for="quantity">Quantity (metric tons)</label>
+          <small>Minimum order: one 20ft container (~19-20 MT)</small>
+        </div>
+        <div class="form-group floating-label">
+          <select id="incoterm" name="incoterm" required>
+            <option value="" disabled selected></option>
+            <option value="FOB">FOB</option>
+            <option value="CIF">CIF</option>
+          </select>
+          <label for="incoterm">Preferred Incoterm</label>
+        </div>
+      </div>
+      <div class="form-group floating-label">
+        <textarea
+          id="quoteMessage"
+          name="quoteMessage"
+          rows="4"
+          placeholder=" "
+        ></textarea>
+        <label for="quoteMessage">
+          Message / Special Requirements
+        </label>
+      </div>
+
+      <button type="submit">Submit Quote Request</button>
+      <p id="quoteFeedback" class="quote-feedback" role="status" aria-live="polite" hidden></p>
+    </form>
+  </div>
+</section>
+
 <section id="footer">
  <div class="container">
   <div class="row">
@@ -481,6 +558,105 @@ $('#toTop').click(function(){
 <div id="google_translate_element" class="google-translate-holder"></div>
 <script src="js/language-switcher.js"></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>
+(function () {
+  var form = document.getElementById("quoteForm");
+  var feedback = document.getElementById("quoteFeedback");
+  if (!form || !feedback) return;
+
+  var submitButton = form.querySelector('button[type="submit"]');
+
+  function getBackend() {
+    return window.AppBackend || {};
+  }
+
+  function setFeedback(message, isError) {
+    feedback.textContent = message;
+    feedback.classList.remove("is-success", "is-error");
+    feedback.classList.add(isError ? "is-error" : "is-success");
+    feedback.hidden = false;
+  }
+
+  async function submitToFormspree() {
+    var response = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" }
+    });
+
+    if (response.ok) {
+      form.reset();
+      setFeedback("Quote request sent successfully. Our export desk will reply shortly.", false);
+      return;
+    }
+
+    var errorMessage = "Unable to send your request right now. Please try again.";
+    try {
+      var data = await response.json();
+      if (data && data.errors && data.errors.length) {
+        errorMessage = data.errors.map(function (error) {
+          return error.message;
+        }).join(" ");
+      }
+    } catch (jsonError) {
+      // Keep generic error message when response is not JSON.
+    }
+    setFeedback(errorMessage, true);
+  }
+
+  async function submitToSupabase() {
+    var backend = getBackend();
+    var payload = {
+      sourceChannel: "blog_quote_form",
+      companyName: (document.getElementById("buyerName") || {}).value || "",
+      workEmail: (document.getElementById("buyerEmail") || {}).value || "",
+      inquiryTopic: (document.getElementById("productSelect") || {}).value || "Quote Request",
+      requiredVolumeMt: (document.getElementById("quantity") || {}).value || null,
+      preferredIncoterm: (document.getElementById("incoterm") || {}).value || null,
+      message: (document.getElementById("quoteMessage") || {}).value || null
+    };
+
+    await backend.inquiryApi.submitInquiry(payload);
+    form.reset();
+    setFeedback("Quote request submitted successfully. Our export desk will reply shortly.", false);
+  }
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      setFeedback("Please complete all required fields before submitting.", true);
+      return;
+    }
+
+    feedback.hidden = true;
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.dataset.originalText = submitButton.textContent;
+      submitButton.textContent = "Sending...";
+    }
+
+    try {
+      var backend = getBackend();
+      if (backend.hasSupabaseConfig && backend.hasSupabaseConfig() && backend.inquiryApi) {
+        await submitToSupabase();
+      } else {
+        await submitToFormspree();
+      }
+    } catch (networkError) {
+      setFeedback("Network error. Please check your connection and try again.", true);
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        if (submitButton.dataset.originalText) {
+          submitButton.textContent = submitButton.dataset.originalText;
+        }
+      }
+    }
+  });
+})();
+</script>
 
 <!-- CHOCOCAM SARL Ltd - Ultra Modern WhatsApp Chat Suite -->
 <div class="wa-suite">

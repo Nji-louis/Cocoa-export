@@ -82,3 +82,135 @@ font-size:12px;
 
 
 
+
+/*********************quote****************/
+.quote-section{
+  background:#f9f9f9;
+  padding:55px 0;
+}
+.quote-section h4{
+  margin-top:0;
+  font-size:30px;
+}
+.quote-section p{
+  max-width:760px;
+}
+.quote-form{
+  margin-top:25px;
+  background:#fff;
+  border:1px solid #eee;
+  padding:25px;
+}
+.quote-form .form-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+}
+.quote-form .form-group{
+  position:relative;
+  flex:1 1 220px;
+  margin-bottom:18px;
+}
+.quote-form .form-group small{
+  color:#666;
+  display:block;
+  margin-top:8px;
+  font-size:13px;
+}
+.quote-form input,
+.quote-form select,
+.quote-form textarea{
+  width:100%;
+  border:1px solid #ccc;
+  border-radius:0;
+  background:#fff;
+  color:#000;
+  font-size:15px;
+  padding:18px 12px 10px;
+}
+.quote-form textarea{
+  resize:vertical;
+  min-height:120px;
+}
+.quote-form select{
+  appearance:none;
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+.quote-form .floating-label label{
+  position:absolute;
+  top:14px;
+  left:12px;
+  color:#666;
+  font-size:14px;
+  font-weight:normal;
+  background:#fff;
+  padding:0 3px;
+  transition:all .2s ease;
+  pointer-events:none;
+}
+.quote-form .floating-label input:focus,
+.quote-form .floating-label select:focus,
+.quote-form .floating-label textarea:focus{
+  border-color:#f3b204;
+  outline:none;
+}
+.quote-form .floating-label input:focus + label,
+.quote-form .floating-label input:not(:placeholder-shown) + label,
+.quote-form .floating-label select:focus + label,
+.quote-form .floating-label select:valid + label,
+.quote-form .floating-label textarea:focus + label,
+.quote-form .floating-label textarea:not(:placeholder-shown) + label{
+  top:-8px;
+  color:#000;
+  font-size:12px;
+}
+.quote-form button{
+  border:none;
+  background:#f3b204;
+  color:#000;
+  padding:12px 24px;
+  font-size:15px;
+  margin-top:8px;
+}
+.quote-form button:hover,
+.quote-form button:focus{
+  background:#000;
+  color:#fff;
+}
+.quote-form button[disabled]{
+  opacity:.7;
+  cursor:not-allowed;
+}
+.quote-feedback{
+  margin-top:14px;
+  padding:10px 12px;
+  border:1px solid transparent;
+  font-size:14px;
+}
+.quote-feedback.is-success{
+  background:#eef8ef;
+  border-color:#b9ddb9;
+  color:#155724;
+}
+.quote-feedback.is-error{
+  background:#fff1f0;
+  border-color:#f1b5b5;
+  color:#8a1f1f;
+}
+/*********************quote_end****************/
+
+@media screen and (max-width : 767px){
+.quote-section{
+  padding:35px 0;
+}
+.quote-section h4{
+  font-size:24px;
+}
+.quote-form{
+  padding:16px;
+}
+.quote-form button{
+  width:100%;
+}
+}
