@@ -27,7 +27,7 @@ file_size_limit = "25MiB"
 
 [auth]
 enabled = true
-site_url = "http://localhost:3000"
+site_url = "http://127.0.0.1:5500"
 additional_redirect_urls = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
@@ -47,6 +47,9 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.submit-blog-comment]
+verify_jwt = false
+
+[functions.vote-buyer-testimonial]
 verify_jwt = false
 
 [functions.generate-document-signed-url]

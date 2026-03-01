@@ -33,8 +33,40 @@
     const fileName = (location.pathname.split("/").pop() || "").toLowerCase();
     if (!fileName.startsWith("product_")) return null;
     const raw = fileName.replace("product_", "").replace(".html", "");
-    if (!raw || raw === "detail") return null;
-    return raw;
+    if (raw && raw !== "detail") return raw;
+    if (!raw || raw !== "detail") return null;
+
+    try {
+      const params = new URLSearchParams(location.search);
+      const variety = (params.get("variety") || "").toLowerCase().trim();
+      const supported = ["amelonado", "bresilien", "cundeamor", "forastero", "criollo", "trinitario"];
+      return supported.indexOf(variety) >= 0 ? variety : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function getBlogSlugFromContext(root) {
+    if (root && root.dataset && root.dataset.postSlug) {
+      return root.dataset.postSlug.trim();
+    }
+
+    const hiddenField = document.getElementById("blog-detail-post-slug");
+    if (hiddenField && hiddenField.value) {
+      return hiddenField.value.trim();
+    }
+
+    try {
+      const params = new URLSearchParams(location.search);
+      const querySlug = (params.get("slug") || "").trim();
+      if (querySlug) {
+        return querySlug;
+      }
+    } catch (error) {
+      // Ignore URL parsing errors and continue with fallback.
+    }
+
+    return "cameroon-mid-crop-update";
   }
 
   function setBusy(button, busy, busyLabel) {
@@ -171,19 +203,59 @@
   async function submitBlogComment(button) {
     const root = button.closest(".blog_d_page_li3");
     if (!root) return false;
+    if (button.dataset.submitting === "1") return true;
+
+    const authorName = valueByPlaceholder(root, "Name");
+    const authorEmail = valueByPlaceholder(root, "Email");
+    const message = valueByPlaceholder(root, "Message");
+
+    if (!authorName || !authorEmail || !message) {
+      ns.notify("Please complete Name, Email, and Message before submitting.", true);
+      return true;
+    }
 
     const payload = {
       sourceChannel: "blog_detail",
-      postSlug: "cameroon-mid-crop-update",
-      authorName: valueByPlaceholder(root, "Name"),
-      authorEmail: valueByPlaceholder(root, "Email"),
-      message: valueByPlaceholder(root, "Message"),
+      postSlug: getBlogSlugFromContext(root),
+      authorName: authorName,
+      authorEmail: authorEmail,
+      message: message,
     };
 
+    button.dataset.submitting = "1";
     setBusy(button, true, "Sending...");
     try {
-      await ns.blogApi.submitComment(payload);
-      ns.notify("Comment submitted for moderation.");
+      const response = await ns.blogApi.submitComment(payload);
+
+      const nameField = root.querySelector('input[placeholder="Name"]');
+      const emailField = root.querySelector('input[placeholder="Email"]');
+      const messageField = root.querySelector('textarea[placeholder="Message"]');
+      if (nameField) nameField.value = "";
+      if (emailField) emailField.value = "";
+      if (messageField) messageField.value = "";
+
+      if (response && response.status === "approved" && ns.blogPages && typeof ns.blogPages.refreshDetailComments === "function") {
+        await ns.blogPages.refreshDetailComments(payload.postSlug);
+        ns.notify("Comment posted successfully.");
+      } else {
+        if (ns.blogPages && typeof ns.blogPages.prependPendingComment === "function") {
+          ns.blogPages.prependPendingComment({
+            id: response && response.commentId ? response.commentId : null,
+            author_name: payload.authorName,
+            author_avatar_url: response && response.authorAvatarUrl
+              ? response.authorAvatarUrl
+              : ((ns.authState && ns.authState.user && ns.authState.user.user_metadata
+                && (ns.authState.user.user_metadata.avatar_url || ns.authState.user.user_metadata.picture)) || null),
+            author_user_id: (ns.authState && ns.authState.user && ns.authState.user.id)
+              ? ns.authState.user.id
+              : null,
+            message: payload.message,
+            created_at: response && response.createdAt ? response.createdAt : new Date().toISOString(),
+            status: response && response.status ? response.status : "pending",
+          });
+        }
+        ns.notify("Comment submitted and shown live (pending moderation).");
+      }
       return true;
     } catch (error) {
       const message = ns.resolveErrorMessage
@@ -193,6 +265,7 @@
       return true;
     } finally {
       setBusy(button, false);
+      button.dataset.submitting = "0";
     }
   }
 
@@ -323,6 +396,38 @@
     void submitNewsletterForm(form);
   }
 
+  function onKeyDown(event) {
+    if (event.key !== "Enter") return;
+    if (!event.target || !event.target.closest) return;
+
+    const commentRoot = event.target.closest(".blog_d_page_li3");
+    if (!commentRoot) return;
+
+    if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
+      return;
+    }
+    if (!ns.blogApi || !ns.notify || !ns.normalizeError) {
+      return;
+    }
+
+    const isTextArea = event.target.tagName === "TEXTAREA";
+    if (isTextArea && !(event.ctrlKey || event.metaKey)) {
+      return;
+    }
+
+    const isInput = event.target.tagName === "INPUT";
+    if (!isInput && !isTextArea) {
+      return;
+    }
+
+    const submitButton = commentRoot.querySelector("a.button_1");
+    if (!submitButton) return;
+
+    event.preventDefault();
+    void submitBlogComment(submitButton);
+  }
+
   document.addEventListener("click", onClick, false);
   document.addEventListener("submit", onFormSubmit, false);
+  document.addEventListener("keydown", onKeyDown, false);
 })(window);

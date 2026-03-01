@@ -16,6 +16,51 @@
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
 	<script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+    <style>
+      .traceability-farm-proof{
+        margin:8px auto 18px;
+        display:flex;
+        flex-wrap:wrap;
+        justify-content:center;
+        gap:8px;
+      }
+      .traceability-farm-proof span{
+        display:inline-block;
+        background:#fff6d8;
+        color:#2b2b2b;
+        border:1px solid #efd38d;
+        border-radius:999px;
+        padding:5px 12px;
+        font-size:12px;
+        font-weight:600;
+        letter-spacing:0.2px;
+      }
+      #traceability-journey .traceability-overlay p{
+        white-space:normal;
+        overflow-wrap:anywhere;
+        word-break:normal;
+      }
+      @media screen and (max-width: 767px){
+        .traceability-farm-proof{
+          margin:8px auto 14px;
+          gap:6px;
+        }
+        .traceability-farm-proof span{
+          font-size:11px;
+          padding:4px 9px;
+        }
+        #traceability-journey .traceability-main{
+          min-height:320px;
+        }
+        #traceability-journey .traceability-overlay{
+          padding:14px 16px 18px;
+        }
+        #traceability-journey .traceability-overlay p{
+          font-size:12.5px;
+          line-height:1.45;
+        }
+      }
+    </style>
   </head>
   
 <body>
@@ -100,7 +145,7 @@
                      <a href="#" class="dropdown-toggle tag_m" data-toggle="dropdown">Product <b class="caret"></b></a>
                      <ul class="dropdown-menu drop_m">
                         <li><a href="product.html">Product</a></li>
-                        <li><a href="product_trinitario.html">Product Detail</a></li>
+                        <li><a href="product_detail.html?variety=trinitario">Product Detail</a></li>
                        </ul>
                   </li>
 					
@@ -184,10 +229,10 @@
     <div class="col-sm-6">
 	 <div class="about_h1lm clearfix">
 	   <div class="about_h1l clearfix">
-	  <img src="img/ga8.png" class="iw" alt="abc">
+	  <img src="img/Ab2.jpg" class="iw" alt="abc">
 	 </div>
 	   <div class="about_h1l1 clearfix">
-		  <img src="img/ag1.png" class="iw" alt="abc">
+		  <img src="img/Ab1.png" class="iw" alt="abc">
 		 </div>
 	 </div>
 	 
@@ -270,6 +315,116 @@
        </div>
 	  </div>
  </div>
+ </div>
+</section>
+
+<section id="traceability-journey" class="clearfix">
+ <div class="container">
+ <div class="traceability-heading text-center clearfix">
+   <h3>Cocoa Traceability Journey</h3>
+   <hr>
+   <p>Trace every lot from registered farmers and mapped cocoa farms to final export shipment.</p>
+   <div class="traceability-farm-proof" aria-label="Farmer and cocoa farm traceability markers">
+    <span>Registered Farmer ID</span>
+    <span>Cocoa Farm Plot ID</span>
+    <span>Village Origin</span>
+    <span>Harvest Date</span>
+    <span>Lot Code</span>
+   </div>
+  </div>
+  <div class="traceability-gallery" data-trace-gallery>
+   <div class="traceability-main" tabindex="0" aria-label="Cocoa traceability slideshow">
+    <article class="traceability-slide is-active" data-trace-slide="0" aria-hidden="false">
+     <img src="img/famers.png" alt="Farmers harvesting ripe cocoa pods">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 01</span>
+      <h4>Farmers &amp; Cocoa Farm Harvesting</h4>
+      <p>Each lot is linked to a registered farmer, cocoa farm plot, harvest date, and village origin before collection.</p>
+     </div>
+    </article>
+    <article class="traceability-slide" data-trace-slide="1" aria-hidden="true">
+     <img src="img/fem.png" alt="Fresh cocoa beans grouped in fermentation lots">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 02</span>
+      <h4>Fermentation</h4>
+      <p>Wet beans are fermented in controlled batches to develop flavor and confirm lot identification.</p>
+     </div>
+    </article>
+    <article class="traceability-slide" data-trace-slide="2" aria-hidden="true">
+     <img src="img/dry.png" alt="Cocoa beans drying on raised beds">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 03</span>
+      <h4>Drying</h4>
+      <p>Beans are sun-dried to target moisture levels with daily monitoring for quality consistency.</p>
+     </div>
+    </article>
+    <article class="traceability-slide" data-trace-slide="3" aria-hidden="true">
+     <img src="img/inspection.png" alt="Technician inspecting cocoa bean quality from sacks">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 04</span>
+      <h4>Quality Inspection</h4>
+      <p>Each lot is sampled for cut tests, moisture checks, and defect screening before approval.</p>
+     </div>
+    </article>
+    <article class="traceability-slide" data-trace-slide="4" aria-hidden="true">
+     <img src="img/warehouse.jpg" alt="Bagged cocoa beans organized in a warehouse">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 05</span>
+      <h4>Bagging &amp; Warehouse</h4>
+      <p>Approved beans are bagged, coded, palletized, and stored in clean export-ready warehouse zones.</p>
+     </div>
+    </article>
+    <article class="traceability-slide" data-trace-slide="5" aria-hidden="true">
+     <img src="img/shipping.jpg" alt="Cocoa sacks being loaded for export shipping">
+     <div class="traceability-overlay">
+      <span class="traceability-chip">Step 06</span>
+      <h4>Export &amp; Shipping</h4>
+      <p>Sealed pallets move through port logistics with complete export documentation and dispatch tracking.</p>
+     </div>
+    </article>
+
+    <button class="traceability-nav traceability-prev" type="button" data-trace-prev aria-label="Previous traceability stage">
+     <i class="fa fa-angle-left"></i>
+    </button>
+    <button class="traceability-nav traceability-next" type="button" data-trace-next aria-label="Next traceability stage">
+     <i class="fa fa-angle-right"></i>
+    </button>
+
+    <div class="traceability-progress">
+     <span class="traceability-progress-label" data-trace-progress-label>Step 1 of 6</span>
+     <span class="traceability-progress-track">
+      <span class="traceability-progress-fill" data-trace-progress></span>
+     </span>
+    </div>
+   </div>
+
+   <div class="traceability-thumbs" role="tablist" aria-label="Traceability stage selector">
+    <button class="traceability-thumb is-active" type="button" role="tab" data-trace-thumb="0" aria-selected="true">
+     <span class="traceability-thumb-media"><img src="img/famers.png" alt="Farmers and cocoa farm harvesting thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Farmers &amp; Cocoa Farm</strong><small>Step 01</small></span>
+    </button>
+    <button class="traceability-thumb" type="button" role="tab" data-trace-thumb="1" aria-selected="false" tabindex="-1">
+     <span class="traceability-thumb-media"><img src="img/fem.png" alt="Fermentation thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Fermentation</strong><small>Step 02</small></span>
+    </button>
+    <button class="traceability-thumb" type="button" role="tab" data-trace-thumb="2" aria-selected="false" tabindex="-1">
+     <span class="traceability-thumb-media"><img src="img/dry.png" alt="Drying thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Drying</strong><small>Step 03</small></span>
+    </button>
+    <button class="traceability-thumb" type="button" role="tab" data-trace-thumb="3" aria-selected="false" tabindex="-1">
+     <span class="traceability-thumb-media"><img src="img/inspection.png" alt="Quality inspection thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Quality Inspection</strong><small>Step 04</small></span>
+    </button>
+    <button class="traceability-thumb" type="button" role="tab" data-trace-thumb="4" aria-selected="false" tabindex="-1">
+     <span class="traceability-thumb-media"><img src="img/warehouse.jpg" alt="Bagging and warehouse thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Bagging &amp; Warehouse</strong><small>Step 05</small></span>
+    </button>
+    <button class="traceability-thumb" type="button" role="tab" data-trace-thumb="5" aria-selected="false" tabindex="-1">
+     <span class="traceability-thumb-media"><img src="img/shipping.jpg" alt="Export and shipping thumbnail"></span>
+     <span class="traceability-thumb-meta"><strong>Export &amp; Shipping</strong><small>Step 06</small></span>
+    </button>
+   </div>
+  </div>
  </div>
 </section>
 
@@ -356,7 +511,7 @@
 	 <div class="col-sm-4">
 	  <div class="cat_1im clearfix">
 	   <div class="cat_1i clearfix">
-	    <img src="img/tri.jpg" class="iw mgt" alt="abc">
+	    <img src="img/ATri.png" class="iw mgt" alt="abc">
 	   </div>
 	   <div class="cat_1i1 text-center clearfix">
 	    <span><i class="fa fa-shopping-basket"></i></span>
@@ -420,7 +575,7 @@
                 <div class="panel-body clearfix">
                   <div class="col-sm-4">
 				   <div class="panel_i">
-				    <img src="https://source.unsplash.com/500x500/?cocoa,quality,lab" class="iw"  alt="abc">
+				    <img src="img/MOQ.png" class="iw"  alt="abc">
 				   </div>
 				  </div>
 				  <div class="col-sm-8">
@@ -439,7 +594,7 @@
                 <div class="panel-body clearfix">
                   <div class="col-sm-4">
 				   <div class="panel_i">
-				    <img src="https://source.unsplash.com/500x500/?container,port,cargo" class="iw"  alt="abc">
+				    <img src="img/Dla.png" class="iw"  alt="abc">
 				   </div>
 				  </div>
 				  <div class="col-sm-8">
@@ -458,7 +613,7 @@
                 <div class="panel-body clearfix">
                   <div class="col-sm-4">
 				   <div class="panel_i">
-				    <img src="https://source.unsplash.com/500x500/?export,documents" class="iw"  alt="abc">
+				    <img src="img/moq2.jpg" class="iw"  alt="abc">
 				   </div>
 				  </div>
 				  <div class="col-sm-8">
@@ -477,7 +632,7 @@
                 <div class="panel-body clearfix">
                   <div class="col-sm-4">
 				   <div class="panel_i">
-				    <img src="https://source.unsplash.com/500x500/?cocoa,bags,warehouse" class="iw"  alt="abc">
+				    <img src="img/moq3.jpeg" class="iw"  alt="abc">
 				   </div>
 				  </div>
 				  <div class="col-sm-8">
@@ -497,7 +652,7 @@
                 <div class="panel-body clearfix">
                   <div class="col-sm-4">
 				   <div class="panel_i">
-				    <img src="https://source.unsplash.com/500x500/?cocoa,bags,warehouse" class="iw"  alt="abc">
+				    <img src="img/moq4.jpg" class="iw"  alt="abc">
 				   </div>
 				  </div>
 				  <div class="col-sm-8">
@@ -614,7 +769,7 @@
 		 <ul>
 		  <li><a href="#"><i class="fa fa-calendar"></i> 28 Mar 20</a></li>
 		  <li><a href="#"><i class="fa fa-user"></i> By Export Desk </a></li>
-		  <li><a href="#"><i class="fa fa-tags"></i> Comments (14)</a></li>
+			  <li><a href="#"><i class="fa fa-tags"></i> Comments (<span class="blog-detail-comment-inline-count">0</span>)</a></li>
 		 </ul>
 		</div>
 	   </div>
@@ -639,7 +794,7 @@
 		 <ul>
 		  <li><a href="#"><i class="fa fa-calendar"></i> 28 Mar 20</a></li>
 		  <li><a href="#"><i class="fa fa-user"></i> By Export Desk </a></li>
-		  <li><a href="#"><i class="fa fa-tags"></i> Comments (14)</a></li>
+			  <li><a href="#"><i class="fa fa-tags"></i> Comments (<span class="blog-detail-comment-inline-count">0</span>)</a></li>
 		 </ul>
 		</div>
 	   </div>
@@ -652,10 +807,50 @@
 	   </div>
 	  </div>
 	 </div>
-	</div>
-   </div>
-  </div>
- </div>
+		</div>
+	   </div>
+	   <div class="news_home_comments clearfix">
+	    <div class="col-sm-12">
+	     <div class="about_h clearfix">
+		  <h3 class="mgt">Comments (<span id="blog-detail-comment-count">0</span>)</h3>
+		  <hr>
+		 </div>
+	    </div>
+	    <div class="col-sm-12">
+	     <div class="blog_d_page_li2 clearfix" id="blog-detail-comments">
+		  <div class="blog_d_page_li2i clearfix">
+		   <div class="col-sm-12">
+		    <p>Loading comments...</p>
+		   </div>
+		  </div>
+		 </div>
+	    </div>
+	    <div class="col-sm-12">
+	     <div class="blog_d_page_li3 clearfix" data-post-slug="cameroon-mid-crop-update">
+		  <div class="about_h clearfix">
+		   <h3 class="mgt">Leave a Reply</h3>
+		   <hr>
+		  </div>
+		  <div class="blog_d_page_li3i cleafix">
+		   <div class="col-sm-6 space_left">
+		    <input class="form-control" type="text" placeholder="Name">
+		   </div>
+		   <div class="col-sm-6 space_right">
+		    <input class="form-control" type="text" placeholder="Email">
+		   </div>
+		  </div>
+		  <div class="blog_d_page_li3i cleafix">
+		   <div class="col-sm-12 space_all">
+		    <input type="hidden" id="blog-detail-post-slug" value="cameroon-mid-crop-update">
+		    <textarea placeholder="Message" class="form-control form_1"></textarea>
+		    <h5><a class="button_1" href="#"><span>SEND MESSAGE</span> <i class="fa fa-chevron-right"></i></a></h5>
+		   </div>
+		  </div>
+		 </div>
+	    </div>
+	   </div>
+	  </div>
+	 </div>
 </section>
 
 <section id="footer">
@@ -670,8 +865,8 @@
 	    <span><i class="fa fa-phone"></i></span>
 	   </div>
 	   <div class="col-sm-11 space_all">
-	     <h6 class="mgt">+237 695 220 118</h6>
-		 <h6 class="mgt">+237 695 220 118</h6>
+	     <h6 class="mgt">+237 671 742 824</h6>
+		 <h6 class="mgt">+237 699 745 546</h6>
 	   </div>
 	  </div>
 	 </div>
@@ -854,6 +1049,7 @@ $(document).ready(function () {
 
 	</script>
 
+<script src="js/traceability-journey.js"></script>
 <script src="js/site-search.js"></script>
 <script src="js/theme-toggle.js"></script>
 
@@ -888,7 +1084,7 @@ $(document).ready(function () {
     <div class="wa-agents">
 
       <div class="wa-agent" data-number="237699745546" data-role="Sales" data-msg="Hello Sales Team! I want information about cocoa exportation.">
-        <img src="https://i.ibb.co/HC0Qk8F/agent-profile.png" alt="Sales Team">
+        <img src="img/35.jpg" alt="Sales Team">
         <div>
           <h5>Sales Team</h5>
           <p>Online | Cocoa Export Info</p>
@@ -896,7 +1092,7 @@ $(document).ready(function () {
       </div>
 
       <div class="wa-agent" data-number="237699745546" data-role="Pricing" data-msg="Hello! Please send me your cocoa price per ton.">
-        <img src="https://i.ibb.co/HC0Qk8F/agent-profile.png" alt="Pricing Desk">
+        <img src="img/35.jpg" alt="Pricing Desk">
         <div>
           <h5>Pricing Desk</h5>
           <p>Online | Get a Fast Quote</p>
@@ -904,7 +1100,7 @@ $(document).ready(function () {
       </div>
 
       <div class="wa-agent" data-number="237699745546" data-role="Shipping" data-msg="Hello! I need your cocoa shipping terms and export procedures.">
-        <img src="https://i.ibb.co/HC0Qk8F/agent-profile.png" alt="Shipping Office">
+        <img src="img/35.jpg" alt="Shipping Office">
         <div>
           <h5>Shipping Office</h5>
           <p>Online | Logistics & Export</p>
@@ -912,7 +1108,7 @@ $(document).ready(function () {
       </div>
 
       <div class="wa-agent" data-number="237699745546" data-role="Support" data-msg="Hello! I need customer support.">
-        <img src="https://i.ibb.co/HC0Qk8F/agent-profile.png" alt="Customer Support">
+        <img src="img/35.jpg" alt="Customer Support">
         <div>
           <h5>Customer Support</h5>
           <p>Online | Assistance</p>
@@ -956,9 +1152,53 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/supabase/catalog.js"></script>
 <script src="js/supabase/inquiries.js"></script>
 <script src="js/supabase/subscriptions.js"></script>
-<script src="js/supabase/blog.js"></script>
-<script src="js/supabase/forms.js"></script>
+<script src="js/supabase/blog.js?v=20260301c"></script>
+<script src="js/supabase/blog-pages.js?v=20260301c"></script>
+<script src="js/supabase/forms.js?v=20260301c"></script>
 <script src="js/supabase/init.js"></script>
+<script>
+(function () {
+  async function initHomeNewsComments() {
+    var backend = window.AppBackend || {};
+    var root = document.querySelector("#news_home .blog_d_page_li3[data-post-slug]");
+    if (!root) return;
+    if (!backend.hasSupabaseConfig || !backend.hasSupabaseConfig()) return;
+    if (!backend.blogPages || typeof backend.blogPages.refreshDetailComments !== "function") return;
+    if (!backend.blogApi || typeof backend.blogApi.listPublishedPosts !== "function") return;
+
+    var hiddenSlug = document.getElementById("blog-detail-post-slug");
+    var slug = (root.dataset.postSlug || "").trim();
+    if (!slug && hiddenSlug && hiddenSlug.value) {
+      slug = String(hiddenSlug.value).trim();
+    }
+
+    if (!slug) {
+      try {
+        var listing = await backend.blogApi.listPublishedPosts({ page: 1, pageSize: 1 });
+        var firstPost = listing && listing.items && listing.items[0];
+        if (firstPost && firstPost.slug) {
+          slug = String(firstPost.slug).trim();
+        }
+      } catch (error) {
+        return;
+      }
+    }
+
+    if (!slug) return;
+    root.dataset.postSlug = slug;
+    if (hiddenSlug) hiddenSlug.value = slug;
+    void backend.blogPages.refreshDetailComments(slug);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      void initHomeNewsComments();
+    }, { once: true });
+  } else {
+    void initHomeNewsComments();
+  }
+})();
+</script>
 
 </body>
  

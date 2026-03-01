@@ -1,5 +1,12 @@
 (function (global) {
   const ns = (global.AppBackend = global.AppBackend || {});
+  const AUTH_MODAL_ID = "authModal";
+  const AUTH_NAV_LOGIN_ID = "auth-nav-login";
+  const AUTH_NAV_LOGOUT_ID = "auth-nav-logout";
+  const AUTH_NAV_PORTAL_ID = "auth-nav-portal";
+  const AUTH_NAV_STAFF_ID = "auth-nav-staff";
+  const AUTH_NAV_ADMIN_ID = "auth-nav-admin";
+  const AUTH_GUARD_SELECTOR = "[data-auth-required], [data-role-required], .js-auth-only, .js-guest-only, .js-staff-only, .js-admin-only";
 
   async function requireClient() {
     const client = ns.getSupabaseClient && ns.getSupabaseClient();
@@ -10,12 +17,13 @@
   }
 
   ns.authApi = {
-    async signUp(email, password, fullName) {
+    async signUp(email, password, fullName, redirectTo) {
       const client = await requireClient();
       const { data, error } = await client.auth.signUp({
         email,
         password,
         options: {
+          emailRedirectTo: redirectTo || undefined,
           data: {
             full_name: fullName || null,
           },
@@ -35,7 +43,52 @@
     async signOut() {
       const client = await requireClient();
       const { error } = await client.auth.signOut();
+      if (!error) {
+        return;
+      }
+
+      const message = String(error.message || "").toLowerCase();
+      const name = String(error.name || "").toLowerCase();
+      const isAbortLike = name === "aborterror" || message.indexOf("aborted") >= 0 || message.indexOf("signal is aborted") >= 0;
+      if (!isAbortLike) {
+        throw error;
+      }
+
+      const fallback = await client.auth.signOut({ scope: "local" });
+      if (fallback && fallback.error) {
+        throw fallback.error;
+      }
+    },
+
+    async resetPassword(email, redirectTo) {
+      const client = await requireClient();
+      const { data, error } = await client.auth.resetPasswordForEmail(email, {
+        redirectTo,
+      });
       if (error) throw error;
+      return data;
+    },
+
+    async updatePassword(newPassword) {
+      const client = await requireClient();
+      const { data, error } = await client.auth.updateUser({
+        password: newPassword,
+      });
+      if (error) throw error;
+      return data;
+    },
+
+    async resendSignUpConfirmation(email, redirectTo) {
+      const client = await requireClient();
+      const { data, error } = await client.auth.resend({
+        type: "signup",
+        email,
+        options: {
+          emailRedirectTo: redirectTo,
+        },
+      });
+      if (error) throw error;
+      return data;
     },
 
     async getSession() {
@@ -52,9 +105,783 @@
       return data.user;
     },
 
+    async getMyRoles(user) {
+      const client = await requireClient();
+      const resolvedUser = user || await ns.authApi.getUser();
+      if (!resolvedUser) {
+        return [];
+      }
+
+      const roles = new Set();
+
+      const { data: profileData, error: profileError } = await client
+        .from("user_profiles")
+        .select("default_role")
+        .eq("id", resolvedUser.id)
+        .maybeSingle();
+
+      if (!profileError && profileData && profileData.default_role) {
+        roles.add(String(profileData.default_role).toLowerCase());
+      }
+
+      const { data: roleRows, error: rolesError } = await client
+        .from("user_role_assignments")
+        .select("role")
+        .eq("user_id", resolvedUser.id);
+
+      if (!rolesError && Array.isArray(roleRows)) {
+        roleRows.forEach(function (row) {
+          if (row && row.role) {
+            roles.add(String(row.role).toLowerCase());
+          }
+        });
+      }
+
+      return Array.from(roles);
+    },
+
     async onAuthStateChange(callback) {
       const client = await requireClient();
       return client.auth.onAuthStateChange(callback);
     },
   };
+
+  ns.authState = ns.authState || {
+    user: null,
+    roles: [],
+  };
+
+  ns.hasRole = function hasRole(requiredRoles) {
+    const required = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
+    return hasAnyRole((ns.authState && ns.authState.roles) || [], required);
+  };
+
+  function notify(message, isError) {
+    if (ns.notify) {
+      ns.notify(message, isError);
+      return;
+    }
+    if (isError) {
+      console.error(message);
+      return;
+    }
+    console.info(message);
+  }
+
+  function normalizeError(error, fallbackMessage) {
+    if (ns.normalizeError) {
+      return ns.normalizeError(error, fallbackMessage);
+    }
+    if (!error) {
+      return fallbackMessage || "Unexpected error";
+    }
+    if (typeof error === "string") {
+      return error;
+    }
+    if (error.message) {
+      return error.message;
+    }
+    return fallbackMessage || "Unexpected error";
+  }
+
+  function isAbortLikeError(error) {
+    if (!error) {
+      return false;
+    }
+
+    if (typeof error === "string") {
+      const text = error.toLowerCase();
+      return text.indexOf("abort") >= 0 || text.indexOf("aborted") >= 0;
+    }
+
+    if (typeof error !== "object") {
+      return false;
+    }
+
+    const name = String(error.name || "").toLowerCase();
+    const message = String(error.message || "").toLowerCase();
+    return name === "aborterror" || message.indexOf("aborted") >= 0 || message.indexOf("signal is aborted") >= 0;
+  }
+
+  function getSafeRedirectTo() {
+    if (!global.location) return undefined;
+    return global.location.origin + global.location.pathname;
+  }
+
+  function getAuthFlowTypeFromHash() {
+    if (!global.location || !global.location.hash) {
+      return "";
+    }
+    const raw = global.location.hash.replace(/^#/, "");
+    const params = new URLSearchParams(raw);
+    return (params.get("type") || "").trim().toLowerCase();
+  }
+
+  function getNavList() {
+    return document.querySelector("ul.nav.navbar-nav.navbar-right");
+  }
+
+  function shortenLabel(value, maxLen) {
+    const text = (value || "").trim();
+    if (!text) return "";
+    if (text.length <= maxLen) return text;
+    return text.slice(0, maxLen - 1) + "…";
+  }
+
+  function getDisplayName(user) {
+    if (!user) return "Account";
+    const fromMeta = user.user_metadata && typeof user.user_metadata.full_name === "string"
+      ? user.user_metadata.full_name
+      : "";
+    return shortenLabel(fromMeta || user.email || "Account", 24);
+  }
+
+  function getRoleBadge(roles) {
+    const roleSet = new Set((roles || []).map(function (role) {
+      return String(role).toLowerCase();
+    }));
+
+    if (roleSet.has("admin")) {
+      return " [ADMIN]";
+    }
+    if (roleSet.has("staff")) {
+      return " [STAFF]";
+    }
+    if (roleSet.has("buyer")) {
+      return " [BUYER]";
+    }
+    return "";
+  }
+
+  function ensureNavControls() {
+    const nav = getNavList();
+    if (!nav) return;
+
+    if (!document.getElementById(AUTH_NAV_LOGIN_ID)) {
+      const loginLi = document.createElement("li");
+      loginLi.id = AUTH_NAV_LOGIN_ID;
+      loginLi.innerHTML = '<a class="tag_m js-auth-open" href="#">Login / Register</a>';
+      nav.appendChild(loginLi);
+    }
+
+    if (!document.getElementById(AUTH_NAV_LOGOUT_ID)) {
+      const logoutLi = document.createElement("li");
+      logoutLi.id = AUTH_NAV_LOGOUT_ID;
+      logoutLi.style.display = "none";
+      logoutLi.innerHTML = '<a class="tag_m js-auth-logout" href="#">Logout</a>';
+      nav.appendChild(logoutLi);
+    }
+
+    if (!document.getElementById(AUTH_NAV_PORTAL_ID)) {
+      const portalLi = document.createElement("li");
+      portalLi.id = AUTH_NAV_PORTAL_ID;
+      portalLi.className = "js-auth-only";
+      portalLi.style.display = "none";
+      portalLi.setAttribute("data-auth-required", "authenticated");
+      portalLi.innerHTML = '<a class="tag_m" href="admin_console.html">Portal</a>';
+      nav.appendChild(portalLi);
+    }
+
+    if (!document.getElementById(AUTH_NAV_STAFF_ID)) {
+      const staffLi = document.createElement("li");
+      staffLi.id = AUTH_NAV_STAFF_ID;
+      staffLi.className = "js-staff-only";
+      staffLi.style.display = "none";
+      staffLi.setAttribute("data-role-required", "staff,admin");
+      staffLi.innerHTML = '<a class="tag_m" href="admin_console.html#staff">Staff</a>';
+      nav.appendChild(staffLi);
+    }
+
+    if (!document.getElementById(AUTH_NAV_ADMIN_ID)) {
+      const adminLi = document.createElement("li");
+      adminLi.id = AUTH_NAV_ADMIN_ID;
+      adminLi.className = "js-admin-only";
+      adminLi.style.display = "none";
+      adminLi.setAttribute("data-role-required", "admin");
+      adminLi.innerHTML = '<a class="tag_m" href="admin_console.html#admin">Admin</a>';
+      nav.appendChild(adminLi);
+    }
+  }
+
+  function setNavState(user, roles) {
+    ensureNavControls();
+    const loginLi = document.getElementById(AUTH_NAV_LOGIN_ID);
+    const logoutLi = document.getElementById(AUTH_NAV_LOGOUT_ID);
+    if (!loginLi || !logoutLi) return;
+
+    const loginAnchor = loginLi.querySelector("a");
+    if (loginAnchor) {
+      loginAnchor.textContent = user
+        ? (getDisplayName(user) + getRoleBadge(roles))
+        : "Login / Register";
+      loginAnchor.className = "tag_m js-auth-open";
+    }
+    logoutLi.style.display = user ? "" : "none";
+  }
+
+  function parseRoleList(value) {
+    if (!value) return [];
+    return String(value)
+      .split(",")
+      .map(function (item) {
+        return item.trim().toLowerCase();
+      })
+      .filter(function (item) {
+        return item.length > 0;
+      });
+  }
+
+  function hasAnyRole(roles, requiredRoles) {
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+    if (!roles || roles.length === 0) {
+      return false;
+    }
+    const roleSet = new Set(roles.map(function (role) {
+      return String(role).toLowerCase();
+    }));
+    return requiredRoles.some(function (requiredRole) {
+      return roleSet.has(String(requiredRole).toLowerCase());
+    });
+  }
+
+  function inferAuthRequirement(element) {
+    const explicit = (element.getAttribute("data-auth-required") || "").trim().toLowerCase();
+    if (explicit === "authenticated" || explicit === "anonymous") {
+      return explicit;
+    }
+    if (element.classList.contains("js-auth-only")) {
+      return "authenticated";
+    }
+    if (element.classList.contains("js-guest-only")) {
+      return "anonymous";
+    }
+    return null;
+  }
+
+  function inferRequiredRoles(element) {
+    const explicit = parseRoleList(element.getAttribute("data-role-required"));
+    if (explicit.length > 0) {
+      return explicit;
+    }
+
+    const inferred = [];
+    if (element.classList.contains("js-staff-only")) {
+      inferred.push("staff", "admin");
+    }
+    if (element.classList.contains("js-admin-only")) {
+      inferred.push("admin");
+    }
+    return inferred;
+  }
+
+  function setGuardVisibility(element, visible) {
+    if (!Object.prototype.hasOwnProperty.call(element.dataset, "guardDisplay")) {
+      element.dataset.guardDisplay = element.style.display || "";
+    }
+
+    element.style.display = visible ? element.dataset.guardDisplay : "none";
+    element.setAttribute("aria-hidden", visible ? "false" : "true");
+  }
+
+  function emitAuthStateChanged(user, roles) {
+    if (typeof global.CustomEvent !== "function" || typeof global.dispatchEvent !== "function") {
+      return;
+    }
+
+    global.dispatchEvent(new CustomEvent("app-auth-state-changed", {
+      detail: {
+        user: user || null,
+        roles: Array.isArray(roles) ? roles : [],
+      },
+    }));
+  }
+
+  function applyAccessGuards(user, roles) {
+    const isAuthenticated = Boolean(user);
+    const nodes = document.querySelectorAll(AUTH_GUARD_SELECTOR);
+    nodes.forEach(function (element) {
+      const authRequired = inferAuthRequirement(element);
+      const requiredRoles = inferRequiredRoles(element);
+
+      let allowed = true;
+
+      if (authRequired === "authenticated" && !isAuthenticated) {
+        allowed = false;
+      }
+      if (authRequired === "anonymous" && isAuthenticated) {
+        allowed = false;
+      }
+      if (requiredRoles.length > 0) {
+        if (!isAuthenticated) {
+          allowed = false;
+        } else if (!hasAnyRole(roles, requiredRoles)) {
+          allowed = false;
+        }
+      }
+
+      setGuardVisibility(element, allowed);
+    });
+  }
+
+  function ensureModal() {
+    if (document.getElementById(AUTH_MODAL_ID)) {
+      return;
+    }
+
+    const modal = document.createElement("div");
+    modal.className = "modal fade";
+    modal.id = AUTH_MODAL_ID;
+    modal.setAttribute("tabindex", "-1");
+    modal.setAttribute("role", "dialog");
+    modal.innerHTML = [
+      '<div class="modal-dialog modal-sm" role="document">',
+      '  <div class="modal-content">',
+      '    <div class="modal-header">',
+      '      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>',
+      '      <h4 class="modal-title">Account</h4>',
+      "    </div>",
+      '    <div class="modal-body">',
+      '      <ul class="nav nav-tabs">',
+      '        <li class="active"><a href="#auth-signin-pane" data-toggle="tab">Sign In</a></li>',
+      '        <li><a href="#auth-signup-pane" data-toggle="tab">Sign Up</a></li>',
+      "      </ul>",
+      '      <div class="tab-content" style="margin-top:15px;">',
+      '        <div class="tab-pane active" id="auth-signin-pane">',
+      '          <form id="auth-signin-form" novalidate>',
+      '            <div class="form-group">',
+      '              <label for="auth-signin-email">Email</label>',
+      '              <input type="email" class="form-control" id="auth-signin-email" autocomplete="email" required>',
+      "            </div>",
+      '            <div class="form-group">',
+      '              <label for="auth-signin-password">Password</label>',
+      '              <input type="password" class="form-control" id="auth-signin-password" autocomplete="current-password" required>',
+      "            </div>",
+      '            <button type="submit" class="btn btn-primary btn-block">Sign In</button>',
+      '            <button type="button" class="btn btn-link btn-block js-auth-reset" style="margin-top:8px;">Forgot password?</button>',
+      '            <button type="button" class="btn btn-link btn-block js-auth-resend" style="margin-top:0;">Resend confirmation email</button>',
+      "          </form>",
+      "        </div>",
+      '        <div class="tab-pane" id="auth-signup-pane">',
+      '          <form id="auth-signup-form" novalidate>',
+      '            <div class="form-group">',
+      '              <label for="auth-signup-name">Full Name</label>',
+      '              <input type="text" class="form-control" id="auth-signup-name" autocomplete="name" maxlength="180">',
+      "            </div>",
+      '            <div class="form-group">',
+      '              <label for="auth-signup-email">Email</label>',
+      '              <input type="email" class="form-control" id="auth-signup-email" autocomplete="email" required>',
+      "            </div>",
+      '            <div class="form-group">',
+      '              <label for="auth-signup-password">Password</label>',
+      '              <input type="password" class="form-control" id="auth-signup-password" autocomplete="new-password" minlength="8" required>',
+      "            </div>",
+      '            <button type="submit" class="btn btn-success btn-block">Create Account</button>',
+      "          </form>",
+      "        </div>",
+      '        <div class="tab-pane" id="auth-recovery-pane" style="display:none;">',
+      '          <form id="auth-recovery-form" novalidate>',
+      '            <p style="font-size:12px;color:#666;">Set a new password for your account.</p>',
+      '            <input type="text" id="auth-recovery-username" class="sr-only" autocomplete="username" tabindex="-1" aria-hidden="true">',
+      '            <div class="form-group">',
+      '              <label for="auth-recovery-password">New Password</label>',
+      '              <input type="password" class="form-control" id="auth-recovery-password" autocomplete="new-password" minlength="8" required>',
+      "            </div>",
+      '            <div class="form-group">',
+      '              <label for="auth-recovery-confirm">Confirm Password</label>',
+      '              <input type="password" class="form-control" id="auth-recovery-confirm" autocomplete="new-password" minlength="8" required>',
+      "            </div>",
+      '            <button type="submit" class="btn btn-primary btn-block">Update Password</button>',
+      "          </form>",
+      "        </div>",
+      "      </div>",
+      "    </div>",
+      "  </div>",
+      "</div>",
+    ].join("");
+
+    document.body.appendChild(modal);
+  }
+
+  function showStandardAuthPanes(tabName) {
+    const modalEl = document.getElementById(AUTH_MODAL_ID);
+    if (!modalEl) return;
+
+    const tabNav = modalEl.querySelector(".nav.nav-tabs");
+    if (tabNav) {
+      tabNav.style.display = "";
+    }
+
+    const recoveryPane = document.getElementById("auth-recovery-pane");
+    if (recoveryPane) {
+      recoveryPane.style.display = "none";
+      recoveryPane.classList.remove("active");
+    }
+
+    if (global.jQuery && typeof global.jQuery.fn.tab === "function") {
+      const href = tabName === "signup" ? "#auth-signup-pane" : "#auth-signin-pane";
+      global.jQuery('a[href="' + href + '"]').tab("show");
+      return;
+    }
+
+    const signInPane = document.getElementById("auth-signin-pane");
+    const signUpPane = document.getElementById("auth-signup-pane");
+    if (signInPane) signInPane.classList.remove("active");
+    if (signUpPane) signUpPane.classList.remove("active");
+    if (tabName === "signup") {
+      if (signUpPane) signUpPane.classList.add("active");
+    } else {
+      if (signInPane) signInPane.classList.add("active");
+    }
+  }
+
+  function showRecoveryPane() {
+    const modalEl = document.getElementById(AUTH_MODAL_ID);
+    if (!modalEl) return;
+
+    const tabNav = modalEl.querySelector(".nav.nav-tabs");
+    if (tabNav) {
+      tabNav.style.display = "none";
+    }
+
+    const signInPane = document.getElementById("auth-signin-pane");
+    const signUpPane = document.getElementById("auth-signup-pane");
+    const recoveryPane = document.getElementById("auth-recovery-pane");
+
+    if (signInPane) signInPane.classList.remove("active");
+    if (signUpPane) signUpPane.classList.remove("active");
+
+    if (recoveryPane) {
+      recoveryPane.style.display = "block";
+      recoveryPane.classList.add("active");
+    }
+
+    const recoveryUserNode = document.getElementById("auth-recovery-username");
+    if (recoveryUserNode) {
+      const signInEmailNode = document.getElementById("auth-signin-email");
+      const emailFromSignIn = signInEmailNode ? signInEmailNode.value.trim() : "";
+      const emailFromState = ns.authState && ns.authState.user && ns.authState.user.email
+        ? String(ns.authState.user.email).trim()
+        : "";
+      recoveryUserNode.value = emailFromSignIn || emailFromState || "";
+    }
+  }
+
+  function openModal(tabName) {
+    ensureModal();
+    showStandardAuthPanes(tabName);
+    const modalEl = document.getElementById(AUTH_MODAL_ID);
+    if (!modalEl) return;
+
+    if (global.jQuery && typeof global.jQuery.fn.modal === "function") {
+      global.jQuery(modalEl).modal("show");
+      return;
+    }
+
+    modalEl.style.display = "block";
+    modalEl.classList.add("in");
+  }
+
+  function closeModal() {
+    const modalEl = document.getElementById(AUTH_MODAL_ID);
+    if (!modalEl) return;
+
+    if (global.jQuery && typeof global.jQuery.fn.modal === "function") {
+      global.jQuery(modalEl).modal("hide");
+      return;
+    }
+
+    modalEl.style.display = "none";
+    modalEl.classList.remove("in");
+  }
+
+  function setFormBusy(form, busy, label) {
+    if (!form) return;
+    const button = form.querySelector('button[type="submit"]');
+    if (!button) return;
+
+    if (busy) {
+      button.dataset.prevLabel = button.textContent || "";
+      button.disabled = true;
+      button.textContent = label;
+      return;
+    }
+
+    button.disabled = false;
+    if (button.dataset.prevLabel) {
+      button.textContent = button.dataset.prevLabel;
+    }
+  }
+
+  async function handleSignInSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const emailEl = form.querySelector("#auth-signin-email");
+    const passwordEl = form.querySelector("#auth-signin-password");
+    const email = emailEl ? emailEl.value.trim() : "";
+    const password = passwordEl ? passwordEl.value : "";
+
+    if (!email || !password) {
+      notify("Email and password are required.", true);
+      return;
+    }
+
+    setFormBusy(form, true, "Signing in...");
+    try {
+      await ns.authApi.signIn(email, password);
+      notify("Signed in successfully.");
+      form.reset();
+      closeModal();
+    } catch (error) {
+      notify(normalizeError(error, "Failed to sign in"), true);
+    } finally {
+      setFormBusy(form, false, "");
+    }
+  }
+
+  async function handleSignUpSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const nameEl = form.querySelector("#auth-signup-name");
+    const emailEl = form.querySelector("#auth-signup-email");
+    const passwordEl = form.querySelector("#auth-signup-password");
+
+    const fullName = nameEl ? nameEl.value.trim() : "";
+    const email = emailEl ? emailEl.value.trim() : "";
+    const password = passwordEl ? passwordEl.value : "";
+
+    if (!email || !password) {
+      notify("Email and password are required.", true);
+      return;
+    }
+    if (password.length < 8) {
+      notify("Password must be at least 8 characters.", true);
+      return;
+    }
+
+    setFormBusy(form, true, "Creating account...");
+    try {
+      const response = await ns.authApi.signUp(email, password, fullName, getSafeRedirectTo());
+      form.reset();
+
+      if (response && response.session) {
+        notify("Account created and signed in.");
+        closeModal();
+        return;
+      }
+
+      notify("Account created. Please check your email to confirm your account.");
+      openModal("signin");
+    } catch (error) {
+      notify(normalizeError(error, "Failed to create account"), true);
+    } finally {
+      setFormBusy(form, false, "");
+    }
+  }
+
+  async function handlePasswordReset() {
+    const emailInput = document.getElementById("auth-signin-email");
+    const email = emailInput ? emailInput.value.trim() : "";
+    if (!email) {
+      notify("Enter your email in Sign In first, then click Forgot password.", true);
+      return;
+    }
+
+    try {
+      const redirectTo = getSafeRedirectTo();
+      await ns.authApi.resetPassword(email, redirectTo);
+      notify("Password reset email sent. Check your inbox.");
+    } catch (error) {
+      notify(normalizeError(error, "Failed to send reset email"), true);
+    }
+  }
+
+  async function handleResendConfirmation() {
+    const emailInput = document.getElementById("auth-signin-email");
+    const email = emailInput ? emailInput.value.trim() : "";
+    if (!email) {
+      notify("Enter your email in Sign In first, then click resend confirmation.", true);
+      return;
+    }
+
+    try {
+      await ns.authApi.resendSignUpConfirmation(email, getSafeRedirectTo());
+      notify("Confirmation email sent. Check your inbox.");
+    } catch (error) {
+      notify(normalizeError(error, "Failed to resend confirmation email"), true);
+    }
+  }
+
+  async function handleRecoverySubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const passwordEl = form.querySelector("#auth-recovery-password");
+    const confirmEl = form.querySelector("#auth-recovery-confirm");
+
+    const password = passwordEl ? passwordEl.value : "";
+    const confirm = confirmEl ? confirmEl.value : "";
+
+    if (!password || password.length < 8) {
+      notify("Password must be at least 8 characters.", true);
+      return;
+    }
+    if (password !== confirm) {
+      notify("Password confirmation does not match.", true);
+      return;
+    }
+
+    setFormBusy(form, true, "Updating...");
+    try {
+      await ns.authApi.updatePassword(password);
+      notify("Password updated successfully. You can continue with your account.");
+      form.reset();
+      closeModal();
+    } catch (error) {
+      notify(normalizeError(error, "Failed to update password"), true);
+    } finally {
+      setFormBusy(form, false, "");
+    }
+  }
+
+  async function refreshAuthState() {
+    const user = await ns.authApi.getUser().catch(function () {
+      return null;
+    });
+    const roles = user
+      ? await ns.authApi.getMyRoles(user).catch(function () {
+        return [];
+      })
+      : [];
+
+    ns.authState = {
+      user: user || null,
+      roles: roles,
+    };
+
+    setNavState(user, roles);
+    applyAccessGuards(user, roles);
+    emitAuthStateChanged(user, roles);
+  }
+
+  function applyLoggedOutState() {
+    ns.authState = {
+      user: null,
+      roles: [],
+    };
+
+    setNavState(null, []);
+    applyAccessGuards(null, []);
+    emitAuthStateChanged(null, []);
+  }
+
+  function bindUiEvents() {
+    document.addEventListener("click", function onClick(event) {
+      const openTrigger = event.target && event.target.closest ? event.target.closest(".js-auth-open") : null;
+      if (openTrigger) {
+        event.preventDefault();
+        openModal("signin");
+        return;
+      }
+
+      const logoutTrigger = event.target && event.target.closest ? event.target.closest(".js-auth-logout") : null;
+      if (logoutTrigger) {
+        event.preventDefault();
+        ns.authApi.signOut()
+          .then(function () {
+            notify("Signed out.");
+            applyLoggedOutState();
+          })
+          .catch(function (error) {
+            if (isAbortLikeError(error)) {
+              applyLoggedOutState();
+              notify("Signed out locally. If needed, retry once when your network is stable.");
+              return;
+            }
+            notify(normalizeError(error, "Failed to sign out"), true);
+          });
+        return;
+      }
+
+      const resetTrigger = event.target && event.target.closest ? event.target.closest(".js-auth-reset") : null;
+      if (resetTrigger) {
+        event.preventDefault();
+        void handlePasswordReset();
+        return;
+      }
+
+      const resendTrigger = event.target && event.target.closest ? event.target.closest(".js-auth-resend") : null;
+      if (resendTrigger) {
+        event.preventDefault();
+        void handleResendConfirmation();
+      }
+    });
+
+    document.addEventListener("submit", function onSubmit(event) {
+      if (!event.target || !event.target.matches) return;
+      if (event.target.matches("#auth-signin-form")) {
+        void handleSignInSubmit(event);
+        return;
+      }
+      if (event.target.matches("#auth-signup-form")) {
+        void handleSignUpSubmit(event);
+        return;
+      }
+      if (event.target.matches("#auth-recovery-form")) {
+        void handleRecoverySubmit(event);
+      }
+    });
+  }
+
+  function bootAuthUi() {
+    if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
+      return;
+    }
+
+    ensureNavControls();
+    ensureModal();
+    bindUiEvents();
+    applyAccessGuards(null, []);
+
+    const flowType = getAuthFlowTypeFromHash();
+    if (flowType === "recovery") {
+      openModal("signin");
+      showRecoveryPane();
+    } else if (flowType === "signup") {
+      notify("Email confirmed. You can now sign in.");
+      openModal("signin");
+    }
+
+    void refreshAuthState();
+
+    ns.authApi.onAuthStateChange(async function (event, session) {
+      const user = session && session.user ? session.user : null;
+      const roles = user
+        ? await ns.authApi.getMyRoles(user).catch(function () {
+          return [];
+        })
+        : [];
+
+      ns.authState = {
+        user: user,
+        roles: roles,
+      };
+      setNavState(user, roles);
+      applyAccessGuards(user, roles);
+      emitAuthStateChanged(user, roles);
+
+      if (event === "PASSWORD_RECOVERY") {
+        openModal("signin");
+        showRecoveryPane();
+      }
+    }).catch(function () {
+      // Ignore listener setup errors.
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootAuthUi, { once: true });
+  } else {
+    bootAuthUi();
+  }
 })(window);

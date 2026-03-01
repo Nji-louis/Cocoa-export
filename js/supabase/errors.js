@@ -27,6 +27,29 @@
     return fallbackMessage || "Unexpected error";
   }
 
+  function isAbortLike(error) {
+    if (!error) {
+      return false;
+    }
+
+    if (typeof error === "string") {
+      const text = error.toLowerCase();
+      return text.indexOf("abort") >= 0 || text.indexOf("aborted") >= 0;
+    }
+
+    if (typeof error !== "object") {
+      return false;
+    }
+
+    const name = String(error.name || "").toLowerCase();
+    const message = String(error.message || "").toLowerCase();
+    const nested = String((error.error && error.error.message) || "").toLowerCase();
+    return name === "aborterror"
+      || message.indexOf("signal is aborted") >= 0
+      || message.indexOf("aborted") >= 0
+      || nested.indexOf("aborted") >= 0;
+  }
+
   ns.normalizeError = function normalizeError(error, fallbackMessage) {
     if (!error) {
       return fallbackMessage || "Unexpected error";
@@ -34,6 +57,10 @@
 
     if (typeof error === "string") {
       return error;
+    }
+
+    if (isAbortLike(error)) {
+      return "Request was interrupted. Check your network and Supabase config, then try again.";
     }
 
     if (error.message) {
@@ -103,4 +130,14 @@
     console.info(message);
     alert(message);
   };
+
+  if (global && global.addEventListener) {
+    global.addEventListener("unhandledrejection", function onUnhandledRejection(event) {
+      if (!event || !isAbortLike(event.reason)) {
+        return;
+      }
+      event.preventDefault();
+      console.warn("Suppressed non-fatal AbortError from interrupted request.");
+    });
+  }
 })(window);

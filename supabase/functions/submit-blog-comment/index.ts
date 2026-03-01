@@ -38,6 +38,16 @@ serveHttp(async (req: Request) => {
       ? (user.email ?? asEmail(body.authorEmail, "authorEmail"))
       : asEmail(body.authorEmail, "authorEmail");
 
+    let authorAvatarUrl: string | null = null;
+    if (user) {
+      const metadataAvatar = asOptionalString(
+        (user.user_metadata?.avatar_url as string | undefined)
+          ?? (user.user_metadata?.picture as string | undefined),
+        2000,
+      );
+      authorAvatarUrl = metadataAvatar ?? null;
+    }
+
     const admin = createServiceClient();
     await enforceIpRateLimit(admin, req, "submit-blog-comment-ip", 20, 3600);
     await enforceRateLimit(admin, {
@@ -61,6 +71,15 @@ serveHttp(async (req: Request) => {
       resolvedPostId = post.id;
     }
 
+    if (user && !authorAvatarUrl) {
+      const { data: profile } = await admin
+        .from("user_profiles")
+        .select("avatar_url")
+        .eq("id", user.id)
+        .maybeSingle();
+      authorAvatarUrl = (profile?.avatar_url as string | null) ?? null;
+    }
+
     const { data, error } = await admin
       .from("blog_comments")
       .insert({
@@ -68,11 +87,14 @@ serveHttp(async (req: Request) => {
         author_user_id: user?.id ?? null,
         author_name: authorName,
         author_email: authorEmail,
+        author_avatar_url: authorAvatarUrl,
         message,
-        status: "pending",
+        status: "approved",
+        approved_by: user?.id ?? null,
+        approved_at: new Date().toISOString(),
         source_channel: sourceChannel,
       })
-      .select("id, status, created_at")
+      .select("id, status, created_at, author_avatar_url")
       .single();
 
     if (error) {
@@ -83,6 +105,7 @@ serveHttp(async (req: Request) => {
       commentId: data.id,
       status: data.status,
       createdAt: data.created_at,
+      authorAvatarUrl: data.author_avatar_url ?? null,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unexpected server error";

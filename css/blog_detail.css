@@ -35,6 +35,13 @@ margin-right:5px;
 .news_h1li1r h6{
 color:#f3b204;
   }
+.news_h1li1r h6 a{
+color:#f3b204;
+  }
+.news_h1li1r h6 a:hover{
+color:#000;
+text-decoration:none;
+  }
 .news_h1{
   position:relative;
   }
@@ -67,6 +74,53 @@ margin-left:0;
 margin-left:30px;
 color:#f3b204;
 letter-spacing:1px; 
+ }
+.blog-comment-head{
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:12px;
+ }
+.blog-comment-head h4{
+ margin:0;
+ }
+.blog-comment-tools{
+ display:flex;
+ align-items:center;
+ }
+.blog-comment-delete{
+ border:1px solid #d6d6d6;
+ background:#fff;
+ color:#a12222;
+ font-size:12px;
+ font-weight:700;
+ padding:4px 10px;
+ border-radius:3px;
+ cursor:pointer;
+ line-height:1.2;
+ }
+.blog-comment-delete:hover,
+.blog-comment-delete:focus{
+ border-color:#a12222;
+ color:#7f1515;
+ outline:none;
+ }
+.blog-comment-delete:disabled{
+ opacity:.65;
+ cursor:default;
+ }
+.blog-comment-status{
+ display:inline-block;
+ margin-left:8px;
+ padding:2px 6px;
+ font-size:11px;
+ font-weight:700;
+ letter-spacing:.3px;
+ color:#856404;
+ background:#fff3cd;
+ border:1px solid #ffeeba;
+ border-radius:2px;
+ text-transform:uppercase;
  }
 .blog_d_page_li2{
  border:1px solid #ddd;
@@ -128,6 +182,11 @@ display:inline-block;
 .blog_d_page_r .about_h hr{
  margin-left:auto; 
   }
+.blog-comment-head{
+ flex-direction:column;
+ align-items:flex-start;
+ gap:6px;
+ }
 #about_page{
 padding-bottom:0;  
   }

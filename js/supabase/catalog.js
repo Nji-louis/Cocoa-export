@@ -90,5 +90,35 @@
       if (error) throw error;
       return data || [];
     },
+
+    async voteTestimonial(payload) {
+      const client = await requireClient();
+      try {
+        const { data, error } = await client.functions.invoke("vote-buyer-testimonial", {
+          body: payload,
+        });
+        if (error) throw error;
+        if (data && data.error) throw new Error(data.error);
+        return data;
+      } catch (edgeError) {
+        const { data, error } = await client.rpc("record_testimonial_vote", {
+          p_testimonial_id: (payload && (payload.testimonialId || payload.id)) || null,
+          p_vote: (payload && (payload.voteType || payload.vote)) || null,
+        });
+        if (error) {
+          throw edgeError || error;
+        }
+
+        const row = Array.isArray(data) ? data[0] : data;
+        if (!row) {
+          throw edgeError || new Error("Vote could not be registered");
+        }
+        return {
+          testimonialId: row.testimonial_id,
+          upVotes: row.up_votes,
+          downVotes: row.down_votes,
+        };
+      }
+    },
   };
 })(window);

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CHOCOCAM | Operations Console</title>
+    <link href="https://fonts.googleapis.com/css?family=Righteous&display=swap" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/global.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/font-awesome.min.css">
+    <style>
+      body { background: #f7f7f7; }
+      .console-wrap { padding: 25px 0 40px; }
+      .console-card { background: #fff; border: 1px solid #e6e6e6; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+      .console-card h4 { margin-top: 0; margin-bottom: 15px; }
+      .console-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 0.4px; }
+      .console-value { font-size: 14px; margin-bottom: 10px; word-break: break-word; }
+      .table-responsive { max-height: 420px; overflow: auto; }
+      #admin-console-status { display: none; }
+      textarea#signed-url-output { min-height: 80px; }
+      .panel-hint { color: #777; font-size: 13px; margin-bottom: 12px; }
+    </style>
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <section id="header" class="clearfix">
+      <nav class="navbar">
+        <div class="container">
+          <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html"><i class="fa fa-copyright"></i>CHOCOCAM</a>
+          </div>
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a class="tag_m" href="index.html">Home</a></li>
+              <li><a class="tag_m" href="product.html">Products</a></li>
+              <li><a class="tag_m" href="export.html">Export</a></li>
+              <li><a class="tag_m" href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </section>
+
+    <section class="console-wrap">
+      <div class="container">
+        <div class="console-card">
+          <h3 class="mgt">Operations Console</h3>
+          <p class="panel-hint">This page is role-aware. Buyers can view their inquiries, staff can manage inquiry workflows, and admins can manage listings and document signed URLs.</p>
+          <div id="admin-console-status" class="alert alert-info"></div>
+          <div id="console-auth-gate" class="alert alert-warning js-guest-only" style="display:none;">
+            Sign in first to access protected operations.
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="console-label">Signed In User</div>
+              <div class="console-value" id="console-user-email">Loading...</div>
+            </div>
+            <div class="col-sm-6">
+              <div class="console-label">Resolved Roles</div>
+              <div class="console-value" id="console-user-roles">Loading...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="console-card js-auth-only" data-auth-required="authenticated">
+          <h4 class="mgt">Recent Inquiries <small>(top 20)</small></h4>
+          <p class="panel-hint">Results shown: <strong id="inquiry-count">0</strong></p>
+          <p><button id="refresh-inquiries-btn" class="btn btn-default btn-sm">Refresh</button></p>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>#</th>
+                  <th>Status</th>
+                  <th>Company</th>
+                  <th>Email</th>
+                  <th>Created</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="inquiry-table-body">
+                <tr><td colspan="7">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="staff" class="console-card js-staff-only" data-role-required="staff,admin">
+          <h4 class="mgt">Staff Workflow Actions</h4>
+          <p class="panel-hint">Update inquiry statuses using the RPC protected by staff/admin checks.</p>
+          <form id="status-update-form">
+            <div class="row">
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="status-inquiry-id">Inquiry ID</label>
+                  <input id="status-inquiry-id" type="text" class="form-control" placeholder="UUID from table above" required>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="status-target">New Status</label>
+                  <select id="status-target" class="form-control" required>
+                    <option value="triaged">triaged</option>
+                    <option value="quoted">quoted</option>
+                    <option value="negotiating">negotiating</option>
+                    <option value="contracted">contracted</option>
+                    <option value="closed_won">closed_won</option>
+                    <option value="closed_lost">closed_lost</option>
+                    <option value="archived">archived</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="status-note">Note</label>
+                  <input id="status-note" type="text" class="form-control" placeholder="Optional note">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Update Inquiry Status</button>
+          </form>
+        </div>
+
+        <div id="admin" class="console-card js-admin-only" data-role-required="admin">
+          <h4 class="mgt">Admin Listing Upsert</h4>
+          <p class="panel-hint">Create or update inventory listings via protected edge function.</p>
+          <form id="listing-upsert-form">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-product-slug">Product Slug</label>
+                  <input id="listing-product-slug" type="text" class="form-control" placeholder="forastero" required>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-code">Listing Code</label>
+                  <input id="listing-code" type="text" class="form-control" placeholder="FOR-2026-Q1" required>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-status">Status</label>
+                  <input id="listing-status" type="text" class="form-control" placeholder="active">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-qty">Qty (MT)</label>
+                  <input id="listing-qty" type="number" step="0.001" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-min-order">Min (MT)</label>
+                  <input id="listing-min-order" type="number" step="0.001" class="form-control">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-price">Price USD/MT</label>
+                  <input id="listing-price" type="number" step="0.01" class="form-control">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-currency">Currency</label>
+                  <input id="listing-currency" type="text" class="form-control" value="USD">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="listing-incoterm">Incoterm</label>
+                  <input id="listing-incoterm" type="text" class="form-control" placeholder="FOB">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-origin-port">Origin Port</label>
+                  <input id="listing-origin-port" type="text" class="form-control" placeholder="Douala">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-destination-region">Destination Region</label>
+                  <input id="listing-destination-region" type="text" class="form-control" placeholder="EU">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-harvest-season">Harvest Season</label>
+                  <input id="listing-harvest-season" type="text" class="form-control" placeholder="Main Crop 2026">
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="listing-valid-until">Valid Until</label>
+                  <input id="listing-valid-until" type="date" class="form-control">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-success">Upsert Listing</button>
+          </form>
+        </div>
+
+        <div id="admin-products" class="console-card js-admin-only" data-role-required="admin">
+          <h4 class="mgt">Admin Product Manager</h4>
+          <p class="panel-hint">Mini CMS for catalog products. Create, read, update, and soft-delete products.</p>
+          <p>
+            <button id="refresh-products-btn" class="btn btn-default btn-sm" type="button">Refresh Products</button>
+            <span style="margin-left:10px;">Active products: <strong id="product-count">0</strong></span>
+          </p>
+
+          <form id="product-manager-form">
+            <input id="product-id" type="hidden">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="product-slug">Slug</label>
+                  <input id="product-slug" type="text" class="form-control" placeholder="forastero" required>
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="product-name">Name</label>
+                  <input id="product-name" type="text" class="form-control" placeholder="Export-Grade Forastero Cocoa Beans from Cameroon" required>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="product-category">Category</label>
+                  <select id="product-category" class="form-control">
+                    <option value="">None</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="product-status">Status</label>
+                  <select id="product-status" class="form-control">
+                    <option value="draft">draft</option>
+                    <option value="published">published</option>
+                    <option value="archived">archived</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="product-origin-country">Origin Country</label>
+                  <input id="product-origin-country" type="text" class="form-control" value="Cameroon">
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="product-flavor-notes">Flavor Notes</label>
+                  <input id="product-flavor-notes" type="text" class="form-control" placeholder="robust, deep cocoa, high yield">
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="product-published-at">Published At</label>
+                  <input id="product-published-at" type="datetime-local" class="form-control">
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <label class="checkbox-inline">
+                  <input id="product-is-featured" type="checkbox"> Featured
+                </label>
+                <label class="checkbox-inline">
+                  <input id="product-is-popular" type="checkbox"> Popular
+                </label>
+                <label class="checkbox-inline">
+                  <input id="product-is-new-arrival" type="checkbox"> New Arrival
+                </label>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 10px;">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="product-short-description">Short Description</label>
+                  <textarea id="product-short-description" class="form-control" rows="2" placeholder="Short product summary for cards"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="product-description">Full Description</label>
+                  <textarea id="product-description" class="form-control" rows="4" placeholder="Detailed CMS content"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <p>
+              <button type="submit" class="btn btn-success">Save Product</button>
+              <button id="product-form-clear-btn" type="button" class="btn btn-default">Clear</button>
+            </p>
+          </form>
+
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Slug</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Status</th>
+                  <th>Flags</th>
+                  <th>Updated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="product-table-body">
+                <tr><td colspan="7">Loading...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr>
+          <h5 class="mgt">Product Specifications</h5>
+          <p class="panel-hint">
+            Active product:
+            <strong id="spec-active-product">none selected</strong>
+            | Specs:
+            <strong id="spec-count">0</strong>
+          </p>
+          <p>
+            <button id="refresh-specs-btn" class="btn btn-default btn-sm" type="button">Refresh Specs</button>
+          </p>
+          <form id="spec-manager-form">
+            <input id="spec-id" type="hidden">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="spec-key">Spec Key</label>
+                  <input id="spec-key" type="text" class="form-control" placeholder="moisture_max" required>
+                </div>
+              </div>
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="spec-value">Spec Value</label>
+                  <input id="spec-value" type="text" class="form-control" placeholder="7.5" required>
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="spec-unit">Unit</label>
+                  <input id="spec-unit" type="text" class="form-control" placeholder="%">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="spec-sort-order">Sort Order</label>
+                  <input id="spec-sort-order" type="number" class="form-control" value="0">
+                </div>
+              </div>
+            </div>
+            <p>
+              <button type="submit" class="btn btn-success">Save Spec</button>
+              <button id="spec-form-clear-btn" type="button" class="btn btn-default">Clear</button>
+            </p>
+          </form>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Key</th>
+                  <th>Value</th>
+                  <th>Unit</th>
+                  <th>Order</th>
+                  <th>Updated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="spec-table-body">
+                <tr><td colspan="6">Select a product to manage specifications.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <hr>
+          <h5 class="mgt">Product Images / Media</h5>
+          <p class="panel-hint">
+            Active product:
+            <strong id="media-active-product">none selected</strong>
+            | Media assets:
+            <strong id="media-count">0</strong>
+          </p>
+          <p>
+            <button id="refresh-media-btn" class="btn btn-default btn-sm" type="button">Refresh Media</button>
+          </p>
+          <form id="media-manager-form">
+            <input id="media-id" type="hidden">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="media-bucket-name">Bucket</label>
+                  <input id="media-bucket-name" type="text" class="form-control" value="product-images">
+                </div>
+              </div>
+              <div class="col-sm-5">
+                <div class="form-group">
+                  <label for="media-alt-text">Alt Text</label>
+                  <input id="media-alt-text" type="text" class="form-control" placeholder="Product image alt text">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="media-display-order">Display Order</label>
+                  <input id="media-display-order" type="number" class="form-control" value="0">
+                </div>
+              </div>
+              <div class="col-sm-2">
+                <div class="form-group">
+                  <label for="media-visibility">Visibility</label>
+                  <select id="media-visibility" class="form-control">
+                    <option value="public">public</option>
+                    <option value="private">private</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="media-external-url">External URL (optional)</label>
+                  <input id="media-external-url" type="url" class="form-control" placeholder="https://...">
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="media-file-input">Upload Image File (optional)</label>
+                  <input id="media-file-input" type="file" class="form-control" accept="image/*">
+                </div>
+              </div>
+            </div>
+            <p>
+              <label class="checkbox-inline">
+                <input id="media-is-primary" type="checkbox"> Set as primary image
+              </label>
+            </p>
+            <p>
+              <button type="submit" class="btn btn-success">Save Media</button>
+              <button id="media-form-clear-btn" type="button" class="btn btn-default">Clear</button>
+            </p>
+          </form>
+          <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Preview</th>
+                  <th>Source</th>
+                  <th>Primary</th>
+                  <th>Order</th>
+                  <th>Visibility</th>
+                  <th>Updated</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="media-table-body">
+                <tr><td colspan="7">Select a product to manage media.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="console-card js-staff-only" data-role-required="staff,admin">
+          <h4 class="mgt">Generate Document Signed URL</h4>
+          <form id="signed-url-form">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="signed-url-bucket">Bucket</label>
+                  <select id="signed-url-bucket" class="form-control">
+                    <option value="export-documents">export-documents</option>
+                    <option value="inquiry-attachments">inquiry-attachments</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <label for="signed-url-path">Path</label>
+                  <input id="signed-url-path" type="text" class="form-control" placeholder="contracts/contract-2026-001.pdf" required>
+                </div>
+              </div>
+              <div class="col-sm-3">
+                <div class="form-group">
+                  <label for="signed-url-expiry">Expires In (sec)</label>
+                  <input id="signed-url-expiry" type="number" class="form-control" value="300" min="60" max="3600">
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Generate URL</button>
+            <div class="form-group" style="margin-top:12px;">
+              <label for="signed-url-output">Signed URL</label>
+              <textarea id="signed-url-output" class="form-control" readonly></textarea>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase/config.js"></script>
+    <script src="js/supabase/client.js"></script>
+    <script src="js/supabase/errors.js"></script>
+    <script src="js/supabase/auth.js"></script>
+    <script src="js/supabase/catalog.js"></script>
+    <script src="js/supabase/inquiries.js"></script>
+    <script src="js/supabase/subscriptions.js"></script>
+    <script src="js/supabase/blog.js"></script>
+    <script src="js/supabase/forms.js"></script>
+    <script src="js/supabase/admin.js"></script>
+    <script src="js/supabase/admin-console.js"></script>
+    <script src="js/supabase/init.js"></script>
+  </body>
+</html>

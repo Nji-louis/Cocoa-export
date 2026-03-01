@@ -45,6 +45,13 @@ color:#f3b204;
 position:absolute;
 bottom:-90px;  
   }
+.blog-card-link{
+ cursor:pointer;
+ }
+.blog-card-link:focus{
+ outline:2px solid #f3b204;
+ outline-offset:2px;
+ }
 /*********************blog_end****************/
 
 

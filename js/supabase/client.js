@@ -13,7 +13,7 @@
     return global.supabase.createClient(config.url, config.anonKey, {
       auth: {
         persistSession: true,
-        autoRefreshToken: true,
+        autoRefreshToken: false,
       },
       global: {
         headers: {

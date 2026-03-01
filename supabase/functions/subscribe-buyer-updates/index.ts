@@ -34,6 +34,43 @@ serveHttp(async (req: Request) => {
       windowSeconds: 86400,
     });
 
+    const { data: existing, error: existingError } = await admin
+      .from("newsletter_subscriptions")
+      .select("id, status")
+      .eq("email", email)
+      .maybeSingle();
+
+    if (existingError) {
+      return fail("Failed to load existing subscription", 500, existingError.message);
+    }
+
+    if (existing && existing.status === "active") {
+      const { data: unchanged, error: updateError } = await admin
+        .from("newsletter_subscriptions")
+        .update({
+          full_name: fullName,
+          user_id: user?.id ?? null,
+          source_channel: sourceChannel,
+        })
+        .eq("id", existing.id)
+        .select("id, email, status, source_channel, updated_at")
+        .single();
+
+      if (updateError) {
+        return fail("Failed to save subscription", 500, updateError.message);
+      }
+
+      return json({
+        subscriptionId: unchanged.id,
+        email: unchanged.email,
+        status: unchanged.status,
+        sourceChannel: unchanged.source_channel,
+        updatedAt: unchanged.updated_at,
+        alreadySubscribed: true,
+        message: "This email is already subscribed.",
+      });
+    }
+
     const { data, error } = await admin
       .from("newsletter_subscriptions")
       .upsert(
@@ -61,6 +98,10 @@ serveHttp(async (req: Request) => {
       status: data.status,
       sourceChannel: data.source_channel,
       updatedAt: data.updated_at,
+      alreadySubscribed: false,
+      message: existing
+        ? "Subscription reactivated successfully."
+        : "Subscription updated successfully.",
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unexpected server error";
