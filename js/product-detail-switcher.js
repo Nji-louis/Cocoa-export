@@ -9,16 +9,18 @@
       imageAlt: "Forastero cocoa beans from Cameroon",
       title: "Premium Forastero Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L supplies robust Forastero cocoa lots sourced from cooperative farmers in Cameroon. This variety is known for its strong cocoa body, reliable bean count, and consistent performance in large-scale chocolate production and industrial processing.",
+        "CHOCOCAM S.A.R.L supplies Forastero cocoa from trusted Cameroonian cooperatives, known for strong cocoa body and reliable industrial use.",
       spec1:
-        "Our Forastero program focuses on export-ready lots with uniform fermentation, controlled moisture, and standardized sorting. Typical flavor profile includes deep cocoa notes, mild bitterness, and balanced acidity, making it ideal for blends and bulk manufacturing contracts.",
+        "Export lots are fermented, dried, and sorted to consistent standards for blends and bulk programs.",
       spec2:
-        "Quality control includes moisture verification, cut test sampling, bean count review, and foreign matter inspection before loading. Export documentation package includes certificate of origin, phytosanitary certificate, quality report, packing list, and commercial invoice.",
+        "Pre-shipment controls cover moisture, cut test, bean count, and foreign matter, with complete export documentation.",
       spec3:
-        "Through long-term farmer partnerships, CHOCOCAM secures dependable Forastero volumes for annual contracts and spot container orders. Shipments are coordinated through Douala Port and Kribi Deep Seaport with traceable lot references for each container.",
+        "Stable farmer partnerships support dependable volumes shipped through Douala and Kribi with traceable lot IDs.",
       specTitle: "Premium Forastero Cocoa Beans - Export Specifications",
       varietySpec: "Forastero (export-grade lots)",
       flavorSpec: "Deep cocoa notes, mild bitterness, balanced acidity",
+      flavorProfile:
+        "Strong cocoa body with dependable bitterness control and balanced acidity for industrial chocolate blends.",
     },
     amelonado: {
       key: "amelonado",
@@ -27,16 +29,18 @@
       imageAlt: "Amelonado cocoa beans from Cameroon",
       title: "Premium Amelonado Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L exports carefully selected Amelonado cocoa beans from partner cooperatives across Cameroon. Amelonado lots are valued for their classic West African profile, dependable quality, and suitability for mainstream chocolate formulations.",
+        "CHOCOCAM exports selected Amelonado cocoa with a classic West African profile and dependable quality.",
       spec1:
-        "Our Amelonado supply offers medium cocoa intensity, gentle nutty undertones, and balanced bitterness. Beans are fermented and dried to export standards, then sorted and packed in jute bags to preserve quality during long-distance shipment.",
+        "Lots offer medium cocoa intensity and gentle nutty notes, prepared and packed to export standards.",
       spec2:
-        "Each lot is checked for moisture, mold risk, bean uniformity, and fermentation condition before dispatch. Export files include certificate of origin, phytosanitary certificate, quality analysis summary, packing list, and commercial invoice for smooth clearance.",
+        "Each shipment is checked for moisture, uniformity, and fermentation, with full compliance documents.",
       spec3:
-        "CHOCOCAM works with farmer groups to maintain consistent Amelonado availability throughout the season while supporting sustainable production practices. Buyers can book regular container programs with transparent lot traceability from origin to destination.",
+        "Partner farmer programs support consistent seasonal availability and traceable container bookings.",
       specTitle: "Premium Amelonado Cocoa Beans - Export Specifications",
       varietySpec: "Amelonado (classic West African profile)",
       flavorSpec: "Medium cocoa intensity, gentle nutty undertones",
+      flavorProfile:
+        "Balanced cocoa profile with mild nutty tones suitable for broad chocolate and cocoa powder applications.",
     },
     cundeamor: {
       key: "cundeamor",
@@ -45,16 +49,18 @@
       imageAlt: "Cundeamor cocoa beans from Cameroon",
       title: "Specialty Cundeamor Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L provides specialty Cundeamor cocoa beans sourced from selected farms in Cameroon. Cundeamor is appreciated by specialty buyers for its distinctive character and compatibility with premium chocolate programs.",
+        "CHOCOCAM provides specialty Cundeamor cocoa from selected farms for premium chocolate applications.",
       spec1:
-        "Flavor profile typically shows pronounced cocoa aroma, complex fruity accents, and an elegant bitter finish. Our team manages controlled fermentation and drying windows to protect sensory quality and preserve consistency across export lots.",
+        "The profile combines strong cocoa aroma, subtle fruit notes, and a refined finish.",
       spec2:
-        "Before export, Cundeamor lots pass grading checks for bean size, moisture level, cut test, and purity. We provide full shipping documentation including certificate of origin, phytosanitary certificate, quality note, packing list, and commercial invoice.",
+        "Lots are graded for size, moisture, cut test, and purity before export, with complete documentation.",
       spec3:
-        "CHOCOCAM supports farmer partnerships that improve post-harvest handling and traceability for Cundeamor supply chains. Buyers can secure specialty container lots for craft and premium chocolate manufacturing with structured shipment planning.",
+        "Farmer partnerships improve post-harvest quality and traceability for specialty shipment planning.",
       specTitle: "Specialty Cundeamor Cocoa Beans - Export Specifications",
       varietySpec: "Cundeamor (specialty traceable lots)",
       flavorSpec: "Pronounced cocoa aroma, complex fruity accents",
+      flavorProfile:
+        "Distinct aromatic profile with layered cocoa and fruit notes suited for specialty chocolate programs.",
     },
     criollo: {
       key: "criollo",
@@ -63,16 +69,18 @@
       imageAlt: "Criollo cocoa beans from Cameroon",
       title: "Premium Criollo Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L offers premium Criollo cocoa beans from carefully managed sourcing zones in Cameroon. Criollo is a rare variety recognized for fine aroma and refined flavor, suitable for gourmet chocolate applications.",
+        "CHOCOCAM offers rare Criollo cocoa with fine aroma and refined flavor for gourmet buyers.",
       spec1:
-        "Criollo flavor profile is smooth and aromatic with delicate fruity notes, mild bitterness, and low astringency. We apply strict lot selection, fermentation tracking, and gentle post-harvest handling to maintain premium quality standards.",
+        "Selected lots deliver smooth body, delicate fruit notes, and low bitterness.",
       spec2:
-        "All Criollo shipments undergo intensive quality screening including bean integrity, moisture control, visual grading, and contamination checks. Export support includes certificate of origin, phytosanitary certificate, quality report, packing list, and commercial invoice.",
+        "Shipments pass strict integrity, moisture, and contamination checks with full export files.",
       spec3:
-        "By partnering with experienced farmer groups, CHOCOCAM secures traceable Criollo micro-lots and contract volumes for international buyers. Loading and documentation are coordinated for dependable delivery through Cameroon export corridors.",
+        "Traceable farmer sourcing supports both micro-lot and contract volumes through Cameroon corridors.",
       specTitle: "Premium Criollo Cocoa Beans - Export Specifications",
       varietySpec: "Criollo (premium micro-lots)",
       flavorSpec: "Smooth aromatic profile, delicate fruity notes",
+      flavorProfile:
+        "Fine aroma cocoa with soft bitterness and delicate fruit character for gourmet chocolate production.",
     },
     trinitario: {
       key: "trinitario",
@@ -81,16 +89,18 @@
       imageAlt: "Trinitario cocoa beans from Cameroon",
       title: "Premium Trinitario Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L supplies export-grade Trinitario cocoa beans from selected farmer cooperatives in Cameroon. Trinitario combines the strength of Forastero with the aromatic complexity valued by premium chocolate manufacturers and international buyers.",
+        "CHOCOCAM supplies Trinitario cocoa combining strong body with aromatic complexity.",
       spec1:
-        "Our Trinitario lots deliver a balanced flavor profile with rich cocoa body, subtle fruit notes, and refined aromatic depth. Beans are fermented and dried under controlled post-harvest protocols, then graded for export consistency.",
+        "Lots are fermented, dried, and graded for balanced cocoa character and export consistency.",
       spec2:
-        "Quality assurance includes moisture checks, bean count analysis, cut test verification, and foreign matter inspection before shipment. Each container is supported by certificate of origin, phytosanitary certificate, quality report, packing list, and commercial invoice.",
+        "Quality assurance includes moisture, bean count, cut test, and foreign matter verification.",
       spec3:
-        "Through long-term farmer partnerships, CHOCOCAM secures traceable Trinitario volumes for contract and spot orders. Shipments are coordinated via Douala Port and Kribi Deep Seaport with clear lot identification and reliable export timelines.",
+        "Long-term partnerships secure traceable volumes for contract and spot shipments via Douala and Kribi.",
       specTitle: "Premium Trinitario Cocoa Beans - Export Specifications",
       varietySpec: "Trinitario (selected cooperative lots)",
       flavorSpec: "Balanced cocoa body, subtle fruit notes, aromatic depth",
+      flavorProfile:
+        "Balanced and aromatic profile combining Forastero strength and Criollo finesse for premium buyers.",
     },
     bresilien: {
       key: "bresilien",
@@ -99,17 +109,35 @@
       imageAlt: "Bresilien cocoa beans for export",
       title: "Premium Bresilien Cocoa Beans for International Buyers",
       intro:
-        "CHOCOCAM S.A.R.L supplies export-ready Bresilien cocoa lots through its professional Cameroon export network. This variety is selected for buyers seeking consistent bean quality, dependable supply execution, and strong processing performance.",
+        "CHOCOCAM supplies export-ready Bresilien cocoa for buyers requiring consistent processing performance.",
       spec1:
-        "Bresilien profile presents rich cocoa character with moderate fruit notes and balanced acidity. Beans are processed under controlled fermentation and drying conditions, then graded and packed to meet international commercial requirements.",
+        "Lots deliver rich cocoa character with balanced acidity and are prepared to commercial export standards.",
       spec2:
-        "Our pre-shipment controls verify moisture, cleanliness, bean size distribution, and fermentation indicators to reduce quality risk. Documentation package includes certificate of origin, phytosanitary certificate, quality summary, packing list, and commercial invoice.",
+        "Checks cover moisture, cleanliness, size distribution, and fermentation with full document support.",
       spec3:
-        "CHOCOCAM coordinates Bresilien sourcing with trusted producer partners and logistics operators, enabling secure container movements for long-term contracts and spot demand. Each shipment is tracked with clear lot identification for buyer assurance.",
+        "Coordinated sourcing and logistics enable reliable container supply with clear lot traceability.",
       specTitle: "Premium Bresilien Cocoa Beans - Export Specifications",
       varietySpec: "Bresilien (commercial export lots)",
       flavorSpec: "Rich cocoa character, moderate fruit notes",
+      flavorProfile:
+        "Structured cocoa aroma with moderate fruit complexity and dependable batch consistency for export programs.",
     },
+  };
+
+  var defaultSpecs = {
+    originSpec: "Cameroon",
+    moistureSpec: "6-7%",
+    beanCountSpec: "90-100 beans / 100g",
+    fermentationSpec: ">= 85%",
+    dryingMethodSpec: "Sun-dried",
+    packagingSpec: "Jute bags (50kg or 65kg)",
+    minimumOrderSpec: "1 x 20ft container (19-20 MT)",
+    shippingPortsSpec: "Douala Port, Kribi Deep Seaport",
+    harvestSeason: "Main crop: October to March. Mid crop: April to July.",
+    exportPackaging:
+      "New export-grade jute bags with lot codes, stack control, and moisture-safe container preparation.",
+    shippingInfo:
+      "FOB/CIF options available with complete export documents and shipment traceability references.",
   };
 
   function getNode(id) {
@@ -126,7 +154,7 @@
   var params = new URLSearchParams(window.location.search);
   var raw = (params.get("variety") || "forastero").toLowerCase();
   var key = products[raw] ? raw : "forastero";
-  var product = products[key];
+  var product = Object.assign({}, defaultSpecs, products[key]);
 
   if (!product) {
     return;
@@ -145,7 +173,19 @@
   setText("product-detail-spec-3", product.spec3);
   setText("product-detail-spec-title", product.specTitle);
   setText("product-detail-variety", product.varietySpec);
+  setText("product-detail-origin", product.originSpec);
+  setText("product-detail-moisture", product.moistureSpec);
+  setText("product-detail-bean-count", product.beanCountSpec);
+  setText("product-detail-fermentation", product.fermentationSpec);
+  setText("product-detail-drying-method", product.dryingMethodSpec);
   setText("product-detail-flavor", product.flavorSpec);
+  setText("product-detail-packaging", product.packagingSpec);
+  setText("product-detail-min-order", product.minimumOrderSpec);
+  setText("product-detail-shipping-ports", product.shippingPortsSpec);
+  setText("product-detail-flavor-profile", product.flavorProfile || product.flavorSpec);
+  setText("product-detail-harvest-season", product.harvestSeason);
+  setText("product-detail-export-packaging", product.exportPackaging);
+  setText("product-detail-shipping-info", product.shippingInfo);
 
   document.title = product.pageTitle + " | CHOCOCAM S.A.R.L";
 

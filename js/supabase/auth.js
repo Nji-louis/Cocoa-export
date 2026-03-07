@@ -261,7 +261,7 @@
       const loginLi = document.createElement("li");
       loginLi.id = AUTH_NAV_LOGIN_ID;
       loginLi.innerHTML = '<a class="tag_m js-auth-open" href="#">Login / Register</a>';
-      nav.appendChild(loginLi);
+      nav.insertBefore(loginLi, nav.firstChild || null);
     }
 
     if (!document.getElementById(AUTH_NAV_LOGOUT_ID)) {
@@ -834,11 +834,11 @@
   }
 
   function bootAuthUi() {
+    ensureNavControls();
     if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
       return;
     }
 
-    ensureNavControls();
     ensureModal();
     bindUiEvents();
     applyAccessGuards(null, []);

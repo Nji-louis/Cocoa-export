@@ -95,6 +95,65 @@ background:#eee!important;
   text-align:center;
   color:#444;
 }
+.export-process{
+  margin:0 0 28px;
+}
+.export-process h3{
+  text-align:center;
+  margin:0 0 16px;
+  font-size:30px;
+}
+.export-process-timeline{
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  gap:16px;
+}
+.export-process-step{
+  position:relative;
+  border:1px solid #ececec;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 10px 22px rgba(0,0,0,0.06);
+  padding:18px 16px 16px;
+  transition:transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+}
+.export-process-step:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 28px rgba(0,0,0,0.12);
+  border-color:rgba(201,162,39,0.5);
+}
+.export-process-step .step-count{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:#4E342E;
+  color:#fff;
+  font-weight:700;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.export-process-step .step-icon{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:rgba(201,162,39,0.2);
+  color:#4E342E;
+}
+.export-process-step h4{
+  margin:12px 0 6px;
+  font-size:21px;
+}
+.export-process-step p{
+  margin:0;
+  font-size:15px;
+  color:#5f6872;
+  line-height:1.58;
+}
 .export-section .timeline{
   display:grid;
   grid-template-columns:repeat(2, minmax(0, 1fr));
@@ -192,6 +251,12 @@ background:#eee!important;
 .export-section .section-title{
   font-size:26px;
 }
+.export-process h3{
+  font-size:24px;
+}
+.export-process-timeline{
+  grid-template-columns:1fr;
+}
 .export-section .timeline{
   grid-template-columns:1fr;
 }
@@ -201,6 +266,9 @@ background:#eee!important;
 }
 
 @media (min-width:768px) and (max-width:991px) {
+.export-process-timeline{
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+}
 .export-section .timeline{
   grid-template-columns:1fr;
 }

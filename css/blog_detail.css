@@ -137,13 +137,17 @@ letter-spacing:1px;
 .blog_d_page_li3{
  margin-top:30px; 
   }
-.blog_d_page_li3i .form-control{
- margin-bottom:10px; 
- height:45px;
-  }
+.blog_d_page_li3i input.form-control{
+ margin-bottom:10px;
+ height:48px;
+}
+.blog_d_page_li3i textarea.form-control{
+ margin-bottom:10px;
+}
 .form_1{
- height:135px!important; 
-  }
+ min-height:150px!important;
+ height:auto!important;
+}
 .blog_d_page_r .btn{
 background: #f3b204;
 border-color: #f3b204;

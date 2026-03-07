@@ -1,0 +1,10 @@
+{
+  "name": "cocoa-export-site",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "seo:sync": "node scripts/seo-head-upgrade.js",
+    "minify": "node scripts/minify-assets.js",
+    "build:prod": "npm run seo:sync && npm run minify"
+  }
+}
