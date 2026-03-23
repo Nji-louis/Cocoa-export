@@ -6,6 +6,8 @@ const path = require('path');
 const ROOT = process.cwd();
 const BASE_URL = 'https://nji-louis.github.io/Cocoa-export/';
 const DEFAULT_OG_IMAGE = `${BASE_URL}img/cacao.jpg`;
+const APPLE_TOUCH_ICON = `${BASE_URL}img/cacao.jpg`;
+const FAVICON = `${BASE_URL}favicon.svg`;
 
 function escapeAttr(value) {
   return String(value || '')
@@ -27,6 +29,53 @@ function canonicalFor(fileName) {
   return `${BASE_URL}${fileName}`;
 }
 
+function schemaFor({ title, description, canonical, noIndex }) {
+  if (noIndex) return '';
+
+  const payload = [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Organization',
+      name: 'CHOCOCAM S.A.R.L',
+      url: BASE_URL,
+      logo: DEFAULT_OG_IMAGE,
+      image: DEFAULT_OG_IMAGE,
+      email: 'export@chococam-sarl.com',
+      telephone: '+237671742824',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Bonaberi Industrial Zone',
+        addressLocality: 'Douala',
+        addressRegion: 'Littoral Region',
+        addressCountry: 'CM',
+      },
+      sameAs: [
+        'https://www.facebook.com/profile.php?id=61582469037982',
+        'https://www.linkedin.com/in/chococam-sarl-702208254',
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': canonical === BASE_URL ? 'WebSite' : 'WebPage',
+      name: title,
+      description,
+      url: canonical,
+      inLanguage: 'en',
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'CHOCOCAM S.A.R.L',
+        url: BASE_URL,
+      },
+    },
+  ];
+
+  return [
+    '    <script type="application/ld+json" data-static-schema="true">',
+    ...JSON.stringify(payload, null, 2).split('\n').map((line) => `    ${line}`),
+    '    </script>',
+  ].join('\n');
+}
+
 function isRedirectPage(content, fileName) {
   if (fileName === 'admin.console.html') return true;
   if (/product_(amelonado|bresilien|criollo|cundeamor|forastero|trinitario)\.html/i.test(fileName)) return true;
@@ -46,10 +95,14 @@ function updateFile(filePath) {
   const canonical = canonicalFor(fileName);
   const noIndex = fileName === 'admin_console.html' || fileName === 'admin.console.html' || isRedirectPage(src, fileName);
   const robots = noIndex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large';
+  const schemaBlock = schemaFor({ title, description, canonical, noIndex });
 
   const seoBlock = [
     `    <meta name="robots" content="${robots}">`,
     `    <link rel="canonical" href="${canonical}">`,
+    `    <link rel="icon" type="image/svg+xml" href="${FAVICON}">`,
+    `    <link rel="apple-touch-icon" href="${APPLE_TOUCH_ICON}">`,
+    `    <meta name="theme-color" content="#4E342E">`,
     `    <meta property="og:type" content="website">`,
     `    <meta property="og:site_name" content="CHOCOCAM S.A.R.L">`,
     `    <meta property="og:locale" content="en_CM">`,
@@ -60,13 +113,18 @@ function updateFile(filePath) {
     `    <meta name="twitter:card" content="summary_large_image">`,
     `    <meta name="twitter:title" content="${escapeAttr(title)}">`,
     `    <meta name="twitter:description" content="${escapeAttr(description)}">`,
-    `    <meta name="twitter:image" content="${DEFAULT_OG_IMAGE}">`
+    `    <meta name="twitter:image" content="${DEFAULT_OG_IMAGE}">`,
+    schemaBlock
   ].join('\n');
 
   src = src.replace(/\n\s*<meta\s+name="robots"[\s\S]*?(?=\n\s*<title>|\n\s*<link href="https:\/\/fonts\.googleapis\.com|\n\s*<meta\s+http-equiv="refresh"|\n\s*<script|\n\s*<\/head>)/i, '\n');
   src = src.replace(/\n\s*<link\s+rel="canonical"[\s\S]*?(?=\n\s*<title>|\n\s*<link href="https:\/\/fonts\.googleapis\.com|\n\s*<meta\s+http-equiv="refresh"|\n\s*<script|\n\s*<\/head>)/i, '\n');
+  src = src.replace(/\n\s*<link\s+rel="icon"[^\n]*\n?/gi, '\n');
+  src = src.replace(/\n\s*<link\s+rel="apple-touch-icon"[^\n]*\n?/gi, '\n');
+  src = src.replace(/\n\s*<meta\s+name="theme-color"[^\n]*\n?/gi, '\n');
   src = src.replace(/\n\s*<meta\s+property="og:[^\n]+\n?/gi, '\n');
   src = src.replace(/\n\s*<meta\s+name="twitter:[^\n]+\n?/gi, '\n');
+  src = src.replace(/\n\s*<script\s+type="application\/ld\+json"\s+data-static-schema="true">[\s\S]*?<\/script>\n?/gi, '\n');
 
   if (/<meta\s+name="keywords"/i.test(src)) {
     src = src.replace(/(<meta\s+name="keywords"\s+content="[\s\S]*?"\s*>)/i, `$1\n${seoBlock}`);

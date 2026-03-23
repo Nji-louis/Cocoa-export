@@ -7,6 +7,7 @@
   const AUTH_NAV_STAFF_ID = "auth-nav-staff";
   const AUTH_NAV_ADMIN_ID = "auth-nav-admin";
   const AUTH_GUARD_SELECTOR = "[data-auth-required], [data-role-required], .js-auth-only, .js-guest-only, .js-staff-only, .js-admin-only";
+  const AUTH_EVENT_NAME = "app-auth-event";
 
   async function requireClient() {
     const client = ns.getSupabaseClient && ns.getSupabaseClient();
@@ -114,6 +115,12 @@
 
       const roles = new Set();
 
+      // Prefer explicit role hint from auth metadata if present.
+      const metaRole = resolvedUser.user_metadata && resolvedUser.user_metadata.role;
+      if (metaRole) {
+        roles.add(String(metaRole).toLowerCase());
+      }
+
       const { data: profileData, error: profileError } = await client
         .from("user_profiles")
         .select("default_role")
@@ -137,6 +144,22 @@
         });
       }
 
+      // Fallback to new consolidated users table if it exists.
+      const { data: userRow, error: userTableError } = await client
+        .from("users")
+        .select("role")
+        .eq("id", resolvedUser.id)
+        .maybeSingle();
+
+      if (!userTableError && userRow && userRow.role) {
+        roles.add(String(userRow.role).toLowerCase());
+      }
+
+      // Ensure at least buyer role if nothing resolved to keep backward compatibility.
+      if (roles.size === 0) {
+        roles.add("buyer");
+      }
+
       return Array.from(roles);
     },
 
@@ -147,8 +170,19 @@
   };
 
   ns.authState = ns.authState || {
+    ready: false,
+    event: "INITIAL",
+    flowType: "",
+    session: null,
+    recoveryMode: false,
     user: null,
     roles: [],
+  };
+
+  ns.authController = ns.authController || {
+    pendingRedirect: null,
+    lastFlowNotice: "",
+    listenerReady: false,
   };
 
   ns.hasRole = function hasRole(requiredRoles) {
@@ -204,18 +238,173 @@
   }
 
   function getSafeRedirectTo() {
-    if (!global.location) return undefined;
-    return global.location.origin + global.location.pathname;
+    if (!ns.resolveEmailRedirectUrl) {
+      return undefined;
+    }
+
+    return ns.resolveEmailRedirectUrl("/login.html") || undefined;
   }
 
-  function getAuthFlowTypeFromHash() {
-    if (!global.location || !global.location.hash) {
+  function getAuthFlowType() {
+    if (!global.location) {
       return "";
     }
-    const raw = global.location.hash.replace(/^#/, "");
-    const params = new URLSearchParams(raw);
-    return (params.get("type") || "").trim().toLowerCase();
+
+    const searchParams = new URLSearchParams(global.location.search || "");
+    const searchType = (searchParams.get("type") || searchParams.get("auth_flow") || "").trim().toLowerCase();
+    if (searchType) {
+      return searchType;
+    }
+
+    const rawHash = String(global.location.hash || "").replace(/^#/, "");
+    if (!rawHash) {
+      return "";
+    }
+
+    const hashParams = new URLSearchParams(rawHash);
+    return (hashParams.get("type") || hashParams.get("auth_flow") || "").trim().toLowerCase();
   }
+
+  function isAuthEntryPage() {
+    if (!global.location || typeof global.location.pathname !== "string") {
+      return false;
+    }
+
+    return /\/login\.html$/i.test(global.location.pathname);
+  }
+
+  function clearAuthCallbackUrl() {
+    if (!global.history || typeof global.history.replaceState !== "function" || !global.location) {
+      return;
+    }
+
+    const url = new URL(global.location.href);
+    const searchKeys = ["code", "token_hash", "type", "auth_flow"];
+    let searchChanged = false;
+    searchKeys.forEach(function (key) {
+      if (url.searchParams.has(key)) {
+        url.searchParams.delete(key);
+        searchChanged = true;
+      }
+    });
+
+    let nextHash = url.hash;
+    const rawHash = String(url.hash || "").replace(/^#/, "");
+    if (rawHash) {
+      const hashParams = new URLSearchParams(rawHash);
+      const removableHashKeys = ["access_token", "refresh_token", "expires_at", "expires_in", "token_type", "type", "auth_flow"];
+      let hashChanged = false;
+      removableHashKeys.forEach(function (key) {
+        if (hashParams.has(key)) {
+          hashParams.delete(key);
+          hashChanged = true;
+        }
+      });
+
+      if (hashChanged) {
+        const hashString = hashParams.toString();
+        nextHash = hashString ? ("#" + hashString) : "";
+      }
+    }
+
+    if (!searchChanged && nextHash === url.hash) {
+      return;
+    }
+
+    const nextUrl = url.pathname + (url.search ? url.search : "") + nextHash;
+    global.history.replaceState({}, global.document ? global.document.title : "", nextUrl);
+  }
+
+  function emitAuthEvent(detail) {
+    if (typeof global.CustomEvent !== "function" || typeof global.dispatchEvent !== "function") {
+      return;
+    }
+
+    global.dispatchEvent(new CustomEvent(AUTH_EVENT_NAME, {
+      detail: detail,
+    }));
+  }
+
+  function getRequestedRedirectUrl() {
+    if (!global.location || !ns.sanitizeRedirectTarget) {
+      return null;
+    }
+
+    const params = new URLSearchParams(global.location.search || "");
+    return ns.sanitizeRedirectTarget(params.get("redirect") || "");
+  }
+
+  function resolvePostAuthUrl(roles) {
+    const requested = getRequestedRedirectUrl();
+    if (requested) {
+      return requested;
+    }
+
+    if (ns.getRoleHomeUrl) {
+      return ns.getRoleHomeUrl(roles || []);
+    }
+
+    return null;
+  }
+
+  function navigateTo(url) {
+    if (!global.location || !url) {
+      return;
+    }
+
+    global.location.href = url;
+  }
+
+  function queuePendingRedirect(reason, options) {
+    ns.authController.pendingRedirect = {
+      reason: reason || "default",
+      requireConfirmed: !options || options.requireConfirmed !== false,
+    };
+  }
+
+  function clearPendingRedirect() {
+    ns.authController.pendingRedirect = null;
+  }
+
+  function shouldRedirectAfterAuth(eventName, user, flowType) {
+    if (!user) {
+      return false;
+    }
+
+    if (eventName === "PASSWORD_RECOVERY" || flowType === "recovery") {
+      return false;
+    }
+
+    const pending = ns.authController.pendingRedirect;
+    if (pending) {
+      if (pending.requireConfirmed && user.email_confirmed_at === null) {
+        return false;
+      }
+      return true;
+    }
+
+    return isAuthEntryPage();
+  }
+
+  function handleAuthRedirect(eventName, user, roles, flowType) {
+    if (!shouldRedirectAfterAuth(eventName, user, flowType)) {
+      return;
+    }
+
+    const target = resolvePostAuthUrl(roles);
+    clearPendingRedirect();
+    if (target) {
+      navigateTo(target);
+    }
+  }
+
+  ns.authController.queuePendingRedirect = queuePendingRedirect;
+  ns.authController.clearPendingRedirect = clearPendingRedirect;
+  ns.authController.resolvePostAuthUrl = resolvePostAuthUrl;
+  ns.authController.getFlowType = getAuthFlowType;
+  ns.authController.isAuthEntryPage = isAuthEntryPage;
+  ns.authController.redirectTo = navigateTo;
+  ns.authController.clearAuthCallbackUrl = clearAuthCallbackUrl;
 
   function getNavList() {
     return document.querySelector("ul.nav.navbar-nav.navbar-right");
@@ -392,6 +581,11 @@
 
     global.dispatchEvent(new CustomEvent("app-auth-state-changed", {
       detail: {
+        ready: Boolean(ns.authState && ns.authState.ready),
+        event: ns.authState && ns.authState.event ? ns.authState.event : "INITIAL",
+        flowType: ns.authState && ns.authState.flowType ? ns.authState.flowType : "",
+        session: ns.authState && ns.authState.session ? ns.authState.session : null,
+        recoveryMode: Boolean(ns.authState && ns.authState.recoveryMode),
         user: user || null,
         roles: Array.isArray(roles) ? roles : [],
       },
@@ -629,11 +823,23 @@
 
     setFormBusy(form, true, "Signing in...");
     try {
+      queuePendingRedirect("signin", { requireConfirmed: true });
       await ns.authApi.signIn(email, password);
+      const user = await ns.authApi.getUser();
+
+      if (user && user.email_confirmed_at === null) {
+        clearPendingRedirect();
+        notify("Please verify your email before logging in.", true);
+        await ns.authApi.signOut();
+        setFormBusy(form, false, "");
+        return;
+      }
+
       notify("Signed in successfully.");
       form.reset();
       closeModal();
     } catch (error) {
+      clearPendingRedirect();
       notify(normalizeError(error, "Failed to sign in"), true);
     } finally {
       setFormBusy(form, false, "");
@@ -662,6 +868,7 @@
 
     setFormBusy(form, true, "Creating account...");
     try {
+      queuePendingRedirect("signup", { requireConfirmed: true });
       const response = await ns.authApi.signUp(email, password, fullName, getSafeRedirectTo());
       form.reset();
 
@@ -671,9 +878,11 @@
         return;
       }
 
+      clearPendingRedirect();
       notify("Account created. Please check your email to confirm your account.");
       openModal("signin");
     } catch (error) {
+      clearPendingRedirect();
       notify(normalizeError(error, "Failed to create account"), true);
     } finally {
       setFormBusy(form, false, "");
@@ -691,7 +900,9 @@
     try {
       const redirectTo = getSafeRedirectTo();
       await ns.authApi.resetPassword(email, redirectTo);
-      notify("Password reset email sent. Check your inbox.");
+      notify(redirectTo
+        ? "Password reset email sent. Check your inbox."
+        : "Password reset email sent. Check your inbox. The redirect will use the Supabase Site URL.");
     } catch (error) {
       notify(normalizeError(error, "Failed to send reset email"), true);
     }
@@ -737,6 +948,10 @@
       notify("Password updated successfully. You can continue with your account.");
       form.reset();
       closeModal();
+      const target = resolvePostAuthUrl((ns.authState && ns.authState.roles) || []);
+      if (target) {
+        navigateTo(target);
+      }
     } catch (error) {
       notify(normalizeError(error, "Failed to update password"), true);
     } finally {
@@ -744,10 +959,16 @@
     }
   }
 
-  async function refreshAuthState() {
-    const user = await ns.authApi.getUser().catch(function () {
-      return null;
-    });
+  async function applyAuthState(eventName, session, options) {
+    const flowType = options && options.flowType ? options.flowType : getAuthFlowType();
+    let user = session && session.user ? session.user : null;
+
+    if (!user) {
+      user = await ns.authApi.getUser().catch(function () {
+        return null;
+      });
+    }
+
     const roles = user
       ? await ns.authApi.getMyRoles(user).catch(function () {
         return [];
@@ -755,6 +976,11 @@
       : [];
 
     ns.authState = {
+      ready: true,
+      event: eventName || "INITIAL_SESSION",
+      flowType: flowType,
+      session: session || null,
+      recoveryMode: eventName === "PASSWORD_RECOVERY" || flowType === "recovery",
       user: user || null,
       roles: roles,
     };
@@ -762,10 +988,60 @@
     setNavState(user, roles);
     applyAccessGuards(user, roles);
     emitAuthStateChanged(user, roles);
+
+    const detail = {
+      ready: true,
+      event: ns.authState.event,
+      flowType: flowType,
+      session: session || null,
+      recoveryMode: ns.authState.recoveryMode,
+      user: user || null,
+      roles: roles,
+    };
+
+    emitAuthEvent(detail);
+
+    if (detail.recoveryMode) {
+      clearPendingRedirect();
+      openModal("signin");
+      showRecoveryPane();
+      notify("Reset link verified. Enter a new password.");
+      clearAuthCallbackUrl();
+      return;
+    }
+
+    if (flowType === "signup" && user && ns.authController.lastFlowNotice !== "signup-confirmed") {
+      ns.authController.lastFlowNotice = "signup-confirmed";
+      notify("Email confirmed. Redirecting to your account.");
+      clearAuthCallbackUrl();
+    }
+
+    if (eventName === "SIGNED_OUT") {
+      ns.authController.lastFlowNotice = "";
+      return;
+    }
+
+    handleAuthRedirect(eventName, user, roles, flowType);
+  }
+
+  async function refreshAuthState() {
+    const session = await ns.authApi.getSession().catch(function () {
+      return null;
+    });
+    return applyAuthState("INITIAL_SESSION", session, {
+      flowType: getAuthFlowType(),
+    });
   }
 
   function applyLoggedOutState() {
+    clearPendingRedirect();
+    ns.authController.lastFlowNotice = "";
     ns.authState = {
+      ready: true,
+      event: "SIGNED_OUT",
+      flowType: "",
+      session: null,
+      recoveryMode: false,
       user: null,
       roles: [],
     };
@@ -773,6 +1049,15 @@
     setNavState(null, []);
     applyAccessGuards(null, []);
     emitAuthStateChanged(null, []);
+    emitAuthEvent({
+      ready: true,
+      event: "SIGNED_OUT",
+      flowType: "",
+      session: null,
+      recoveryMode: false,
+      user: null,
+      roles: [],
+    });
   }
 
   function bindUiEvents() {
@@ -839,41 +1124,37 @@
       return;
     }
 
+    if (ns.validateSupabaseConfig) {
+      const validation = ns.validateSupabaseConfig();
+      if (validation && Array.isArray(validation.warnings)) {
+        validation.warnings.forEach(function (warning) {
+          console.warn(warning);
+        });
+      }
+    }
+
     ensureModal();
     bindUiEvents();
     applyAccessGuards(null, []);
 
-    const flowType = getAuthFlowTypeFromHash();
-    if (flowType === "recovery") {
-      openModal("signin");
-      showRecoveryPane();
-    } else if (flowType === "signup") {
-      notify("Email confirmed. You can now sign in.");
+    const flowType = getAuthFlowType();
+    if (flowType === "recovery" || flowType === "signup") {
       openModal("signin");
     }
 
     void refreshAuthState();
 
-    ns.authApi.onAuthStateChange(async function (event, session) {
-      const user = session && session.user ? session.user : null;
-      const roles = user
-        ? await ns.authApi.getMyRoles(user).catch(function () {
-          return [];
-        })
-        : [];
+    ns.authController.listenerReady = true;
 
-      ns.authState = {
-        user: user,
-        roles: roles,
-      };
-      setNavState(user, roles);
-      applyAccessGuards(user, roles);
-      emitAuthStateChanged(user, roles);
-
-      if (event === "PASSWORD_RECOVERY") {
-        openModal("signin");
-        showRecoveryPane();
+    ns.authApi.onAuthStateChange(function (event, session) {
+      if (event === "SIGNED_OUT") {
+        applyLoggedOutState();
+        return;
       }
+
+      void applyAuthState(event, session, {
+        flowType: getAuthFlowType(),
+      });
     }).catch(function () {
       // Ignore listener setup errors.
     });

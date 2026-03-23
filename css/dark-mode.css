@@ -68,7 +68,8 @@ body.dark-mode #top {
 }
 
 body.dark-mode .top_i1 .form-control,
-body.dark-mode .top_i1 h5 {
+body.dark-mode .top_i1 h5,
+body.dark-mode .top_contact {
   border-left-color: #2f3a4d;
   color: #d0d8e5;
 }

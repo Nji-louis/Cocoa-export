@@ -24,7 +24,43 @@
     button.style.opacity = '';
   }
 
+  async function submitToFormspree(form) {
+    var action = form ? String(form.getAttribute('action') || '').trim() : '';
+    if (!action) {
+      return { unavailable: true };
+    }
+
+    var response = await fetch(action, {
+      method: String(form.getAttribute('method') || 'POST').toUpperCase(),
+      body: new FormData(form),
+      headers: { Accept: 'application/json' }
+    });
+
+    if (response.ok) {
+      form.reset();
+      return { via: 'formspree' };
+    }
+
+    var errorMessage = 'Unable to send your quote request right now. Please try again.';
+    try {
+      var data = await response.json();
+      if (data && data.errors && data.errors.length) {
+        errorMessage = data.errors.map(function (error) {
+          return error.message;
+        }).join(' ');
+      }
+    } catch (jsonError) {
+      // Keep the generic error message when the response is not JSON.
+    }
+
+    throw new Error(errorMessage);
+  }
+
   async function submitQuote(payload, form) {
+    if (form && form.getAttribute('action')) {
+      return submitToFormspree(form);
+    }
+
     var backend = global.AppBackend || {};
     if (!backend.hasSupabaseConfig || !backend.hasSupabaseConfig()) {
       return { localOnly: true };

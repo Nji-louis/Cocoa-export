@@ -24,6 +24,10 @@
   }
 
   function init() {
+    if (document.querySelector('script[data-static-schema="true"]')) {
+      return;
+    }
+
     var pageTitle = document.title || 'CHOCOCAM S.A.R.L';
     var pageDescription = textFromMeta('description') || 'Cameroon cocoa exporter for international buyers.';
     var pageUrl = canonicalUrl();

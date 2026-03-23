@@ -94,10 +94,12 @@
   padding: 16px;
 }
 
-.wa-suite-header h4 {
+.wa-suite-header h4,
+.wa-suite-header .wa-title {
   margin: 0;
   color: #ffffff;
   font-size: 20px;
+  font-family: 'Righteous', cursive;
 }
 
 .wa-suite-header p {
@@ -134,10 +136,12 @@
   margin: 0;
 }
 
-.wa-agent h5 {
+.wa-agent h5,
+.wa-agent .wa-agent-name {
   margin: 0;
   font-size: 16px;
   color: #111111;
+  font-family: 'Righteous', cursive;
 }
 
 .wa-agent p {
@@ -172,7 +176,8 @@
   background: #252525;
 }
 
-.wa-suite-window.wa-dark .wa-agent h5 {
+.wa-suite-window.wa-dark .wa-agent h5,
+.wa-suite-window.wa-dark .wa-agent .wa-agent-name {
   color: #f0f0f0;
 }
 
