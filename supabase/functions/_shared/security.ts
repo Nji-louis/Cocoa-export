@@ -1,3 +1,16 @@
+function normalizeOrigin(value: string): string {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  try {
+    return new URL(trimmed).origin;
+  } catch (_error) {
+    return trimmed;
+  }
+}
+
 export function getAllowedOrigins(): Set<string> {
   const runtime = globalThis as unknown as {
     Deno?: {
@@ -11,7 +24,7 @@ export function getAllowedOrigins(): Set<string> {
   return new Set(
     raw
       .split(",")
-      .map((value) => value.trim())
+      .map(normalizeOrigin)
       .filter((value) => value.length > 0),
   );
 }

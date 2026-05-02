@@ -231,7 +231,12 @@
       return String(role).toLowerCase();
     }) : [];
 
-    if (normalizedRoles.indexOf("admin") >= 0 || normalizedRoles.indexOf("staff") >= 0) {
+    if (
+      normalizedRoles.indexOf("super_admin") >= 0
+      || normalizedRoles.indexOf("admin") >= 0
+      || normalizedRoles.indexOf("editor") >= 0
+      || normalizedRoles.indexOf("staff") >= 0
+    ) {
       return resolveNavigationUrl(DEFAULT_ROUTES.admin);
     }
 

@@ -6,5 +6,8 @@
     "seo:sync": "node scripts/seo-head-upgrade.js",
     "minify": "node scripts/minify-assets.js",
     "build:prod": "npm run seo:sync && npm run minify"
+  },
+  "devDependencies": {
+    "supabase": "^2.95.0"
   }
 }

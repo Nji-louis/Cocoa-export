@@ -657,6 +657,11 @@ a.clickable:hover { text-decoration:none; }
   height:45px;
   font-size:16px;
   }
+.consultation_1_li textarea.form-control{
+  min-height:120px;
+  height:auto;
+  resize:vertical;
+  }
 .consultation_1_li button.button_1{
   border:1px solid var(--cocoa-gold);
 }

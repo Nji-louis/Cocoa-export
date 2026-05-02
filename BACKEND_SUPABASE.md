@@ -30,6 +30,7 @@ This backend was inferred from the existing frontend pages and flows in this rep
 - `supabase/functions/submit-blog-comment/index.ts`
 - `supabase/functions/generate-document-signed-url/index.ts`
 - `supabase/functions/admin-upsert-listing/index.ts`
+- `supabase/functions/vote-buyer-testimonial/index.ts`
 - `js/supabase/*.js`
 
 ## 3) Schema Coverage
@@ -83,6 +84,7 @@ All tables include `created_at`/`updated_at`; updates are handled with trigger `
 - `submit-blog-comment`: moderation-safe comment submission.
 - `generate-document-signed-url`: staff/admin signed URL generation for private docs.
 - `admin-upsert-listing`: protected inventory/listing mutation.
+- `vote-buyer-testimonial`: public testimonial vote capture with rate limiting.
 
 Hardening applied:
 - origin allowlist enforcement via `ALLOWED_ORIGINS`
@@ -100,7 +102,7 @@ Added under `js/supabase/`:
 - `subscriptions.js`: newsletter ops
 - `blog.js`: comment submission/listing
 - `forms.js`: binds existing DOM classes/IDs and existing data flow
-- `errors.js`, `init.js`, `config.example.js`
+- `errors.js`, `init.js`, `config.example.js`, `product-testimonials.js`, `blog-pages.js`
 
 ## 8) Integrate Into Existing Pages
 
@@ -108,7 +110,7 @@ Add these scripts before `</body>` on pages where backend interaction is needed:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase/config.js"></script>
+<script src="js/supabase/config.min.js"></script>
 <script src="js/supabase/client.js"></script>
 <script src="js/supabase/errors.js"></script>
 <script src="js/supabase/auth.js"></script>
@@ -120,7 +122,7 @@ Add these scripts before `</body>` on pages where backend interaction is needed:
 <script src="js/supabase/init.js"></script>
 ```
 
-Create `js/supabase/config.js` from `js/supabase/config.example.js`.
+Create `js/supabase/config.min.js` from `js/supabase/config.example.js` (or generate it via the asset pipeline if you prefer to keep `.min` assets only in pages).
 
 ## 9) Deploy Steps (Supabase CLI)
 
@@ -133,12 +135,16 @@ npx supabase functions deploy subscribe-buyer-updates
 npx supabase functions deploy submit-blog-comment
 npx supabase functions deploy generate-document-signed-url
 npx supabase functions deploy admin-upsert-listing
+npx supabase functions deploy vote-buyer-testimonial
 ```
 
 ## 10) Production Notes
 
 - Keep `SUPABASE_SERVICE_ROLE_KEY` only in Edge Function secrets.
-- Keep only anon key on frontend (`config.js`).
+- Keep only anon key on frontend (`config.min.js`).
+- In Supabase Dashboard `Authentication > URL Configuration`, set `Site URL` to `https://nji-louis.github.io/Cocoa-export` and add `https://nji-louis.github.io/Cocoa-export/login.html` as a redirect URL.
+- In Supabase Dashboard `Authentication > Email`, keep email/password enabled, keep email confirmation enabled for buyers, and configure a working sender. For reliable delivery in production, use custom SMTP instead of relying on the default shared sender.
+- If you use custom SMTP, verify the sender domain with SPF/DKIM so confirmation and password-reset emails do not disappear into spam or get rejected.
 - Enable PITR backups and monitor query performance/index usage in Supabase dashboard.
 - Set `ALLOWED_ORIGINS` and `RATE_LIMIT_PEPPER` in `supabase/.env` before `supabase secrets set`.
 - Rotate any keys that were previously exposed in chat/logs.

@@ -1,5 +1,6 @@
 (function (global) {
   const ns = global.AppBackend || {};
+  const PENDING_BUYER_PROFILE_KEY = "cocoa_pending_buyer_profile";
 
   function getClient() {
     if (!ns.getSupabaseClient) throw new Error("Supabase client not available");
@@ -31,11 +32,89 @@
     });
   }
 
+  function getStorage() {
+    try {
+      return global.localStorage || null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function buildBuyerProfilePayload(fullName, companyName, phone, country) {
+    return {
+      full_name: fullName || null,
+      company_name: companyName || null,
+      phone_whatsapp: phone || null,
+      country_region: country || null,
+      default_role: "buyer",
+    };
+  }
+
+  function savePendingBuyerProfile(user, email, profile) {
+    const storage = getStorage();
+    if (!storage || !profile) return;
+
+    try {
+      storage.setItem(PENDING_BUYER_PROFILE_KEY, JSON.stringify({
+        userId: user && user.id ? user.id : "",
+        email: email || "",
+        profile: profile,
+      }));
+    } catch (error) {
+      console.warn("Pending buyer profile cache skipped", error);
+    }
+  }
+
+  function readPendingBuyerProfile() {
+    const storage = getStorage();
+    if (!storage) return null;
+
+    try {
+      const raw = storage.getItem(PENDING_BUYER_PROFILE_KEY);
+      if (!raw) return null;
+
+      const parsed = JSON.parse(raw);
+      return parsed && typeof parsed === "object" ? parsed : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function clearPendingBuyerProfile() {
+    const storage = getStorage();
+    if (!storage) return;
+
+    try {
+      storage.removeItem(PENDING_BUYER_PROFILE_KEY);
+    } catch (error) {
+      console.warn("Pending buyer profile cache cleanup skipped", error);
+    }
+  }
+
+  function getFriendlyAuthError(error, fallbackMessage) {
+    const rawMessage = error && error.message ? String(error.message).trim() : "";
+    if (!rawMessage) {
+      return fallbackMessage;
+    }
+
+    if (/error sending confirmation email/i.test(rawMessage)) {
+      return "We could not send the confirmation email right now. Please retry shortly. If this keeps happening, the Supabase Auth email provider needs attention.";
+    }
+
+    if (/error sending.*recovery email/i.test(rawMessage) || /error sending.*reset email/i.test(rawMessage)) {
+      return "We could not send the password reset email right now. Please retry shortly. If this keeps happening, the Supabase Auth email provider needs attention.";
+    }
+
+    return rawMessage || fallbackMessage;
+  }
+
   function resolvePrimaryRole(roles) {
     const roleSet = new Set((roles || []).map(function (role) {
       return String(role).toLowerCase();
     }));
+    if (roleSet.has("super_admin")) return "super_admin";
     if (roleSet.has("admin")) return "admin";
+    if (roleSet.has("editor")) return "editor";
     if (roleSet.has("staff")) return "staff";
     if (roleSet.has("buyer")) return "buyer";
     return null;
@@ -74,6 +153,33 @@
     }
 
     return url.toString();
+  }
+
+  function getAuthConfigWarnings() {
+    if (!ns.validateSupabaseConfig) {
+      return [];
+    }
+
+    const validation = ns.validateSupabaseConfig();
+    if (!validation || !Array.isArray(validation.warnings)) {
+      return [];
+    }
+
+    return validation.warnings.filter(Boolean);
+  }
+
+  function renderAuthSetupNotice() {
+    if (!isLoginPage()) {
+      return;
+    }
+
+    const warnings = getAuthConfigWarnings();
+    if (!warnings.length) {
+      setStatus("auth-setup-notice", "", false);
+      return;
+    }
+
+    setStatus("auth-setup-notice", warnings.join(" "), true);
   }
 
   function showRecoveryForm(message, isError) {
@@ -115,10 +221,43 @@
   async function upsertUserRow(userId, payload) {
     try {
       const client = getClient();
-      await client.from("users").upsert({ id: userId, ...payload });
+      const { error } = await client.from("user_profiles").upsert({ id: userId, ...payload });
+      if (error) throw error;
+      return true;
     } catch (error) {
-      console.warn("User profile upsert skipped", error);
+      console.warn("Buyer profile sync skipped", error);
+      return false;
     }
+  }
+
+  async function syncPendingBuyerProfile(user) {
+    if (!user || !user.id) {
+      return false;
+    }
+
+    const pending = readPendingBuyerProfile();
+    if (!pending || !pending.profile) {
+      return false;
+    }
+
+    const pendingUserId = pending.userId ? String(pending.userId) : "";
+    const pendingEmail = pending.email ? String(pending.email).trim().toLowerCase() : "";
+    const currentEmail = user.email ? String(user.email).trim().toLowerCase() : "";
+
+    if (pendingUserId && pendingUserId !== user.id && (!pendingEmail || !currentEmail || pendingEmail !== currentEmail)) {
+      return false;
+    }
+
+    if (!pendingUserId && pendingEmail && currentEmail && pendingEmail !== currentEmail) {
+      return false;
+    }
+
+    const synced = await upsertUserRow(user.id, pending.profile);
+    if (synced) {
+      clearPendingBuyerProfile();
+    }
+
+    return synced;
   }
 
   async function handleLogin(event) {
@@ -150,12 +289,13 @@
         return;
       }
 
+      await syncPendingBuyerProfile(user);
       setStatus("login-status", "Signed in. Redirecting...", false);
     } catch (error) {
       if (ns.authController && ns.authController.clearPendingRedirect) {
         ns.authController.clearPendingRedirect();
       }
-      setStatus("login-status", error.message || "Unable to sign in.", true);
+      setStatus("login-status", getFriendlyAuthError(error, "Unable to sign in."), true);
     }
   }
 
@@ -192,16 +332,17 @@
 
       const redirectTo = buildAuthEntryRedirect("signup");
       const client = getClient();
+      const profilePayload = buildBuyerProfilePayload(fullName, companyName, phone, country);
       const { data, error } = await client.auth.signUp({
         email,
         password,
         options: {
           emailRedirectTo: redirectTo,
           data: {
-            full_name: fullName,
-            company_name: companyName,
-            phone_whatsapp: phone,
-            country_region: country,
+            full_name: profilePayload.full_name,
+            company_name: profilePayload.company_name,
+            phone_whatsapp: profilePayload.phone_whatsapp,
+            country_region: profilePayload.country_region,
             role: "buyer",
           },
         },
@@ -209,14 +350,11 @@
       if (error) throw error;
 
       if (data && data.user) {
-        await upsertUserRow(data.user.id, {
-          full_name: fullName,
-          email: email,
-          phone: phone,
-          company_name: companyName,
-          country: country,
-          role: "buyer",
-        });
+        savePendingBuyerProfile(data.user, email, profilePayload);
+      }
+
+      if (data && data.user && data.session) {
+        await syncPendingBuyerProfile(data.user);
       }
 
       const loginEmailNode = document.getElementById("login-email");
@@ -234,13 +372,13 @@
       }
 
       setStatus("signup-status", redirectTo
-        ? "Account created. Please confirm your email. If it does not arrive, use Resend Confirmation Email."
-        : "Account created. Please confirm your email. If it does not arrive, use Resend Confirmation Email. The link will use the Supabase Site URL.", false);
+        ? "Account created for " + email + ". Please confirm your email. If it does not arrive, use Resend Confirmation Email."
+        : "Account created for " + email + ". Please confirm your email. If it does not arrive, use Resend Confirmation Email. The link will use the Supabase Site URL.", false);
     } catch (error) {
       if (ns.authController && ns.authController.clearPendingRedirect) {
         ns.authController.clearPendingRedirect();
       }
-      setStatus("signup-status", error.message || "Failed to create account.", true);
+      setStatus("signup-status", getFriendlyAuthError(error, "Failed to create account."), true);
     }
   }
 
@@ -261,10 +399,10 @@
       const redirectTo = buildAuthEntryRedirect("signup");
       await ns.authApi.resendSignUpConfirmation(email, redirectTo);
       setStatus("login-status", redirectTo
-        ? "Confirmation email sent. Check inbox and spam."
-        : "Confirmation email sent. Check inbox and spam. The link will use the Supabase Site URL.", false);
+        ? "Confirmation email sent to " + email + ". Check inbox and spam."
+        : "Confirmation email sent to " + email + ". Check inbox and spam. The link will use the Supabase Site URL.", false);
     } catch (error) {
-      setStatus("login-status", error.message || "Could not resend confirmation email.", true);
+      setStatus("login-status", getFriendlyAuthError(error, "Could not resend confirmation email."), true);
     }
   }
 
@@ -285,7 +423,7 @@
         ? "Password reset email sent."
         : "Password reset email sent. The link will use the Supabase Site URL.", false);
     } catch (error) {
-      setStatus("login-status", error.message || "Could not send reset email.", true);
+      setStatus("login-status", getFriendlyAuthError(error, "Could not send reset email."), true);
     }
   }
 
@@ -321,7 +459,7 @@
         }, 300);
       }
     } catch (error) {
-      setStatus("recovery-status", error.message || "Failed to update password.", true);
+      setStatus("recovery-status", getFriendlyAuthError(error, "Failed to update password."), true);
     }
   }
 
@@ -356,15 +494,20 @@
     }) : [];
     const primaryRole = resolvePrimaryRole(roles);
 
-    if (guardAttr === "admin" && primaryRole !== "admin") {
-      global.location.href = ns.getRoleHomeUrl ? ns.getRoleHomeUrl(roles) : (ns.getAppRoute ? ns.getAppRoute("buyer") : "/buyer-portal/dashboard.html");
-      return;
+    if (guardAttr === "admin") {
+      const adminRoles = ["super_admin", "admin", "editor", "staff"];
+      if (adminRoles.indexOf(primaryRole || "") < 0) {
+        global.location.href = ns.getRoleHomeUrl ? ns.getRoleHomeUrl(roles) : (ns.getAppRoute ? ns.getAppRoute("buyer") : "/buyer-portal/dashboard.html");
+        return;
+      }
     }
 
-    if (guardAttr === "buyer" && (primaryRole === "admin" || primaryRole === "staff")) {
+    if (guardAttr === "buyer" && ["super_admin", "admin", "editor", "staff"].indexOf(primaryRole || "") >= 0) {
       global.location.href = ns.getRoleHomeUrl ? ns.getRoleHomeUrl(roles) : (ns.getAppRoute ? ns.getAppRoute("admin") : "/admin/dashboard.html");
       return;
     }
+
+    await syncPendingBuyerProfile(user);
 
     const emailNodes = document.querySelectorAll("[data-user-email]");
     emailNodes.forEach(function (node) {
@@ -473,6 +616,7 @@
       return;
     }
 
+    renderAuthSetupNotice();
     wireForms();
     wireLogoutButtons();
     wireAuthEvents();

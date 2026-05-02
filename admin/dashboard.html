@@ -1,97 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Dashboard | CHOCOCAM</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayScrollbars@1.13.3/css/OverlayScrollbars.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Admin Dashboard | CAMCOCOA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="assets/adminlte/css/adminlte.min.css">
+  <link rel="stylesheet" href="css/admin-dashboard.css">
 </head>
-<body class="hold-transition sidebar-mini" data-guard="admin">
-<div class="wrapper">
-  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-      </li>
-      <li class="nav-item d-none d-sm-inline-block"><a href="/index.html" class="nav-link">Back to site</a></li>
-    </ul>
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item"><span class="nav-link"><i class="far fa-user"></i> <span data-user-email></span></span></li>
-      <li class="nav-item"><a href="#" class="nav-link js-logout">Logout</a></li>
-    </ul>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary" data-guard="admin">
+<div class="app-wrapper">
+  <nav class="app-header navbar navbar-expand bg-body">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" data-lte-toggle="sidebar" href="#" role="button"><i class="fa-solid fa-bars"></i></a></li>
+        <li class="nav-item d-none d-md-block"><a href="../index.html" class="nav-link">Public website</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-center">
+        <li class="nav-item me-3 text-end">
+          <div class="fw-semibold" data-user-email></div>
+          <small class="text-muted text-uppercase" id="admin-current-role"></small>
+        </li>
+        <li class="nav-item"><a href="#" class="nav-link js-logout">Logout</a></li>
+      </ul>
+    </div>
   </nav>
 
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <a href="dashboard.html" class="brand-link">
-      <span class="brand-text font-weight-light">CHOCOCAM Admin</span>
-    </a>
-    <div class="sidebar">
+  <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+    <div class="sidebar-brand">
+      <a href="dashboard.html" class="brand-link text-decoration-none">
+        <span class="brand-text fw-light">CAMCOCOA Admin</span>
+      </a>
+    </div>
+    <div class="sidebar-wrapper">
       <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
-          <li class="nav-item"><a href="dashboard.html" class="nav-link active"><i class="nav-icon fas fa-tachometer-alt"></i><p>Dashboard</p></a></li>
-          <li class="nav-item"><a href="buyers.html" class="nav-link"><i class="nav-icon fas fa-users"></i><p>Buyers</p></a></li>
-          <li class="nav-item"><a href="cocoa-batches.html" class="nav-link"><i class="nav-icon fas fa-box-open"></i><p>Cocoa Batches</p></a></li>
-          <li class="nav-item"><a href="traceability.html" class="nav-link"><i class="nav-icon fas fa-route"></i><p>Traceability Records</p></a></li>
-          <li class="nav-item"><a href="shipments.html" class="nav-link"><i class="nav-icon fas fa-ship"></i><p>Shipments</p></a></li>
-          <li class="nav-item"><a href="contracts.html" class="nav-link"><i class="nav-icon fas fa-file-contract"></i><p>Contracts</p></a></li>
-          <li class="nav-item"><a href="documents.html" class="nav-link"><i class="nav-icon fas fa-file-pdf"></i><p>Documents</p></a></li>
-          <li class="nav-item"><a href="settings.html" class="nav-link"><i class="nav-icon fas fa-cog"></i><p>Settings</p></a></li>
-          <li class="nav-item"><a href="#" class="nav-link js-logout"><i class="nav-icon fas fa-sign-out-alt"></i><p>Logout</p></a></li>
+        <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+          <li class="nav-item"><a href="#overview" class="nav-link"><i class="nav-icon fa-solid fa-chart-line"></i><p>Overview</p></a></li>
+          <li class="nav-item"><a href="#products" class="nav-link"><i class="nav-icon fa-solid fa-box"></i><p>Products</p></a></li>
+          <li class="nav-item"><a href="#inquiries" class="nav-link"><i class="nav-icon fa-solid fa-envelope-open-text"></i><p>Inquiries</p></a></li>
+          <li class="nav-item"><a href="#content" class="nav-link"><i class="nav-icon fa-solid fa-pen-ruler"></i><p>Content</p></a></li>
+          <li class="nav-item"><a href="#media" class="nav-link"><i class="nav-icon fa-solid fa-photo-film"></i><p>Media</p></a></li>
+          <li class="nav-item"><a href="#users" class="nav-link"><i class="nav-icon fa-solid fa-users-gear"></i><p>Users</p></a></li>
+          <li class="nav-item"><a href="#settings" class="nav-link"><i class="nav-icon fa-solid fa-sliders"></i><p>Settings</p></a></li>
         </ul>
       </nav>
     </div>
   </aside>
 
-  <div class="content-wrapper">
-    <div class="content-header">
+  <main class="app-main">
+    <div class="app-content-header">
       <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6"><h1 class="m-0">Dashboard</h1></div>
-          <div class="col-sm-6"><ol class="breadcrumb float-sm-right"><li class="breadcrumb-item">Admin</li><li class="breadcrumb-item active">Dashboard</li></ol></div>
+        <div class="row">
+          <div class="col-sm-6"><h1 class="mb-0">Admin Control Center</h1></div>
+          <div class="col-sm-6"><ol class="breadcrumb float-sm-end"><li class="breadcrumb-item">Admin</li><li class="breadcrumb-item active">Dashboard</li></ol></div>
         </div>
       </div>
     </div>
-    <section class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-info"><div class="inner"><h3>24</h3><p>Active Buyers</p></div><div class="icon"><i class="fas fa-users"></i></div></div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-success"><div class="inner"><h3>12</h3><p>Cocoa Batches</p></div><div class="icon"><i class="fas fa-box"></i></div></div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning"><div class="inner"><h3>5</h3><p>Open Shipments</p></div><div class="icon"><i class="fas fa-ship"></i></div></div>
-          </div>
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger"><div class="inner"><h3>9</h3><p>Pending Contracts</p></div><div class="icon"><i class="fas fa-file-contract"></i></div></div>
-          </div>
-        </div>
 
-        <div class="card">
-          <div class="card-header"><h3 class="card-title">Recent Traceability Records</h3></div>
-          <div class="card-body p-0">
-            <table class="table table-striped">
-              <thead><tr><th>Batch</th><th>Origin</th><th>Status</th><th>Updated</th></tr></thead>
-              <tbody><tr><td>CB-2026-01</td><td>Centre</td><td><span class="badge badge-success">Verified</span></td><td>Today</td></tr><tr><td>CB-2026-02</td><td>Littoral</td><td><span class="badge badge-warning">Pending Lab</span></td><td>Yesterday</td></tr></tbody>
-            </table>
+    <div class="app-content">
+      <div class="container-fluid">
+        <div id="admin-app-status" class="alert alert-info admin-status"></div>
+
+        <section id="overview" class="admin-section section-anchor">
+          <div class="row g-3 mb-3">
+            <div class="col-xl-3 col-md-6 metric-card"><div class="small-box text-bg-primary"><div class="inner"><h3 id="metric-products">0</h3><p>Total Products</p></div><div class="icon"><i class="fa-solid fa-box"></i></div></div></div>
+            <div class="col-xl-3 col-md-6 metric-card"><div class="small-box text-bg-success"><div class="inner"><h3 id="metric-inquiries">0</h3><p>Total Inquiries</p></div><div class="icon"><i class="fa-solid fa-envelope"></i></div></div></div>
+            <div class="col-xl-3 col-md-6 metric-card"><div class="small-box text-bg-warning"><div class="inner"><h3 id="metric-admins">0</h3><p>Admin Users</p></div><div class="icon"><i class="fa-solid fa-user-shield"></i></div></div></div>
+            <div class="col-xl-3 col-md-6 metric-card"><div class="small-box text-bg-danger"><div class="inner"><h3 id="metric-media">0</h3><p>Managed Media</p></div><div class="icon"><i class="fa-solid fa-photo-film"></i></div></div></div>
           </div>
-        </div>
+          <div class="row g-3">
+            <div class="col-lg-8">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title mb-0">Inquiry Sources</h3></div>
+                <div class="card-body"><canvas id="inquiry-source-chart" height="120"></canvas></div>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="card h-100">
+                <div class="card-header"><h3 class="card-title mb-0">Recent Activity</h3></div>
+                <div class="card-body"><div id="recent-activity-list" class="list-group list-group-flush"></div></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="products" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Product Management</h3></div>
+            <div class="card-body">
+              <div class="admin-grid mb-4">
+                <form id="category-form" class="border rounded p-3 bg-light">
+                  <h4 class="h6">Category</h4>
+                  <input id="category-id" type="hidden">
+                  <div class="mb-2"><input id="category-name" class="form-control" placeholder="Category name" required></div>
+                  <div class="mb-2"><input id="category-slug" class="form-control" placeholder="Slug"></div>
+                  <div class="mb-2"><textarea id="category-description" class="form-control" rows="3" placeholder="Description"></textarea></div>
+                  <div class="row g-2"><div class="col-6"><input id="category-order" class="form-control" type="number" value="0"></div><div class="col-6"><select id="category-status" class="form-select"><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select></div></div>
+                  <button class="btn btn-outline-primary mt-3" type="submit">Save Category</button>
+                </form>
+                <form id="product-form" class="border rounded p-3 bg-light">
+                  <h4 class="h6">Product</h4>
+                  <input id="product-id" type="hidden">
+                  <div class="row g-2 mb-2"><div class="col-md-6"><input id="product-name" class="form-control" placeholder="Product name" required></div><div class="col-md-6"><input id="product-slug" class="form-control" placeholder="Slug"></div></div>
+                  <div class="mb-2"><select id="product-category" class="form-select"></select></div>
+                  <div class="mb-2"><textarea id="product-short-description" class="form-control" rows="2" placeholder="Short description"></textarea></div>
+                  <div class="mb-2"><textarea id="product-description" class="form-control" rows="4" placeholder="Long description"></textarea></div>
+                  <div class="row g-2 mb-2"><div class="col-md-4"><input id="product-origin" class="form-control" value="Cameroon"></div><div class="col-md-4"><input id="product-flavor-notes" class="form-control" placeholder="Notes, comma separated"></div><div class="col-md-4"><select id="product-status" class="form-select"><option value="published">Published</option><option value="draft">Draft</option><option value="archived">Archived</option></select></div></div>
+                  <div class="row g-2 mb-2"><div class="col-md-4"><input id="listing-code" class="form-control" placeholder="Listing code"></div><div class="col-md-4"><input id="listing-quantity" class="form-control" type="number" step="0.001" placeholder="Quantity MT"></div><div class="col-md-4"><input id="listing-price" class="form-control" type="number" step="0.01" placeholder="USD / MT"></div></div>
+                  <div class="form-check form-check-inline"><input id="product-featured" class="form-check-input" type="checkbox"><label class="form-check-label" for="product-featured">Featured</label></div>
+                  <div class="form-check form-check-inline"><input id="product-popular" class="form-check-input" type="checkbox"><label class="form-check-label" for="product-popular">Popular</label></div>
+                  <div class="form-check form-check-inline"><input id="product-new" class="form-check-input" type="checkbox"><label class="form-check-label" for="product-new">New arrival</label></div>
+                  <div class="d-flex gap-2 mt-3"><button class="btn btn-primary" type="submit">Save Product</button><button class="btn btn-outline-secondary" id="product-reset-btn" type="button">Reset</button></div>
+                </form>
+                <form id="product-media-form" class="border rounded p-3 bg-light">
+                  <h4 class="h6">Product Image</h4>
+                  <div class="mb-2"><select id="media-product-id" class="form-select"></select></div>
+                  <div class="mb-2"><input id="media-file" class="form-control" type="file" accept="image/*"></div>
+                  <div class="mb-2"><input id="media-alt-text" class="form-control" placeholder="Alt text"></div>
+                  <button class="btn btn-outline-success" type="submit">Upload Image</button>
+                </form>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                  <thead><tr><th>Name</th><th>Category</th><th>Status</th><th>Updated</th><th>Action</th></tr></thead>
+                  <tbody id="products-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="inquiries" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Inquiry Management</h3><div class="action-stack"><button id="refresh-inquiries-btn" class="btn btn-sm btn-outline-secondary">Refresh</button><button id="export-inquiries-btn" class="btn btn-sm btn-primary">Export CSV</button></div></div>
+            <div class="card-body table-responsive">
+              <table class="table table-striped align-middle">
+                <thead><tr><th>#</th><th>Source</th><th>Company</th><th>Email</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+                <tbody id="inquiries-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="content" class="admin-section section-anchor">
+          <div class="card content-editor">
+            <div class="card-header"><h3 class="card-title mb-0">Website Content CMS</h3></div>
+            <div class="card-body">
+              <div class="admin-grid mb-4">
+                <form id="content-form" class="border rounded p-3 bg-light">
+                  <input id="content-id" type="hidden">
+                  <div class="row g-2 mb-2"><div class="col-md-6"><input id="content-page-key" class="form-control" placeholder="Page key e.g. home" required></div><div class="col-md-6"><input id="content-section-key" class="form-control" placeholder="Section key e.g. hero" required></div></div>
+                  <div class="mb-2"><input id="content-title" class="form-control" placeholder="Title"></div>
+                  <div class="mb-2"><input id="content-subtitle" class="form-control" placeholder="Subtitle"></div>
+                  <div class="mb-2"><textarea id="content-body" class="form-control" placeholder="Body"></textarea></div>
+                  <div class="mb-2"><textarea id="content-json" class="form-control" rows="4" placeholder='JSON content, e.g. {"cta_label":"Request Quote"}'></textarea></div>
+                  <div class="row g-2 mb-2"><div class="col-md-6"><input id="content-seo-title" class="form-control" placeholder="SEO title"></div><div class="col-md-6"><input id="content-seo-description" class="form-control" placeholder="SEO description"></div></div>
+                  <div class="row g-2 mb-2"><div class="col-md-4"><input id="content-seo-keywords" class="form-control" placeholder="Keywords, comma separated"></div><div class="col-md-4"><input id="content-phone" class="form-control" placeholder="Contact phone"></div><div class="col-md-4"><input id="content-email" class="form-control" placeholder="Contact email"></div></div>
+                  <div class="mb-2"><input id="content-address" class="form-control" placeholder="Address"></div>
+                  <div class="form-check mb-3"><input id="content-published" class="form-check-input" type="checkbox" checked><label class="form-check-label" for="content-published">Published</label></div>
+                  <button class="btn btn-primary" type="submit">Save Content Block</button>
+                </form>
+                <div class="border rounded p-3 bg-light">
+                  <h4 class="h6">Live Website Binding</h4>
+                  <p class="text-muted mb-3">Homepage hero, about, services, contact details, footer copy, and SEO fields are pulled from the Supabase <code>website_content</code> table.</p>
+                  <div id="content-permission-list"></div>
+                </div>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                  <thead><tr><th>Page</th><th>Section</th><th>Title</th><th>Published</th><th>Updated</th><th>Action</th></tr></thead>
+                  <tbody id="content-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="media" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Media Library</h3></div>
+            <div class="card-body">
+              <form id="library-media-form" class="row g-2 mb-4">
+                <div class="col-md-3"><input id="library-media-file" class="form-control" type="file" required></div>
+                <div class="col-md-2"><input id="library-media-bucket" class="form-control" value="product-images" placeholder="Bucket"></div>
+                <div class="col-md-2"><input id="library-media-folder" class="form-control" value="gallery" placeholder="Folder"></div>
+                <div class="col-md-3"><input id="library-media-alt" class="form-control" placeholder="Alt text"></div>
+                <div class="col-md-2"><button class="btn btn-success w-100" type="submit">Upload</button></div>
+              </form>
+              <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                  <thead><tr><th>Preview</th><th>File</th><th>Bucket</th><th>Visibility</th><th>Action</th></tr></thead>
+                  <tbody id="media-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="users" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Admin Access Management</h3></div>
+            <div class="card-body">
+              <form id="invite-user-form" class="row g-2 mb-4">
+                <div class="col-md-3"><input id="invite-user-name" class="form-control" placeholder="Full name" required></div>
+                <div class="col-md-3"><input id="invite-user-email" class="form-control" type="email" placeholder="Email" required></div>
+                <div class="col-md-2"><input id="invite-user-title" class="form-control" placeholder="Title"></div>
+                <div class="col-md-2"><select id="invite-user-role" class="form-select"><option value="staff">Staff</option><option value="editor">Editor</option><option value="admin">Admin</option><option value="super_admin">Super Admin</option></select></div>
+                <div class="col-md-2"><button class="btn btn-primary w-100" type="submit">Invite User</button></div>
+              </form>
+              <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                  <thead><tr><th>Name</th><th>Email / Team</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
+                  <tbody id="users-table-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="settings" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Role Matrix</h3></div>
+            <div class="card-body">
+              <div class="admin-grid">
+                <div class="border rounded p-3"><h4 class="h6">Super Admin</h4><p>Full website control, admin creation, permissions, product and content operations, storage, and settings.</p></div>
+                <div class="border rounded p-3"><h4 class="h6">Admin</h4><p>Manage products, inquiries, website content, and media. Cannot control super admin accounts.</p></div>
+                <div class="border rounded p-3"><h4 class="h6">Editor</h4><p>Edit CMS-driven content, SEO metadata, and homepage sections only.</p></div>
+                <div class="border rounded p-3"><h4 class="h6">Staff</h4><p>View dashboard metrics and manage inquiry workflows only.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
-    </section>
-  </div>
+    </div>
+  </main>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/overlayScrollbars@1.13.3/js/jquery.overlayScrollbars.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="../js/supabase/config.min.js"></script>
-<script src="../js/supabase/client.min.js"></script>
-<script src="../js/supabase/auth.min.js"></script>
+<script src="../js/supabase/client.js"></script>
+<script src="../js/supabase/auth.js"></script>
+<script src="../js/supabase/admin.js"></script>
 <script src="../js/auth-flow.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="assets/adminlte/js/adminlte.min.js"></script>
+<script src="js/admin-app.js"></script>
 </body>
 </html>

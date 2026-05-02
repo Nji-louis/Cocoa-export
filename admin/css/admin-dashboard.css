@@ -1,0 +1,18 @@
+body { font-family: "Source Sans 3", system-ui, sans-serif; }
+.brand-link { font-weight: 700; letter-spacing: 0.04em; }
+.metric-card .small-box { border-radius: 1rem; margin-bottom: 0; }
+.metric-card .small-box .icon { opacity: 0.35; }
+.admin-section { margin-bottom: 1.5rem; }
+.admin-section .card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.admin-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.permission-pill { display: inline-block; padding: 0.25rem 0.65rem; border-radius: 999px; background: #f4efe8; color: #6c4a2a; font-size: 0.85rem; margin: 0.15rem; }
+.table td, .table th { vertical-align: middle; }
+.admin-status { display: none; }
+.media-preview { width: 56px; height: 56px; object-fit: cover; border-radius: 0.6rem; background: #f1f3f5; }
+.content-editor textarea { min-height: 160px; }
+.action-stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.section-anchor { scroll-margin-top: 6rem; }
+.nav-sidebar .nav-link p { white-space: nowrap; }
+@media (max-width: 991px) {
+  .content-wrapper .content-header { padding-top: 1rem; }
+}

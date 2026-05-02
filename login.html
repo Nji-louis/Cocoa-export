@@ -3,8 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="canonical" href="https://nji-louis.github.io/Cocoa-export/login.html">
-  <title>CHOCOCAM | Account Access</title>
+    <meta name="description" content="Secure account access page for CAMCOCOA buyers, staff, and administrators.">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="canonical" href="https://nji-louis.github.io/Cocoa-export/login.html">
+    <link rel="icon" type="image/svg+xml" href="https://nji-louis.github.io/Cocoa-export/favicon.svg">
+    <link rel="apple-touch-icon" href="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+    <meta name="theme-color" content="#4E342E">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CAMCOCOA S.A.R.L Ltd">
+    <meta property="og:locale" content="en_CM">
+    <meta property="og:title" content="CAMCOCOA | Account Access">
+    <meta property="og:description" content="Secure account access page for CAMCOCOA buyers, staff, and administrators.">
+    <meta property="og:url" content="https://nji-louis.github.io/Cocoa-export/login.html">
+    <meta property="og:image" content="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="CAMCOCOA | Account Access">
+    <meta name="twitter:description" content="Secure account access page for CAMCOCOA buyers, staff, and administrators.">
+    <meta name="twitter:image" content="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+
+  <title>CAMCOCOA | Account Access</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/global.min.css">
   <style>
@@ -19,9 +36,10 @@
 <body data-auth-entry="login">
   <div class="auth-wrapper">
     <div class="auth-header">
-      <h2>CHOCOCAM Account</h2>
+      <h2>CAMCOCOA Account</h2>
       <p>Sign in to your dashboard or create a buyer account.</p>
     </div>
+    <div id="auth-setup-notice" class="auth-status error" style="margin-bottom:18px;"></div>
     <div class="row" id="auth-main-row">
       <div class="col-md-6">
         <h4>Login</h4>
@@ -73,7 +91,7 @@
           </div>
           <button type="submit" class="btn btn-success btn-block">Create Buyer Account</button>
           <div id="signup-status" class="auth-status"></div>
-          <p style="margin-top:10px; color:#555;">After signup we will email a verification link. You must verify before logging in.</p>
+          <p style="margin-top:10px; color:#555;">After signup we will email a verification link. You must verify before logging in. If the message does not arrive after resend, the Supabase Auth email sender needs dashboard setup.</p>
         </form>
       </div>
     </div>

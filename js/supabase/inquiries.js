@@ -4,7 +4,7 @@
   async function requireClient() {
     const client = ns.getSupabaseClient && ns.getSupabaseClient();
     if (!client) {
-      throw new Error("Supabase client is not configured");
+      throw new Error('Supabase client is not configured');
     }
     return client;
   }
@@ -12,7 +12,7 @@
   ns.inquiryApi = {
     async submitInquiry(payload) {
       const client = await requireClient();
-      const { data, error } = await client.functions.invoke("submit-inquiry", {
+      const { data, error } = await client.functions.invoke('submit-inquiry', {
         body: payload,
       });
       if (error) throw error;
@@ -28,9 +28,9 @@
       const to = from + pageSize - 1;
 
       const { data, error, count } = await client
-        .from("inquiry_requests")
-        .select("id, request_number, status, company_name, work_email, created_at, updated_at", { count: "exact" })
-        .order("created_at", { ascending: false })
+        .from('inquiry_requests')
+        .select('id, request_number, status, company_name, work_email, created_at, updated_at', { count: 'exact' })
+        .order('created_at', { ascending: false })
         .range(from, to);
 
       if (error) throw error;
@@ -44,7 +44,7 @@
 
     async updateInquiryStatus(inquiryId, toStatus, note) {
       const client = await requireClient();
-      const { data, error } = await client.rpc("update_inquiry_status", {
+      const { data, error } = await client.rpc('update_inquiry_status', {
         p_inquiry_id: inquiryId,
         p_to_status: toStatus,
         p_note: note || null,

@@ -107,24 +107,80 @@
     submitButton.style.opacity = "";
   }
 
+  function setInlineFeedback(node, message, isError) {
+    if (!node) return;
+    node.textContent = message || "";
+    node.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function valueBySelector(root, selector) {
+    const field = root ? root.querySelector(selector) : null;
+    return field && field.value ? field.value.trim() : "";
+  }
+
+  function isValidEmailAddress(value) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+  }
+
+  function clearFieldValues(fields) {
+    (fields || []).forEach(function (field) {
+      if (field) field.value = "";
+    });
+  }
+
+  function parsePositiveNumber(value) {
+    const normalized = String(value || "").replace(/,/g, "").trim();
+    if (!normalized) return null;
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
+  }
+
+  function hasInquirySupport() {
+    return Boolean(
+      ns.hasSupabaseConfig &&
+      ns.hasSupabaseConfig() &&
+      ns.inquiryApi &&
+      typeof ns.inquiryApi.submitInquiry === "function"
+    );
+  }
+
   async function submitContactInquiry(button) {
-    const root = button.closest("#contact_page");
+    const root = button.closest(".blog_d_page_li3") || button.closest("#contact_page");
     if (!root) return false;
 
-    const payload = {
-      sourceChannel: "contact_page",
-      companyName: valueByPlaceholder(root, "Company Name"),
-      phoneWhatsApp: valueByPlaceholder(root, "Phone / WhatsApp"),
-      workEmail: valueByPlaceholder(root, "Work Email"),
-      requiredVolumeMt: valueByPlaceholder(root, "Required Volume (MT)"),
-      message: valueByPlaceholder(root, "Destination port, cocoa variety, quality specs, and preferred Incoterm."),
-      inquiryTopic: "Export Inquiry Form",
-    };
+    const companyField = root.querySelector('input[placeholder="Company Name"]');
+    const phoneField = root.querySelector('input[placeholder="Phone / WhatsApp"]');
+    const emailField = root.querySelector('input[placeholder="Work Email"]');
+    const volumeField = root.querySelector('input[placeholder="Required Volume (MT)"]');
+    const messageField = root.querySelector('textarea');
+
+    const companyName = companyField && companyField.value ? companyField.value.trim() : "";
+    const workEmail = emailField && emailField.value ? emailField.value.trim() : "";
+    const quantity = volumeField && volumeField.value ? volumeField.value.trim() : "";
+    const message = messageField && messageField.value ? messageField.value.trim() : "";
+
+    if (!companyName || !workEmail || !message) {
+      ns.notify("Please complete company name, email, and inquiry details before submitting.", true);
+      return true;
+    }
+
+    if (!isValidEmailAddress(workEmail)) {
+      ns.notify("Please enter a valid email address.", true);
+      return true;
+    }
 
     setBusy(button, true, "Submitting...");
     try {
-      await ns.inquiryApi.submitInquiry(payload);
-      ns.notify("Inquiry submitted. Our export desk will contact you shortly.");
+      await ns.inquiryApi.submitInquiry({
+        companyName: companyName,
+        workEmail: workEmail,
+        phoneWhatsApp: phoneField && phoneField.value ? phoneField.value.trim() : "",
+        requiredVolumeMt: parsePositiveNumber(quantity),
+        message: quantity ? message + "\n\nRequired Volume: " + quantity : message,
+        sourceChannel: "contact_export_inquiry_form",
+      });
+      clearFieldValues([companyField, phoneField, emailField, volumeField, messageField]);
+      ns.notify("Export inquiry submitted successfully.");
       return true;
     } catch (error) {
       const message = ns.resolveErrorMessage
@@ -141,19 +197,38 @@
     const root = button.closest(".comment_1");
     if (!root) return false;
 
-    const payload = {
-      sourceChannel: "product_page",
-      productSlug: getProductSlugFromPath(),
-      companyName: valueByPlaceholder(root, "Company Name*"),
-      workEmail: valueByPlaceholder(root, "Work Email*"),
-      countryRegion: valueByPlaceholder(root, "Country / Region"),
-      message: valueByPlaceholder(root, root.querySelector("textarea") ? root.querySelector("textarea").getAttribute("placeholder") || "" : ""),
-      inquiryTopic: "Product Inquiry",
-    };
+    const messageField = root.querySelector("#product-inquiry-message");
+    const companyField = root.querySelector("#product-inquiry-company");
+    const emailField = root.querySelector("#product-inquiry-email");
+    const countryField = root.querySelector("#product-inquiry-country");
+
+    const companyName = companyField && companyField.value ? companyField.value.trim() : "";
+    const workEmail = emailField && emailField.value ? emailField.value.trim() : "";
+    const message = messageField && messageField.value ? messageField.value.trim() : "";
+    const country = countryField && countryField.value ? countryField.value.trim() : "";
+
+    if (!companyName || !workEmail || !message) {
+      ns.notify("Please complete company name, email, and product requirements before submitting.", true);
+      return true;
+    }
+
+    if (!isValidEmailAddress(workEmail)) {
+      ns.notify("Please enter a valid email address.", true);
+      return true;
+    }
 
     setBusy(button, true, "Submitting...");
     try {
-      await ns.inquiryApi.submitInquiry(payload);
+      await ns.inquiryApi.submitInquiry({
+        companyName: companyName,
+        workEmail: workEmail,
+        countryRegion: country,
+        inquiryTopic: "Product Inquiry",
+        productSlug: getProductSlugFromPath() || undefined,
+        message: message,
+        sourceChannel: "product_inquiry_form",
+      });
+      clearFieldValues([messageField, companyField, emailField, countryField]);
       ns.notify("Product inquiry submitted successfully.");
       return true;
     } catch (error) {
@@ -167,36 +242,64 @@
     }
   }
 
-  async function submitIndexInquiry(button) {
-    const root = button.closest("#consultation");
+  async function submitIndexInquiry(target) {
+    const root = target && target.closest ? target.closest("#consultation") : null;
     if (!root) return false;
 
-    const topic = findInputAfterLabel(root, "Inquiry Topic");
-    const name = findInputAfterLabel(root, "Your Name");
-    const email = findInputAfterLabel(root, "Your Email");
+    const form = target && target.tagName === "FORM"
+      ? target
+      : root.querySelector("#home-export-inquiry-form");
+    const feedback = root.querySelector("#export-inquiry-feedback");
+    const topic = valueBySelector(root, "#export-inquiry-topic") || findInputAfterLabel(root, "Inquiry Topic");
+    const name = valueBySelector(root, "#export-inquiry-name") || findInputAfterLabel(root, "Your Name");
+    const email = valueBySelector(root, "#export-inquiry-email") || findInputAfterLabel(root, "Your Email");
+    const message = valueBySelector(root, "#export-inquiry-message");
+    const resolvedMessage = message || (topic ? "Inquiry Topic: " + topic : "General export inquiry from homepage");
 
-    const payload = {
-      sourceChannel: "index_inquiry",
-      inquiryTopic: topic,
-      contactName: name,
-      companyName: name || "Website Buyer",
-      workEmail: email,
-      message: topic ? `Inquiry Topic: ${topic}` : "General inquiry from homepage",
-    };
+    if (!topic || !name || !email) {
+      setInlineFeedback(feedback, "Please select a topic and complete your name and email.", true);
+      return true;
+    }
 
-    setBusy(button, true, "Submitting...");
+    if (!isValidEmailAddress(email)) {
+      setInlineFeedback(feedback, "Please enter a valid email address.", true);
+      return true;
+    }
+
+    if (form) {
+      setFormSubmitBusy(form, true, "Submitting...");
+    } else {
+      setBusy(target, true, "Submitting...");
+    }
+    setInlineFeedback(feedback, "Submitting your inquiry...", false);
+
     try {
-      await ns.inquiryApi.submitInquiry(payload);
-      ns.notify("Inquiry submitted. We will respond by email.");
+      await ns.inquiryApi.submitInquiry({
+        contactName: name,
+        workEmail: email,
+        inquiryTopic: topic,
+        message: resolvedMessage,
+        sourceChannel: "home_export_inquiry_form",
+      });
+      if (form) {
+        form.reset();
+      }
+      setInlineFeedback(feedback, "Inquiry submitted successfully.", false);
+      ns.notify("Inquiry submitted successfully.");
       return true;
     } catch (error) {
-      const message = ns.resolveErrorMessage
+      const errorMessage = ns.resolveErrorMessage
         ? await ns.resolveErrorMessage(error, "Failed to submit inquiry")
         : ns.normalizeError(error, "Failed to submit inquiry");
-      ns.notify(message, true);
+      setInlineFeedback(feedback, errorMessage, true);
+      ns.notify(errorMessage, true);
       return true;
     } finally {
-      setBusy(button, false);
+      if (form) {
+        setFormSubmitBusy(form, false);
+      } else {
+        setBusy(target, false);
+      }
     }
   }
 
@@ -334,28 +437,25 @@
   }
 
   function shouldHandle(label) {
-    return ["SUBMIT INQUIRY", "SUBMIT", "SEND MESSAGE", "SUBSCRIBE"].some(function (token) {
+    return ["SUBMIT INQUIRY", "SUBMIT", "SEND MESSAGE", "SEND COMMENT", "SUBSCRIBE"].some(function (token) {
       return label.indexOf(token) >= 0;
     });
   }
 
   function onClick(event) {
-    const button = event.target.closest("a.button_1, a.button_2");
+    const button = event.target.closest("a.button_1, a.button_2, button.button_1, button.button_2");
     if (!button) return;
 
     const label = textFrom(button).toUpperCase();
     if (!shouldHandle(label)) return;
 
-    if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
-      return;
-    }
-    if (!ns.inquiryApi || !ns.subscriptionApi || !ns.blogApi || !ns.notify || !ns.normalizeError) {
-      return;
-    }
-
-    event.preventDefault();
-
     if (label.indexOf("SUBMIT INQUIRY") >= 0) {
+      if (!hasInquirySupport() || !ns.notify || !ns.normalizeError) {
+        return;
+      }
+
+      event.preventDefault();
+
       if (button.closest("#contact_page")) {
         void submitContactInquiry(button);
         return;
@@ -364,26 +464,63 @@
         void submitProductInquiry(button);
         return;
       }
+      if (button.closest("#consultation")) {
+        void submitIndexInquiry(button);
+        return;
+      }
+      return;
     }
 
     if (label === "SUBMIT" && button.closest("#consultation")) {
+      if (!hasInquirySupport() || !ns.notify || !ns.normalizeError) {
+        return;
+      }
+      event.preventDefault();
       void submitIndexInquiry(button);
       return;
     }
 
-    if (label.indexOf("SEND MESSAGE") >= 0) {
+    if (label.indexOf("SEND MESSAGE") >= 0 || label.indexOf("SEND COMMENT") >= 0) {
+      if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
+        return;
+      }
+      if (!ns.blogApi || !ns.notify || !ns.normalizeError) {
+        return;
+      }
+      event.preventDefault();
       void submitBlogComment(button);
       return;
     }
 
     if (label.indexOf("SUBSCRIBE") >= 0) {
+      if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
+        return;
+      }
+      if (!ns.subscriptionApi || !ns.notify || !ns.normalizeError) {
+        return;
+      }
+      event.preventDefault();
       void submitSubscription(button);
     }
   }
 
   function onFormSubmit(event) {
-    const form = event.target && event.target.closest ? event.target.closest("form.mc-newsletter-form") : null;
+    const form = event.target && event.target.closest ? event.target.closest("form") : null;
     if (!form) return;
+
+    if (form.matches("#home-export-inquiry-form")) {
+      if (!hasInquirySupport() || !ns.notify || !ns.normalizeError) {
+        return;
+      }
+
+      event.preventDefault();
+      void submitIndexInquiry(form);
+      return;
+    }
+
+    if (!form.matches("form.mc-newsletter-form")) {
+      return;
+    }
 
     if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
       return;
@@ -402,6 +539,9 @@
 
     const commentRoot = event.target.closest(".blog_d_page_li3");
     if (!commentRoot) return;
+    if (!commentRoot.querySelector('input[placeholder="Name"]') || !commentRoot.querySelector('input[placeholder="Email"]') || !commentRoot.querySelector('textarea[placeholder="Message"]')) {
+      return;
+    }
 
     if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
       return;

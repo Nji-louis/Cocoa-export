@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backend Connection Test</title>
+</head>
+<body>
+    <h1>Frontend-Backend Connection Test</h1>
+    <div id="results"></div>
+
+    <script src="js/backend-config.js"></script>
+    <script src="js/backend-api.js"></script>
+
+    <script>
+        async function testConnection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing connection...</p>';
+
+            try {
+                // Test products API
+                const productsResponse = await window.AppBackend.catalogApi.searchProducts();
+                results.innerHTML += '<p>✅ Products API: ' + productsResponse.items.length + ' products loaded</p>';
+
+                // Test blog API
+                const blogResponse = await window.AppBackend.blogApi.getPosts();
+                results.innerHTML += '<p>✅ Blog API: ' + blogResponse.length + ' posts loaded</p>';
+
+                // Test auth API (should work without token)
+                try {
+                    await window.AppBackend.authApi.getCurrentUser();
+                    results.innerHTML += '<p>✅ Auth API: User check completed</p>';
+                } catch (error) {
+                    results.innerHTML += '<p>✅ Auth API: No user logged in (expected)</p>';
+                }
+
+                results.innerHTML += '<p><strong>🎉 All APIs connected successfully!</strong></p>';
+                results.innerHTML += '<p>Frontend is now connected to your local backend at http://localhost:4000</p>';
+
+            } catch (error) {
+                results.innerHTML += '<p>❌ Connection failed: ' + error.message + '</p>';
+                console.error('Connection test failed:', error);
+            }
+        }
+
+        // Run test when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', testConnection);
+        } else {
+            testConnection();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+(function () {
+  function ready(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn, { once: true });
+      return;
+    }
+    fn();
+  }
+
+  ready(function () {
+    var grid = document.getElementById('blog-hub-grid');
+    if (grid == null) return;
+
+    var searchInput = document.getElementById('blog-search-input');
+    var categorySelect = document.getElementById('blog-category-filter');
+    var chips = Array.prototype.slice.call(document.querySelectorAll('.blog-chip'));
+    var countNode = document.getElementById('blog-results-count');
+    var emptyNode = document.getElementById('blog-hub-empty');
+    var loadMoreButton = document.getElementById('blog-load-more');
+    var defaultVisible = 6;
+    var loadStep = 3;
+    var visibleLimit = defaultVisible;
+
+    function normalize(value) {
+      return String(value || '').trim().toLowerCase();
+    }
+
+    function getCards() {
+      return Array.prototype.slice.call(grid.querySelectorAll('.blog-hub-card'));
+    }
+
+    function matches(card, keyword, category) {
+      var haystack = normalize([
+        card.getAttribute('data-title'),
+        card.getAttribute('data-excerpt'),
+        card.getAttribute('data-keywords')
+      ].join(' '));
+      var cardCategory = normalize(card.getAttribute('data-category'));
+      var keywordOk = keyword === '' || haystack.indexOf(keyword) >= 0;
+      var categoryOk = category === '' || cardCategory === category;
+      return keywordOk && categoryOk;
+    }
+
+    function syncActiveChip(category) {
+      chips.forEach(function (chip) {
+        chip.classList.toggle('is-active', normalize(chip.getAttribute('data-category')) === category);
+      });
+    }
+
+    function render() {
+      var cards = getCards();
+      var keyword = normalize(searchInput && searchInput.value);
+      var category = normalize(categorySelect && categorySelect.value);
+      var matchedCount = 0;
+
+      cards.forEach(function (card) {
+        var showMatch = matches(card, keyword, category);
+        if (showMatch === false) {
+          card.hidden = true;
+          return;
+        }
+
+        matchedCount += 1;
+        card.hidden = matchedCount > visibleLimit;
+      });
+
+      if (countNode) {
+        countNode.textContent = matchedCount === 1 ? 'Showing 1 article' : 'Showing ' + matchedCount + ' articles';
+      }
+      if (emptyNode) {
+        emptyNode.hidden = matchedCount !== 0;
+      }
+      if (loadMoreButton) {
+        loadMoreButton.hidden = matchedCount <= visibleLimit || matchedCount === 0;
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function () {
+        visibleLimit = defaultVisible;
+        render();
+      });
+    }
+
+    if (categorySelect) {
+      categorySelect.addEventListener('change', function () {
+        visibleLimit = defaultVisible;
+        syncActiveChip(normalize(categorySelect.value));
+        render();
+      });
+    }
+
+    chips.forEach(function (chip) {
+      chip.addEventListener('click', function () {
+        if (categorySelect) {
+          categorySelect.value = chip.getAttribute('data-category') || '';
+        }
+        visibleLimit = defaultVisible;
+        syncActiveChip(normalize(chip.getAttribute('data-category')));
+        render();
+      });
+    });
+
+    if (loadMoreButton) {
+      loadMoreButton.addEventListener('click', function () {
+        visibleLimit += loadStep;
+        render();
+      });
+    }
+
+    document.addEventListener('app-blog-hub-updated', function () {
+      visibleLimit = defaultVisible;
+      render();
+    });
+
+    syncActiveChip('');
+    render();
+  });
+})();

@@ -1021,7 +1021,7 @@
 
   async function init() {
     if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
-      setStatus("Supabase config is missing. Update js/supabase/config.js.", true);
+      setStatus("Supabase config is missing. Update js/supabase/config.min.js.", true);
       return;
     }
 

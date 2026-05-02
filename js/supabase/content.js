@@ -1,0 +1,100 @@
+(function (global) {
+  const ns = global.AppBackend || {};
+
+  function pageKeyFromPath(pathname) {
+    const fileName = String(pathname || "").split("/").pop() || "index.html";
+    if (fileName === "index.html" || fileName === "") return "home";
+    if (fileName === "about.html") return "about";
+    if (fileName === "services.html") return "services";
+    if (fileName === "contact.html") return "contact";
+    return fileName.replace(/\.html$/, "");
+  }
+
+  function setText(selector, value) {
+    const node = document.querySelector(selector);
+    if (node && value) {
+      node.textContent = value;
+    }
+  }
+
+  function setMeta(name, value, attr) {
+    if (!value) return;
+    const selector = attr === "property" ? 'meta[property="' + name + '"]' : 'meta[name="' + name + '"]';
+    const node = document.querySelector(selector);
+    if (node) {
+      node.setAttribute("content", value);
+    }
+  }
+
+  function applyHomeSections(rows) {
+    const hero = rows.find(function (item) { return item.page_key === "home" && item.section_key === "hero"; });
+    const about = rows.find(function (item) { return item.page_key === "home" && item.section_key === "about"; });
+    const services = rows.find(function (item) { return item.page_key === "home" && item.section_key === "services"; });
+
+    if (hero) {
+      setText(".hero-title", hero.title);
+      setText(".hero-subtitle", hero.subtitle || hero.body);
+      if (hero.seo_title) document.title = hero.seo_title;
+      setMeta("description", hero.seo_description, "name");
+      setMeta("og:title", hero.seo_title, "property");
+      setMeta("og:description", hero.seo_description, "property");
+      setMeta("twitter:title", hero.seo_title, "name");
+      setMeta("twitter:description", hero.seo_description, "name");
+    }
+
+    if (about) {
+      setText("#about_home h2", about.title);
+      setText("#about_home .about-kicker", about.subtitle);
+      setText("#about_home .about_h1r p:not(.about-kicker)", about.body);
+    }
+
+    if (services) {
+      setText(".specialist-label", services.subtitle || "Services");
+      setText("#center_o .specialist h2, #center_o h2", services.title);
+      setText("#center_o .specialist p", services.body);
+    }
+  }
+
+  function applyGlobalContent(rows) {
+    const contact = rows.find(function (item) { return item.page_key === "global" && item.section_key === "contact"; });
+    const footer = rows.find(function (item) { return item.page_key === "global" && item.section_key === "footer"; });
+
+    if (contact) {
+      const content = contact.content || {};
+      const phone = contact.contact_phone || content.whatsapp || "";
+      const email = contact.contact_email || "";
+      const address = contact.address_line || content.address || "";
+      setText(".top_contact", phone);
+      setText("#footer .footer-meta", phone);
+      const footerEmailNodes = document.querySelectorAll("#footer .footer-meta");
+      if (footerEmailNodes[2] && email) footerEmailNodes[2].textContent = email;
+      if (footerEmailNodes[1] && address) footerEmailNodes[1].textContent = address;
+    }
+
+    if (footer) {
+      setText("#footer_bottom .footer_bottom_1 p", footer.body || footer.title);
+    }
+  }
+
+  async function init() {
+    if (ns.getSupabaseClient == null) return;
+    const client = ns.getSupabaseClient();
+    if (client == null) return;
+    const currentPageKey = pageKeyFromPath(global.location.pathname);
+    const { data, error } = await client
+      .from("website_content")
+      .select("page_key, section_key, title, subtitle, body, content, seo_title, seo_description, contact_email, contact_phone, address_line")
+      .in("page_key", [currentPageKey, "home", "global"])
+      .eq("is_published", true);
+    if (error) return;
+    const rows = data || [];
+    if (currentPageKey === "home") {
+      applyHomeSections(rows);
+    }
+    applyGlobalContent(rows);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    void init();
+  });
+})(window);

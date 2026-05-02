@@ -22,11 +22,88 @@ function extract(regex, text) {
   return m ? m[1].trim() : '';
 }
 
-function canonicalFor(fileName) {
-  if (fileName === 'index.html') {
+function toPosix(filePath) {
+  return filePath.split(path.sep).join('/');
+}
+
+function canonicalFor(relativePath) {
+  if (relativePath === 'index.html') {
     return BASE_URL;
   }
-  return `${BASE_URL}${fileName}`;
+  return `${BASE_URL}${relativePath}`;
+}
+
+function relativeDir(relativePath) {
+  const dir = path.posix.dirname(relativePath);
+  return dir === '.' ? '' : `${dir}/`;
+}
+
+function extractRedirectTarget(content) {
+  const metaRefresh = content.match(/<meta\s+http-equiv\s*=\s*"refresh"\s+content="\d+\s*;\s*url=([^"]+)"/i);
+  if (metaRefresh && metaRefresh[1]) {
+    return metaRefresh[1].trim();
+  }
+
+  const locationReplace = content.match(/window\.location\.replace\(\s*"([^"]+)"\s*\)/i);
+  if (locationReplace && locationReplace[1]) {
+    return locationReplace[1].trim();
+  }
+
+  return '';
+}
+
+function canonicalForRedirect(relativePath, content) {
+  const target = extractRedirectTarget(content);
+  if (!target) {
+    return canonicalFor(relativePath);
+  }
+
+  try {
+    return new URL(target, `${BASE_URL}${relativeDir(relativePath)}`).toString();
+  } catch (error) {
+    return canonicalFor(relativePath);
+  }
+}
+
+function isPrivatePage(relativePath) {
+  return (
+    relativePath === 'login.html' ||
+    relativePath === 'admin_console.html' ||
+    relativePath === 'admin.console.html' ||
+    relativePath.startsWith('admin/') ||
+    relativePath.startsWith('buyer-portal/')
+  );
+}
+
+function trimTitleSuffix(title, suffixPattern, fallbackValue) {
+  const trimmed = String(title || '').replace(suffixPattern, '').trim();
+  return trimmed || fallbackValue;
+}
+
+function inferDescription(relativePath, title) {
+  if (relativePath === 'login.html') {
+    return 'Secure account access page for CHOCOCAM buyers, staff, and administrators.';
+  }
+
+  if (relativePath === 'admin_console.html') {
+    return 'Administrative console for CHOCOCAM platform management.';
+  }
+
+  if (relativePath === 'admin.console.html') {
+    return 'Administrative redirect page for CHOCOCAM platform management.';
+  }
+
+  if (relativePath.startsWith('admin/')) {
+    const section = trimTitleSuffix(title, /\s*\|\s*CHOCOCAM(?:\s+Admin)?\s*$/i, 'CHOCOCAM operations');
+    return `Administrative interface for ${section}.`;
+  }
+
+  if (relativePath.startsWith('buyer-portal/')) {
+    const section = trimTitleSuffix(title, /\s*\|\s*CHOCOCAM\s*$/i, 'CHOCOCAM accounts');
+    return `Buyer portal page for ${section}.`;
+  }
+
+  return '';
 }
 
 function schemaFor({ title, description, canonical, noIndex }) {
@@ -76,47 +153,54 @@ function schemaFor({ title, description, canonical, noIndex }) {
   ].join('\n');
 }
 
-function isRedirectPage(content, fileName) {
-  if (fileName === 'admin.console.html') return true;
-  if (/product_(amelonado|bresilien|criollo|cundeamor|forastero|trinitario)\.html/i.test(fileName)) return true;
+function isRedirectPage(content, relativePath) {
+  if (relativePath === 'admin.console.html') return true;
+  if (/product_(amelonado|bresilien|criollo|cundeamor|forastero|trinitario|cocoa_butter|cocoa_shell)\.html/i.test(relativePath)) return true;
   return /http-equiv\s*=\s*"refresh"/i.test(content);
 }
 
 function updateFile(filePath) {
-  const fileName = path.basename(filePath);
+  const relativePath = toPosix(path.relative(ROOT, filePath));
   let src = fs.readFileSync(filePath, 'utf8');
 
   const title = extract(/<title>([\s\S]*?)<\/title>/i, src);
-  const description = extract(/<meta\s+name="description"\s+content="([\s\S]*?)"\s*>/i, src);
+  const existingDescription = extract(/<meta\s+name="description"\s+content="([\s\S]*?)"\s*>/i, src);
+  const description = existingDescription || inferDescription(relativePath, title);
   if (!title || !description) {
     return false;
   }
 
-  const canonical = canonicalFor(fileName);
-  const noIndex = fileName === 'admin_console.html' || fileName === 'admin.console.html' || isRedirectPage(src, fileName);
+  const redirectPage = isRedirectPage(src, relativePath);
+  const canonical = redirectPage ? canonicalForRedirect(relativePath, src) : canonicalFor(relativePath);
+  const noIndex = isPrivatePage(relativePath) || redirectPage;
   const robots = noIndex ? 'noindex,nofollow' : 'index,follow,max-image-preview:large';
   const schemaBlock = schemaFor({ title, description, canonical, noIndex });
 
-  const seoBlock = [
+  const seoLines = [
+    `    <meta name="description" content="${escapeAttr(description)}">`,
     `    <meta name="robots" content="${robots}">`,
     `    <link rel="canonical" href="${canonical}">`,
     `    <link rel="icon" type="image/svg+xml" href="${FAVICON}">`,
     `    <link rel="apple-touch-icon" href="${APPLE_TOUCH_ICON}">`,
-    `    <meta name="theme-color" content="#4E342E">`,
-    `    <meta property="og:type" content="website">`,
-    `    <meta property="og:site_name" content="CHOCOCAM S.A.R.L">`,
-    `    <meta property="og:locale" content="en_CM">`,
+    '    <meta name="theme-color" content="#4E342E">',
+    '    <meta property="og:type" content="website">',
+    '    <meta property="og:site_name" content="CHOCOCAM S.A.R.L">',
+    '    <meta property="og:locale" content="en_CM">',
     `    <meta property="og:title" content="${escapeAttr(title)}">`,
     `    <meta property="og:description" content="${escapeAttr(description)}">`,
     `    <meta property="og:url" content="${canonical}">`,
     `    <meta property="og:image" content="${DEFAULT_OG_IMAGE}">`,
-    `    <meta name="twitter:card" content="summary_large_image">`,
+    '    <meta name="twitter:card" content="summary_large_image">',
     `    <meta name="twitter:title" content="${escapeAttr(title)}">`,
     `    <meta name="twitter:description" content="${escapeAttr(description)}">`,
     `    <meta name="twitter:image" content="${DEFAULT_OG_IMAGE}">`,
-    schemaBlock
-  ].join('\n');
+    schemaBlock,
+  ].filter(Boolean);
+  const seoBlock = seoLines.join('\n');
+  src = src.replace(/\n\s*<meta\s+http-equiv="X-UA-Compatible"[^\n]*\n?/gi, "\n");
 
+
+  src = src.replace(/\n\s*<meta\s+name="description"[^\n]*\n?/gi, '\n');
   src = src.replace(/\n\s*<meta\s+name="robots"[\s\S]*?(?=\n\s*<title>|\n\s*<link href="https:\/\/fonts\.googleapis\.com|\n\s*<meta\s+http-equiv="refresh"|\n\s*<script|\n\s*<\/head>)/i, '\n');
   src = src.replace(/\n\s*<link\s+rel="canonical"[\s\S]*?(?=\n\s*<title>|\n\s*<link href="https:\/\/fonts\.googleapis\.com|\n\s*<meta\s+http-equiv="refresh"|\n\s*<script|\n\s*<\/head>)/i, '\n');
   src = src.replace(/\n\s*<link\s+rel="icon"[^\n]*\n?/gi, '\n');
@@ -128,8 +212,10 @@ function updateFile(filePath) {
 
   if (/<meta\s+name="keywords"/i.test(src)) {
     src = src.replace(/(<meta\s+name="keywords"\s+content="[\s\S]*?"\s*>)/i, `$1\n${seoBlock}`);
-  } else if (/<meta\s+name="description"/i.test(src)) {
-    src = src.replace(/(<meta\s+name="description"\s+content="[\s\S]*?"\s*>)/i, `$1\n${seoBlock}`);
+  } else if (/<meta\s+name="viewport"/i.test(src)) {
+    src = src.replace(/(<meta\s+name="viewport"[\s\S]*?>)/i, `$1\n${seoBlock}`);
+  } else if (/<meta\s+charset/i.test(src)) {
+    src = src.replace(/(<meta\s+charset[\s\S]*?>)/i, `$1\n${seoBlock}`);
   }
 
   src = src.replace(/\n{3,}/g, '\n\n');
@@ -137,14 +223,37 @@ function updateFile(filePath) {
   return true;
 }
 
+function walkHtmlFiles(startDir) {
+  const files = [];
+  const entries = fs.readdirSync(startDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (entry.name === '.git' || entry.name === 'node_modules') {
+      continue;
+    }
+
+    const fullPath = path.join(startDir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...walkHtmlFiles(fullPath));
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith('.html')) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
 function main() {
-  const htmlFiles = fs.readdirSync(ROOT).filter((name) => name.endsWith('.html'));
+  const htmlFiles = walkHtmlFiles(ROOT);
   let updated = 0;
   for (const file of htmlFiles) {
-    const changed = updateFile(path.join(ROOT, file));
+    const changed = updateFile(file);
     if (changed) {
       updated += 1;
-      console.log(`SEO updated: ${file}`);
+      console.log(`SEO updated: ${toPosix(path.relative(ROOT, file))}`);
     }
   }
   console.log(`\nSEO pass completed for ${updated} pages.`);

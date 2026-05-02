@@ -24,69 +24,43 @@
     button.style.opacity = '';
   }
 
-  async function submitToFormspree(form) {
-    var action = form ? String(form.getAttribute('action') || '').trim() : '';
-    if (!action) {
-      return { unavailable: true };
-    }
-
-    var response = await fetch(action, {
-      method: String(form.getAttribute('method') || 'POST').toUpperCase(),
-      body: new FormData(form),
-      headers: { Accept: 'application/json' }
-    });
-
-    if (response.ok) {
-      form.reset();
-      return { via: 'formspree' };
-    }
-
-    var errorMessage = 'Unable to send your quote request right now. Please try again.';
-    try {
-      var data = await response.json();
-      if (data && data.errors && data.errors.length) {
-        errorMessage = data.errors.map(function (error) {
-          return error.message;
-        }).join(' ');
-      }
-    } catch (jsonError) {
-      // Keep the generic error message when the response is not JSON.
-    }
-
-    throw new Error(errorMessage);
+  function parsePositiveNumber(value) {
+    var normalized = String(value || '').replace(/,/g, '').trim();
+    if (!normalized) return null;
+    var parsed = Number(normalized);
+    return Number.isFinite(parsed) && parsed >= 0 ? parsed : null;
   }
 
   async function submitQuote(payload, form) {
-    if (form && form.getAttribute('action')) {
-      return submitToFormspree(form);
-    }
-
     var backend = global.AppBackend || {};
     if (!backend.hasSupabaseConfig || !backend.hasSupabaseConfig()) {
-      return { localOnly: true };
+      throw new Error('Inquiry service is not configured.');
     }
     if (!backend.inquiryApi || typeof backend.inquiryApi.submitInquiry !== 'function') {
-      return { localOnly: true };
+      throw new Error('Inquiry service is not available.');
     }
 
     await backend.inquiryApi.submitInquiry({
-      sourceChannel: 'home_request_quote',
       contactName: payload.name,
       companyName: payload.company,
       countryRegion: payload.country,
       workEmail: payload.email,
       phoneWhatsApp: payload.phone,
-      productSlug: payload.productType.toLowerCase(),
-      requiredVolumeMt: payload.quantity,
-      inquiryTopic: 'Request Quote',
-      message: payload.message,
+      inquiryTopic: payload.productType,
+      requiredVolumeMt: parsePositiveNumber(payload.quantity),
+      message: [
+        payload.message,
+        'Product Type: ' + payload.productType,
+        'Quantity Required: ' + payload.quantity
+      ].join('\n\n'),
+      sourceChannel: 'buyer_quote_form'
     });
 
     if (form) {
       form.reset();
     }
 
-    return { localOnly: false };
+    return { success: true };
   }
 
   function getFormPayload(form) {
@@ -103,7 +77,7 @@
       phone: valueOf('phone'),
       productType: valueOf('productType'),
       quantity: valueOf('quantity'),
-      message: valueOf('message'),
+      message: valueOf('message')
     };
   }
 
@@ -138,12 +112,8 @@
       setFeedback(feedback, 'Submitting your quote request...', false);
 
       try {
-        var result = await submitQuote(payload, form);
-        if (result && result.localOnly) {
-          setFeedback(feedback, 'Quote request captured locally. Configure Supabase to receive submissions in your dashboard.', false);
-        } else {
-          setFeedback(feedback, 'Quote request sent successfully. Our export desk will contact you shortly.', false);
-        }
+        await submitQuote(payload, form);
+        setFeedback(feedback, 'Quote request sent successfully. Our export desk will contact you shortly.', false);
       } catch (error) {
         setFeedback(feedback, (error && error.message) ? error.message : 'Unable to send quote request right now. Please try again.', true);
       } finally {

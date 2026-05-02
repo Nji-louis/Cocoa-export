@@ -144,6 +144,15 @@
         });
       }
 
+      // Security-definer RPC avoids client-side RLS blind spots during routing.
+      const { data: primaryRoleData, error: primaryRoleError } = await client.rpc("get_primary_role", {
+        target_user_id: resolvedUser.id,
+      });
+
+      if (!primaryRoleError && primaryRoleData) {
+        roles.add(String(primaryRoleData).toLowerCase());
+      }
+
       // Fallback to new consolidated users table if it exists.
       const { data: userRow, error: userTableError } = await client
         .from("users")
