@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Profile</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+  <main>
+    <h1>My Profile</h1>
+    <form id="profile-form">
+      <label>Email <input id="profile-email" name="email" disabled></label>
+      <label>Company <input id="profile-company" name="company_name"></label>
+      <label>Role <input id="profile-role" name="role" disabled></label>
+      <button type="submit">Save</button>
+    </form>
+  </main>
+  <script type="module">
+    import { requireAuth } from '../../js/authGuard.js'
+    import { initSupabase } from '/js/supabaseClient.js'
+
+    if (window.__SUPABASE_CONFIG__) initSupabase(window.__SUPABASE_CONFIG__)
+
+    const res = await requireAuth(['buyer','admin'])
+    if (!res) throw new Error('not authorized')
+    const { user, profile } = res
+
+    document.getElementById('profile-email').value = user.email
+    document.getElementById('profile-company').value = profile.company_name || ''
+    document.getElementById('profile-role').value = profile.role || 'buyer'
+
+    const form = document.getElementById('profile-form')
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault()
+      const company_name = document.getElementById('profile-company').value || null
+      const { supabase } = await import('/js/supabaseClient.js')
+      const { error } = await supabase.from('profiles').update({ company_name, updated_at: new Date().toISOString() }).eq('id', user.id)
+      if (error) return alert(error.message || 'Failed to update')
+      alert('Profile updated')
+    })
+  </script>
+</body>
+</html>

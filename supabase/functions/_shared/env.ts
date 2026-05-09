@@ -13,6 +13,13 @@ export function requireEnv(name: string): string {
   return value;
 }
 
+export function getSupabaseAdminEnv() {
+  return {
+    supabaseUrl: requireEnv("SUPABASE_URL"),
+    supabaseServiceRoleKey: requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
+  };
+}
+
 export function getSupabaseEnv() {
   return {
     supabaseUrl: requireEnv("SUPABASE_URL"),
@@ -20,3 +27,6 @@ export function getSupabaseEnv() {
     supabaseServiceRoleKey: requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
   };
 }
+
+// Some Edge Functions only need the service-role client. Keep that path free of
+// anon-key requirements so anonymous form submissions do not fail at startup.

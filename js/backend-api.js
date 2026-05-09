@@ -182,11 +182,78 @@
   ns.initializeApi = function() {
     console.log('Backend API client initialized for local server at', BACKEND_CONFIG.baseUrl);
   };
+  // Initialize Supabase client when environment variables are provided on `window`.
+  // This supports adding `window.SUPABASE_URL` and `window.SUPABASE_ANON_KEY` in your HTML
+  // or server template to enable direct Supabase usage in the frontend.
+  ns.initSupabase = function() {
+    const url = window.SUPABASE_URL || window.__SUPABASE_URL;
+    const key = window.SUPABASE_ANON_KEY || window.__SUPABASE_ANON_KEY;
 
-  // Legacy compatibility - create a mock Supabase client for existing code
+    if (!url || !key) return null;
+
+    // If supabase is already available globally (UMD), use it. Otherwise inject the UMD bundle.
+    function createClientFromGlobal() {
+      try {
+        if (window.supabase && typeof window.supabase.createClient === 'function') {
+          ns.supabase = window.supabase.createClient(url, key);
+          return ns.supabase;
+        }
+      } catch (e) {
+        console.warn('Supabase global client not ready yet');
+      }
+      return null;
+    }
+
+    const existing = createClientFromGlobal();
+    if (existing) return existing;
+
+    // Inject UMD bundle
+    return new Promise((resolve, reject) => {
+      const scriptId = 'supabase-umd';
+      if (document.getElementById(scriptId)) {
+        // wait for it to initialize
+        const check = () => {
+          const c = createClientFromGlobal();
+          if (c) resolve(c);
+          else setTimeout(check, 50);
+        };
+        check();
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = scriptId;
+      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js';
+      script.onload = () => {
+        const client = createClientFromGlobal();
+        if (client) resolve(client);
+        else reject(new Error('Failed to create Supabase client after script load'));
+      };
+      script.onerror = (e) => reject(e || new Error('Failed to load Supabase UMD bundle'));
+      document.head.appendChild(script);
+    });
+  };
+
+  // Provide a helper to get a Supabase client; falls back to a mock that proxies to local API.
   ns.getSupabaseClient = function() {
+    if (ns.supabase) return ns.supabase;
+    // If running in browser and SUPABASE_* config is present, attempt to initialize
+    if (typeof window !== 'undefined' && (window.SUPABASE_URL || window.__SUPABASE_URL)) {
+      // initSupabase may return a Promise
+      const res = ns.initSupabase();
+      if (res && typeof res.then === 'function') {
+        // async init - return a thin proxy that throws if called before ready
+        return {
+          _ready: res,
+          _errorIfNotReady() {
+            throw new Error('Supabase client initializing; await ns.getSupabaseClient()._ready before use');
+          }
+        };
+      }
+    }
+
+    // Fallback mock client that delegates operations to the existing local API endpoints
     return {
-      // Mock methods for compatibility
       auth: {
         signUp: ns.authApi.signUp,
         signInWithPassword: ns.authApi.signIn,
@@ -200,9 +267,9 @@
               eq: function(column, value) {
                 return {
                   single: async function() {
-                    // Mock implementation - would need specific logic per table
-                    console.warn('Mock Supabase query:', table, columns, column, value);
-                    return { data: null, error: null };
+                    console.warn('Mock Supabase query (delegating to local API):', table, columns, column, value);
+                    const resp = await ns.apiRequest(`/products/${value}`);
+                    return { data: resp.data || null, error: null };
                   }
                 };
               }
@@ -210,10 +277,13 @@
           }
         };
       },
-      rpc: function(functionName, params) {
-        // Mock RPC calls - would need specific implementations
-        console.warn('Mock Supabase RPC:', functionName, params);
-        return { data: [], error: null };
+      rpc: async function(functionName, params) {
+        console.warn('Mock Supabase RPC (delegating to local API):', functionName, params);
+        const resp = await ns.apiRequest(`/rpc/${functionName}`, {
+          method: 'POST',
+          body: params
+        });
+        return { data: resp.data || [], error: null };
       }
     };
   };

@@ -70,6 +70,53 @@
 	<link href="css/newsletter.min.css" rel="stylesheet">
 	<link href="css/dark-mode.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+  <style>
+    .testimonial-reply-thread {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .testimonial-reply-thread.is-empty {
+      display: none;
+    }
+    .testimonial-reply-item {
+      background: #fbf7ef;
+      border: 1px solid rgba(243, 178, 4, 0.22);
+      border-left: 4px solid #f3b204;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .testimonial-reply-badge {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f3b204;
+      color: #111;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .testimonial-reply-item h6 {
+      margin: 0 0 8px 0;
+      color: #4e342e;
+      font-weight: 700;
+    }
+    .testimonial-reply-item h6 span {
+      font-weight: 400;
+      color: #7b7068;
+      margin-left: 8px;
+    }
+    .testimonial-reply-item p {
+      margin: 0;
+      line-height: 1.7em;
+      color: #44362f;
+    }
+    .testimonial-reply-form .form-control {
+      border-radius: 12px;
+    }
+  </style>
 	<script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </head>
@@ -359,14 +406,34 @@
 	   </div>
 		</div>
 		
-		<div class="comment_1 col-sm-12 clearfix" id="product-inquiry-block">
-			   <h3 class="heading_1">Send Product Inquiry</h3>
-		     <textarea id="product-inquiry-message" class="form-control select_1" placeholder="Required variety, volume (MT), destination port*"></textarea>
-			 <input id="product-inquiry-company" type="text" placeholder="Company Name*" class="form-control text_1_box">
-			 <input id="product-inquiry-email" type="text" placeholder="Work Email*" class="form-control text_1_box">
-			 <input id="product-inquiry-country" type="text" placeholder="Country / Region" class="form-control text_1_box">
-			 <h5><a class="button_2" href="#"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></a></h5>
-	   </div>
+				<form class="comment_1 col-sm-12 clearfix" id="product-inquiry-form">
+							 <h3 class="heading_1">Send Product Inquiry</h3>
+						 <textarea id="product-inquiry-message" name="message" class="form-control select_1" placeholder="Required variety, volume (MT), destination port*"></textarea>
+						 <input id="product-inquiry-company" name="company_name" type="text" placeholder="Company Name*" class="form-control text_1_box">
+						 <input id="product-inquiry-email" name="workEmail" type="text" placeholder="Work Email*" class="form-control text_1_box">
+						 <input id="product-inquiry-country" name="country" type="text" placeholder="Country / Region" class="form-control text_1_box">
+						 <div><button type="submit" class="button_2"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></button></div>
+			 <p class="quote-form-feedback" id="product-inquiry-feedback" aria-live="polite"></p>
+			 </form>
+		<script type="module">
+			import { submitInquiry } from '/js/forms.js'
+			const form = document.getElementById('product-inquiry-form')
+			const feedback = document.getElementById('product-inquiry-feedback')
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault()
+				feedback.innerText = 'Sending...'
+				const productTitle = document.getElementById('product-detail-title-text')?.innerText || document.getElementById('product-detail-variety')?.innerText || ''
+				const fd = new FormData(form)
+				fd.set('product', productTitle)
+				try {
+					await submitInquiry(fd)
+					feedback.innerText = 'Inquiry submitted — thank you.'
+					form.reset()
+				} catch (err) {
+					feedback.innerText = err.message || 'Failed to submit inquiry.'
+				}
+			})
+		</script>
 
 	</div>
    </div>
@@ -646,7 +713,6 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/supabase/inquiries.min.js"></script>
 <script src="js/supabase/subscriptions.min.js"></script>
 <script src="js/supabase/blog.min.js"></script>
-<script src="js/supabase/forms.min.js"></script>
 <script src="js/supabase/product-testimonials.min.js"></script>
 <script src="js/supabase/init.min.js"></script>
 

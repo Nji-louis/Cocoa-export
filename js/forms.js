@@ -1,0 +1,140 @@
+import { supabase } from './supabaseClient.js'
+
+function getValue(source, ...keys) {
+  for (const key of keys) {
+    if (!key) continue
+    if (source && typeof source.get === 'function') {
+      const value = source.get(key)
+      if (value != null && String(value).trim() !== '') return String(value).trim()
+    } else if (source && Object.prototype.hasOwnProperty.call(source, key)) {
+      const value = source[key]
+      if (value != null && String(value).trim() !== '') return String(value).trim()
+    }
+  }
+  return ''
+}
+
+function inferProductSlug() {
+  if (typeof location === 'undefined') return ''
+  const fileName = (location.pathname.split('/').pop() || '').toLowerCase()
+  if (!fileName.startsWith('product_')) return ''
+  const raw = fileName.replace('product_', '').replace('.html', '')
+  if (raw && raw !== 'detail') return raw
+  try {
+    const params = new URLSearchParams(location.search)
+    const variety = (params.get('variety') || '').toLowerCase().trim()
+    const supported = ['amelonado', 'bresilien', 'cundeamor', 'forastero', 'criollo', 'trinitario']
+    return supported.includes(variety) ? variety : ''
+  } catch (error) {
+    return ''
+  }
+}
+
+function inferSourceChannel(source) {
+  const explicit =
+    getValue(source, 'sourceChannel') ||
+    (source && source.dataset && source.dataset.sourceChannel) ||
+    ''
+  if (explicit) return explicit
+
+  const formId = source && source.id ? String(source.id).toLowerCase() : ''
+  if (formId.includes('buyer-quote')) return 'buyer_quote_form'
+  if (formId.includes('contact')) return 'contact_export_inquiry_form'
+  if (formId.includes('product')) return 'product_inquiry_form'
+  if (formId.includes('home-export')) return 'home_export_inquiry_form'
+  return 'website_form'
+}
+
+function inferQuantityFromMessage(message) {
+  if (!message) return ''
+  const match = String(message).match(/(\d+(?:[\.,]\d+)?)\s*(?:MT|mt|ton|tons|tonnes|t)\b/)
+  return match ? match[1] : ''
+}
+
+function normalizeInput(input) {
+  const isForm = typeof HTMLFormElement !== 'undefined' && input instanceof HTMLFormElement
+  const source = isForm ? new FormData(input) : input
+
+  const name = getValue(source, 'name', 'contactName', 'buyerName', 'full_name')
+  const companyName = getValue(source, 'company_name', 'company', 'companyName', 'Company Name')
+  const workEmail = getValue(source, 'workEmail', 'email', 'buyerEmail', 'work_email', 'contactEmail')
+  const phoneWhatsApp = getValue(source, 'phone', 'phone_whatsapp', 'phoneWhatsApp', 'contactPhone')
+  const countryRegion = getValue(source, 'country', 'Country', 'countryRegion')
+  const destinationPort = getValue(source, 'destinationPort', 'destination_port')
+  const preferredIncoterm = getValue(source, 'preferredIncoterm', 'incoterm')
+  const qualitySpecs = getValue(source, 'qualitySpecs', 'quality_specs')
+  const inquiryTopic =
+    getValue(source, 'inquiryTopic', 'topic', 'productType', 'product', 'product_title', 'product_detail') ||
+    'General Inquiry'
+  const message = getValue(source, 'message', 'detail', 'contactMessage', 'message_body', 'quoteMessage')
+  const quantity =
+    getValue(source, 'requiredVolumeMt', 'quantity', 'volume', 'required_volume', 'workQuantity', 'Required Volume (MT)') ||
+    inferQuantityFromMessage(message)
+  const productSlug = getValue(source, 'productSlug') || inferProductSlug()
+  const sourceChannel = inferSourceChannel(input)
+
+  return {
+    name,
+    companyName,
+    workEmail,
+    phoneWhatsApp,
+    countryRegion,
+    destinationPort,
+    preferredIncoterm,
+    qualitySpecs,
+    inquiryTopic,
+    quantity,
+    productSlug,
+    sourceChannel,
+    message,
+  }
+}
+
+function buildMessage(payload) {
+  const parts = []
+  if (payload.message) parts.push(payload.message)
+  if (payload.inquiryTopic) parts.push(`Inquiry Topic: ${payload.inquiryTopic}`)
+  if (payload.quantity) parts.push(`Quantity Required: ${payload.quantity}`)
+  if (payload.countryRegion) parts.push(`Country / Region: ${payload.countryRegion}`)
+  if (payload.phoneWhatsApp) parts.push(`Phone / WhatsApp: ${payload.phoneWhatsApp}`)
+  if (payload.destinationPort) parts.push(`Destination Port: ${payload.destinationPort}`)
+  if (payload.preferredIncoterm) parts.push(`Preferred Incoterm: ${payload.preferredIncoterm}`)
+  if (payload.qualitySpecs) parts.push(`Quality Specs: ${payload.qualitySpecs}`)
+  return parts.join('\n\n')
+}
+
+async function invokeInquiry(payload) {
+  const { data, error } = await supabase.functions.invoke('submit-inquiry', {
+    body: payload,
+  })
+  if (error) throw error
+  if (data && data.error) throw new Error(data.error)
+  return data
+}
+
+export async function submitInquiry(input) {
+  const payload = normalizeInput(input)
+
+  const request = {
+    contactName: payload.name || null,
+    companyName: payload.companyName || null,
+    workEmail: payload.workEmail || null,
+    phoneWhatsApp: payload.phoneWhatsApp || null,
+    countryRegion: payload.countryRegion || null,
+    destinationPort: payload.destinationPort || null,
+    preferredIncoterm: payload.preferredIncoterm || null,
+    qualitySpecs: payload.qualitySpecs || null,
+    inquiryTopic: payload.inquiryTopic || null,
+    requiredVolumeMt: payload.quantity || null,
+    message: buildMessage(payload) || null,
+    sourceChannel: payload.sourceChannel || 'website_form',
+    productSlug: payload.productSlug || null,
+  }
+
+  return invokeInquiry(request)
+}
+
+if (typeof window !== 'undefined') {
+  window.CAMCOCOA_FORMS = window.CAMCOCOA_FORMS || {}
+  window.CAMCOCOA_FORMS.submitInquiry = submitInquiry
+}

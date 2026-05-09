@@ -1,0 +1,27 @@
+name: Test Supabase Edge Functions
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  test-functions:
+    name: Run Edge Functions tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make scripts executable
+        run: chmod +x ./scripts/test-functions-ci.sh
+
+      - name: Run CI test script
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          ADMIN_EMAIL: ${{ secrets.CI_ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.CI_ADMIN_PASSWORD }}
+          FUNC_BASE: ${{ secrets.FUNC_BASE }}
+          INQUIRY_ID: ${{ secrets.TEST_INQUIRY_ID }}
+        run: ./scripts/test-functions-ci.sh

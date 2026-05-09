@@ -7,5 +7,22 @@
 </head>
 <body>
   <p>Redirecting to <a href="dashboard.html#products">dashboard</a>...</p>
+  <script type="module">
+    import { initSupabase } from '/js/supabaseClient.js'
+    import { requireAuth } from '/js/authGuard.js'
+    if (window.__SUPABASE_CONFIG__) initSupabase(window.__SUPABASE_CONFIG__)
+    await requireAuth(['admin','super_admin','staff'])
+  </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="refresh" content="0; url=dashboard.html#products">
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting to <a href="dashboard.html#products">dashboard</a>...</p>
 </body>
 </html>

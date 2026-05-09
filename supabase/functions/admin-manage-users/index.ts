@@ -211,6 +211,16 @@ serveHttp(async (req: Request) => {
     if (action === "reset_password") {
       const email = asString(body.email, "email", 160).toLowerCase();
       const redirectTo = asOptionalString(body.redirectTo, 500) ?? undefined;
+      const { data: targetProfile } = await admin
+        .from("profiles")
+        .select("id, role")
+        .eq("email", email)
+        .maybeSingle();
+      const targetUserId = targetProfile?.id ? String(targetProfile.id) : null;
+      const targetRole = targetProfile?.role ? String(targetProfile.role).toLowerCase() : null;
+      if (targetRole === "super_admin" && currentRole !== "super_admin") {
+        return fail("Super admin accounts can only be managed by another super admin", 403);
+      }
       const { data, error } = await admin.auth.admin.generateLink({
         type: "recovery",
         email,
@@ -226,7 +236,7 @@ serveHttp(async (req: Request) => {
         actor_user_id: user.id,
         action: "reset_password",
         entity_type: "auth_user",
-        entity_id: targetUserId,
+        entity_id: targetUserId ?? email,
         details: { email },
       });
 

@@ -10,6 +10,9 @@
     <link rel="icon" type="image/svg+xml" href="https://nji-louis.github.io/Cocoa-export/favicon.svg">
     <link rel="apple-touch-icon" href="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
     <meta name="theme-color" content="#4E342E">
+    <!-- Supabase runtime config: replace these values during deployment -->
+    <meta name="supabase-url" content="https://zsyawtkrkjvulrjhgbyn.supabase.co">
+    <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzeWF3dGtya2p2dWxyamhnYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNjQ3NzEsImV4cCI6MjA5MzY0MDc3MX0.Mns1-UZMIaZwR99KrvZXwKpo7TmjijPWFQYL3DaAcSs">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="CAMCOCOA S.A.R.L Ltd">
     <meta property="og:locale" content="en_CM">
@@ -546,7 +549,7 @@
    </div>
    <div class="col-sm-12">
     <div class="buyer-quote-card">
-     <form id="buyer-quote-form" novalidate>
+    <form id="buyer-quote-form" novalidate>
       <div class="buyer-quote-grid">
        <div>
         <label for="quote-name">Name</label>
@@ -596,6 +599,38 @@
       </div>
       <p class="quote-form-feedback" id="buyer-quote-feedback" aria-live="polite"></p>
      </form>
+    <script type="module">
+      import { submitInquiry } from '/js/forms.js'
+      import { supabase } from '/js/supabaseClient.js'
+
+      const buyerForm = document.getElementById('buyer-quote-form')
+      const buyerFeedback = document.getElementById('buyer-quote-feedback')
+      buyerForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        buyerFeedback.innerText = 'Sending...'
+        try {
+          await submitInquiry(buyerForm)
+          buyerFeedback.innerText = 'Request submitted — we will contact you shortly.'
+          buyerForm.reset()
+        } catch (err) {
+          buyerFeedback.innerText = err.message || 'Failed to submit request.'
+        }
+      })
+
+      const exportForm = document.getElementById('home-export-inquiry-form')
+      const exportFeedback = document.getElementById('export-inquiry-feedback')
+      exportForm.addEventListener('submit', async (e) => {
+        e.preventDefault()
+        exportFeedback.innerText = 'Sending...'
+        try {
+          await submitInquiry(exportForm)
+          exportFeedback.innerText = 'Inquiry submitted — thank you.'
+          exportForm.reset()
+        } catch (err) {
+          exportFeedback.innerText = err.message || 'Failed to submit inquiry.'
+        }
+      })
+    </script>
     </div>
    </div>
   </div>

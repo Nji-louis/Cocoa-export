@@ -529,7 +529,6 @@ $$;
 
 grant execute on function public.assign_user_role(uuid, public.app_role) to authenticated;
 
--- Read-optimized RPC for frontend listing/search
 create or replace function public.search_catalog(
   p_query text default null,
   p_category_slug text default null,

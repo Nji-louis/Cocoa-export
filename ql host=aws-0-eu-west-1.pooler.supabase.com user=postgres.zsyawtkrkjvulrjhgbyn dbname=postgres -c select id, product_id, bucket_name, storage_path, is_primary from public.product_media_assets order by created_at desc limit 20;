@@ -1,0 +1,12 @@
+                  id                  |              product_id              |  bucket_name  |            storage_path            | is_primary 
+--------------------------------------+--------------------------------------+---------------+------------------------------------+------------
+ 002183e5-7338-4f66-8f17-20677101398a | 0697f355-e231-4967-b486-28fdaccc689b | product-media | products/cocoa-powder/coshe.png    | t
+ 457b8b1d-3d3d-4b51-986a-de373d961346 | b2cf57db-99cc-47e8-b2ed-5119b810ee2f | product-media | products/bresilien/ab.jpg          | t
+ 6dcd92bd-f0fb-4ef6-9d8a-e3abdaa72277 | 19d6e124-7b5c-4e79-8fa8-44d6c2056e6c | product-media | products/cundeamor/Cun.png         | t
+ 954b1f09-112d-4d14-b0ee-ad54e627b70d | e67050a7-c258-475b-9a51-f0811291949a | product-media | products/forastero/For5.jpg        | t
+ 944ed2fa-3952-4643-b10c-f835b90e022e | fdc38e94-ec44-4459-8f5a-ff23784b3bb4 | product-media | products/criollo/Cri1.png          | t
+ 7403da88-9f37-4122-80af-9b267d4255e7 | 4b3015ea-970b-4af6-acc0-f0818e546aef | product-media | products/trinitario/Tri3.png       | t
+ 2b587b41-2877-4152-8a6c-ac2beaec8e27 | b02cc450-b53f-45be-bacc-a41c8f698935 | product-media | products/cocoa-butter/cocoabut.png | t
+ 54903618-d299-458b-a423-ce68b65cf9b4 | 207c53d4-b6a1-4dea-8286-daf2228a178d | product-media | products/amelonado/ame.jpg         | t
+(8 rows)
+

@@ -71,6 +71,94 @@
 	<link href="css/newsletter.min.css" rel="stylesheet">
 	<link href="css/dark-mode.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+  <style>
+    .blog-detail-sidebar-card {
+      background: #fff;
+      border: 1px solid rgba(78, 52, 46, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+    .blog-detail-search-form {
+      display: grid;
+      gap: 12px;
+    }
+    .blog-detail-search-form .form-control {
+      height: 50px;
+      border-radius: 12px;
+    }
+    .blog-detail-top-search {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      justify-content: flex-end;
+    }
+    .blog-detail-top-search .form-control {
+      height: 48px;
+      border-radius: 12px;
+      max-width: 320px;
+    }
+    .blog-detail-top-search .btn {
+      border-radius: 999px;
+      min-width: 120px;
+      border: none;
+      background: #4e342e;
+    }
+    .blog-detail-search-btn {
+      width: 100%;
+      border-radius: 999px;
+      height: 48px;
+      border: none;
+      background: #4e342e;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .blog-detail-search-btn:hover,
+    .blog-detail-search-btn:focus {
+      background: #f3b204;
+      color: #111;
+    }
+    .blog-detail-comment-form .form-control {
+      border-radius: 12px;
+      min-height: 48px;
+    }
+    .blog-detail-comment-form textarea.form-control {
+      min-height: 170px;
+    }
+    .blog-detail-comment-actions {
+      margin-top: 10px;
+    }
+    .blog-detail-comment-actions .button_1 {
+      border: none;
+    }
+    .quote-form-feedback {
+      margin-top: 10px;
+      min-height: 20px;
+      color: #4e342e;
+      font-size: 14px;
+    }
+    .quote-form-feedback.is-error {
+      color: #b10000;
+    }
+    @media (min-width: 992px) {
+      .blog_detail_sidebar_stack {
+        position: sticky;
+        top: 18px;
+      }
+    }
+    @media (max-width: 767px) {
+      .blog-detail-top-search {
+        flex-direction: column;
+      }
+      .blog-detail-top-search .form-control,
+      .blog-detail-top-search .btn {
+        width: 100%;
+        max-width: none;
+      }
+    }
+  </style>
 	<script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </head>
@@ -205,13 +293,10 @@
 	  </ul>
 	 </div>
 	 <div class="col-sm-6 space_right">
-	  <div class="input-group">
-			<input type="text" class="form-control" placeholder="Keywords">
-			<span class="input-group-btn">
-			 <button class="btn btn-primary" type="button">
-			  SEARCH</button>
-			</span>
-		  </div>
+	  <form class="blog-detail-top-search" action="blog.html" method="get">
+			<input type="text" name="q" class="form-control" placeholder="Keywords">
+			<button class="btn btn-primary" type="submit">SEARCH</button>
+		  </form>
 	 </div>
    </div>
    </div>
@@ -263,34 +348,41 @@
 			 <h3 class="mgt">Leave a Reply</h3>
 			 <hr>
        </div>
+	     <form class="blog-detail-comment-form" novalidate>
 	     <div class="blog_d_page_li3i cleafix">
 		  <div class="col-sm-6 space_left">
-		   <input class="form-control" type="text" placeholder="Name">
+		   <input class="form-control" type="text" name="authorName" placeholder="Name" required>
 		  </div>
 		  <div class="col-sm-6 space_right">
-		   <input class="form-control" type="text" placeholder="Email">
+		   <input class="form-control" type="email" name="authorEmail" placeholder="Email" required>
 		  </div>
 		 </div>
 		 <div class="blog_d_page_li3i cleafix">
 		  <div class="col-sm-12 space_all">
 		   <input type="hidden" id="blog-detail-post-slug" value="">
-		   <textarea placeholder="Message" class="form-control form_1"></textarea>
-		   <h5><a class="button_1" href="#"><span>SEND MESSAGE</span> <i class="fa fa-chevron-right"></i></a></h5>
+		   <textarea name="message" placeholder="Message" class="form-control form_1" required></textarea>
+		   <div class="blog-detail-comment-actions">
+		     <button class="button_1" type="submit"><span>SEND MESSAGE</span> <i class="fa fa-chevron-right"></i></button>
+		   </div>
+		   <p class="quote-form-feedback" id="blog-detail-comment-feedback" aria-live="polite"></p>
 		  </div>
-		  
 		 </div>
+		 </form>
 	   </div>
 	 </div>
 	</div>
 	<div class="col-sm-3">
-	 <div class="blog_d_page_r clearfix">
-	   <div class="input-group">
-			<input type="text" class="form-control" placeholder="Keywords">
-			<span class="input-group-btn">
-			 <button class="btn btn-primary" type="button">
-			  SEARCH</button>
-			</span>
-		  </div>
+	 <div class="blog_d_page_r clearfix blog_detail_sidebar_stack">
+	   <div class="blog-detail-sidebar-card blog-detail-search-card">
+	     <div class="about_h clearfix">
+			 <h3 class="mgt">Search Articles</h3>
+			 <hr>
+       </div>
+	     <form class="blog-detail-search-form" action="blog.html" method="get">
+	       <input type="text" name="q" class="form-control" placeholder="Keywords">
+	       <button class="blog-detail-search-btn" type="submit">SEARCH</button>
+	     </form>
+	   </div>
 	   <div class="about_h clearfix">
 			 <h3>Category</h3>
 			 <hr>
@@ -617,9 +709,8 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/supabase/subscriptions.min.js"></script>
 <script src="js/supabase/blog.min.js?v=20260301c"></script>
 <script src="js/supabase/blog-pages.min.js?v=20260301c"></script>
-<script src="js/supabase/forms.min.js?v=20260301c"></script>
+<script type="module" src="js/blog-forms.js"></script>
 <script src="js/supabase/init.min.js"></script>
-
 </body>
  
 </html>

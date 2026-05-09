@@ -1,9 +1,0 @@
-(function (global) {
-  const ns = global.AppBackend || {};
-  if (!ns.hasSupabaseConfig || !ns.hasSupabaseConfig()) {
-    console.warn("Supabase is not configured. Populate window.__SUPABASE_CONFIG__ in js/supabase/config.min.js with your project URL, anon key, and siteUrl.");
-    return;
-  }
-
-  console.info("Supabase frontend integration initialized");
-})(window);

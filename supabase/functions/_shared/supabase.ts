@@ -1,8 +1,8 @@
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.48.1";
-import { getSupabaseEnv } from "./env.ts";
+import { getSupabaseAdminEnv, getSupabaseEnv } from "./env.ts";
 
 export function createServiceClient(): SupabaseClient {
-  const { supabaseUrl, supabaseServiceRoleKey } = getSupabaseEnv();
+  const { supabaseUrl, supabaseServiceRoleKey } = getSupabaseAdminEnv();
   return createClient(supabaseUrl, supabaseServiceRoleKey, {
     auth: {
       autoRefreshToken: false,

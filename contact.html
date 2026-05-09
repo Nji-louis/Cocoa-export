@@ -70,6 +70,71 @@
 	<link href="css/newsletter.min.css" rel="stylesheet">
 	<link href="css/dark-mode.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+  <style>
+    .contact_page_1i,
+    .blog_d_page_li3,
+    .contact_page_2i {
+      background: #fff;
+      border: 1px solid rgba(78, 52, 46, 0.1);
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    }
+    .contact_page_2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+      align-items: start;
+    }
+    .contact_page_2 > .col-sm-6 {
+      width: 100%;
+      float: none;
+    }
+    .blog_d_page_li3 {
+      padding: 24px;
+      height: 100%;
+    }
+    .blog_d_page_li3i input.form-control,
+    .blog_d_page_li3i textarea.form-control {
+      border-radius: 12px;
+      border: 1px solid #e7e1db;
+      box-shadow: none;
+    }
+    .blog_d_page_li3i input.form-control {
+      height: 48px;
+    }
+    .contact_page_2i {
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    .contact_page_2i .form-control {
+      height: 50px;
+      margin-top: 14px;
+      border-radius: 12px;
+    }
+    .contact-page-updates-form {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .contact-page-updates-form .button_2 {
+      border: none;
+      width: 100%;
+    }
+    .contact-page-updates-feedback {
+      margin-top: 4px;
+      min-height: 20px;
+      color: #4e342e;
+    }
+    .contact-page-updates-feedback.is-error {
+      color: #b10000;
+    }
+    @media (max-width: 991px) {
+      .contact_page_2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 	<script src="js/jquery-2.1.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
   </head>
@@ -259,38 +324,99 @@
 				 <h3 class="mgt">Export Inquiry Form</h3>
 			 <hr>
        </div>
-	     <div class="blog_d_page_li3i cleafix">
-		  <div class="col-sm-6 space_left">
-			   <input class="form-control" type="text" placeholder="Company Name">
-		  </div>
-		  <div class="col-sm-6 space_right">
-			   <input class="form-control" type="text" placeholder="Phone / WhatsApp">
-		  </div>
-		 </div>
-		 <div class="blog_d_page_li3i cleafix">
-		  <div class="col-sm-6 space_left">
-			   <input class="form-control" type="text" placeholder="Work Email">
-		  </div>
-		  <div class="col-sm-6 space_right">
-			   <input class="form-control" type="text" placeholder="Required Volume (MT)">
-		  </div>
-		 </div>
-		 <div class="blog_d_page_li3i cleafix">
-		  <div class="col-sm-12 space_all">
-			   <textarea placeholder="Destination port, cocoa variety, quality specs, and preferred Incoterm." class="form-control form_1"></textarea>
-			   <h5><a class="button_1" href="#"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></a></h5>
-		  </div>
-		  
-		 </div>
-	   </div>
+      <form id="contact-inquiry-form">
+        <div class="blog_d_page_li3i cleafix">
+         <div class="col-sm-6 space_left">
+           <input id="contact-company" name="company_name" class="form-control" type="text" placeholder="Company Name">
+         </div>
+         <div class="col-sm-6 space_right">
+           <input id="contact-phone" name="phone" class="form-control" type="text" placeholder="Phone / WhatsApp">
+         </div>
+        </div>
+        <div class="blog_d_page_li3i cleafix">
+         <div class="col-sm-6 space_left">
+           <input id="contact-email" name="workEmail" class="form-control" type="text" placeholder="Work Email">
+         </div>
+         <div class="col-sm-6 space_right">
+           <input id="contact-quantity" name="quantity" class="form-control" type="text" placeholder="Required Volume (MT)">
+         </div>
+        </div>
+        <div class="blog_d_page_li3i cleafix">
+          <div class="col-sm-12 space_all">
+           <textarea id="contact-inquiry-message" name="message" placeholder="Destination port, cocoa variety, quality specs, and preferred Incoterm." class="form-control form_1"></textarea>
+           <div class="mgt"><button type="submit" class="button_1"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></button></div>
+          </div>
+        </div>
+       </form>
+       <script type="module">
+         import { submitInquiry } from '/js/forms.js'
+         const contactForm = document.getElementById('contact-inquiry-form')
+         contactForm.addEventListener('submit', async (e) => {
+           e.preventDefault()
+           try {
+             await submitInquiry(contactForm)
+             alert('Inquiry submitted — thank you')
+             contactForm.reset()
+           } catch (err) {
+             alert(err.message || 'Failed to submit inquiry')
+           }
+         })
+       </script>
+       <script type="module">
+         window.addEventListener('DOMContentLoaded', () => {
+           const backend = window.AppBackend || {}
+           const form = document.getElementById('buyer-updates-form')
+           const feedback = document.getElementById('buyer-updates-feedback')
+
+           if (!form) return
+
+           form.addEventListener('submit', async (event) => {
+             event.preventDefault()
+             const email = (form.querySelector('input[name="email"]')?.value || '').trim()
+             const fullName = (form.querySelector('input[name="fullName"]')?.value || '').trim()
+
+             if (!email) {
+               feedback.textContent = 'Please enter your email address.'
+               feedback.classList.add('is-error')
+               return
+             }
+
+             if (!backend.subscriptionApi || typeof backend.subscriptionApi.subscribe !== 'function') {
+               feedback.textContent = 'Subscription service is not available right now.'
+               feedback.classList.add('is-error')
+               return
+             }
+
+             feedback.textContent = 'Subscribing...'
+             feedback.classList.remove('is-error')
+
+             try {
+               const result = await backend.subscriptionApi.subscribe({
+                 fullName,
+                 email,
+                 sourceChannel: 'contact_buyer_updates'
+               })
+               form.reset()
+               feedback.textContent = (result && result.message) ? result.message : 'You are now subscribed to buyer updates.'
+               feedback.classList.remove('is-error')
+             } catch (error) {
+               feedback.textContent = error && error.message ? error.message : 'Failed to subscribe.'
+               feedback.classList.add('is-error')
+             }
+           })
+         })
+       </script>
 	 </div>
-	 <div class="col-sm-6">
+	<div class="col-sm-6">
 	  <div class="contact_page_2i clearfix">
 		   <h3 class="mgt">Buyer Updates</h3>
 		   <p>Receive crop forecasts, shipment windows, market notes, and documentation updates from our export desk.</p>
-		   <input class="form-control" type="text" placeholder="Your name">
-		   <input class="form-control" type="text" placeholder="Your email">
-		   <h5><a class="button_2" href="#"><span>SUBSCRIBE</span> <i class="fa fa-chevron-right"></i></a></h5>
+		   <form id="buyer-updates-form" class="contact-page-updates-form" novalidate>
+		     <input id="buyer-updates-name" class="form-control" type="text" name="fullName" placeholder="Your name">
+		     <input id="buyer-updates-email" class="form-control" type="email" name="email" placeholder="Your email" required>
+		     <button class="button_2" type="submit"><span>SUBSCRIBE</span> <i class="fa fa-chevron-right"></i></button>
+		     <p class="contact-page-updates-feedback" id="buyer-updates-feedback" aria-live="polite"></p>
+		   </form>
 	  </div>
 	  <div class="contact_page_2ii clearfix">
 	    <ul class="social-network social-circle mgt">
@@ -580,10 +706,9 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/supabase/inquiries.min.js"></script>
 <script src="js/supabase/subscriptions.min.js"></script>
 <script src="js/supabase/blog.min.js"></script>
-<script src="js/supabase/forms.min.js"></script>
 <script src="js/supabase/content.js"></script>
+<script type="module" src="js/blog-forms.js"></script>
 <script src="js/supabase/init.min.js"></script>
-
 </body>
  
 </html>

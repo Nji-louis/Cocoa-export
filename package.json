@@ -4,10 +4,14 @@
   "private": true,
   "scripts": {
     "seo:sync": "node scripts/seo-head-upgrade.js",
+    "create:bucket": "node scripts/create_bucket.js",
     "minify": "node scripts/minify-assets.js",
     "build:prod": "npm run seo:sync && npm run minify"
   },
   "devDependencies": {
     "supabase": "^2.95.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.3"
   }
 }
