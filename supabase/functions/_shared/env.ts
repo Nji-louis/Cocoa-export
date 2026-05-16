@@ -13,18 +13,37 @@ export function requireEnv(name: string): string {
   return value;
 }
 
+export function getEnv(name: string): string | undefined {
+  const runtime = globalThis as unknown as {
+    Deno?: {
+      env?: {
+        get: (key: string) => string | undefined;
+      };
+    };
+  };
+  return runtime.Deno?.env?.get(name);
+}
+
 export function getSupabaseAdminEnv() {
+  const serviceRoleKey = getEnv("SERVICE_ROLE_KEY") ?? getEnv("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceRoleKey) {
+    throw new Error("Missing required environment variable: SERVICE_ROLE_KEY");
+  }
   return {
     supabaseUrl: requireEnv("SUPABASE_URL"),
-    supabaseServiceRoleKey: requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
+    supabaseServiceRoleKey: serviceRoleKey,
   };
 }
 
 export function getSupabaseEnv() {
+  const serviceRoleKey = getEnv("SERVICE_ROLE_KEY") ?? getEnv("SUPABASE_SERVICE_ROLE_KEY");
+  if (!serviceRoleKey) {
+    throw new Error("Missing required environment variable: SERVICE_ROLE_KEY");
+  }
   return {
     supabaseUrl: requireEnv("SUPABASE_URL"),
     supabaseAnonKey: requireEnv("SUPABASE_ANON_KEY"),
-    supabaseServiceRoleKey: requireEnv("SUPABASE_SERVICE_ROLE_KEY"),
+    supabaseServiceRoleKey: serviceRoleKey,
   };
 }
 

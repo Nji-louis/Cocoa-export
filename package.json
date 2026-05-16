@@ -9,7 +9,7 @@
     "build:prod": "npm run seo:sync && npm run minify"
   },
   "devDependencies": {
-    "supabase": "^2.95.0"
+    "supabase": "^2.99.0-beta.8"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.3"

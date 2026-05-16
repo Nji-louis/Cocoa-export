@@ -140,11 +140,12 @@ npx supabase functions deploy vote-buyer-testimonial
 
 ## 10) Production Notes
 
-- Keep `SUPABASE_SERVICE_ROLE_KEY` only in Edge Function secrets.
+- Keep `SERVICE_ROLE_KEY` only in Edge Function secrets.
 - Keep only anon key on frontend (`config.min.js`).
-- In Supabase Dashboard `Authentication > URL Configuration`, set `Site URL` to `https://nji-louis.github.io/Cocoa-export` and add `https://nji-louis.github.io/Cocoa-export/login.html` as a redirect URL.
+- In Supabase Dashboard `Authentication > URL Configuration`, set `Site URL` to `https://nji-louis.github.io/Cocoa-export` and add `https://nji-louis.github.io/Cocoa-export/auth/login.html` as a redirect URL.
 - In Supabase Dashboard `Authentication > Email`, keep email/password enabled, keep email confirmation enabled for buyers, and configure a working sender. For reliable delivery in production, use custom SMTP instead of relying on the default shared sender.
 - If you use custom SMTP, verify the sender domain with SPF/DKIM so confirmation and password-reset emails do not disappear into spam or get rejected.
 - Enable PITR backups and monitor query performance/index usage in Supabase dashboard.
 - Set `ALLOWED_ORIGINS` and `RATE_LIMIT_PEPPER` in `supabase/.env` before `supabase secrets set`.
+- For this repository, include the GitHub Pages origin `https://nji-louis.github.io` in `ALLOWED_ORIGINS` so browser comment submissions are accepted from the deployed homepage.
 - Rotate any keys that were previously exposed in chat/logs.

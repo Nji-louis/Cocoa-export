@@ -37,7 +37,7 @@ This document contains minimal setup instructions, schema notes, and RLS guidanc
 
 7) Migration / deploy tips
 
-- Run migrations in order. If using the Supabase CLI, set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in your environment and run `supabase db push` or `supabase migration run` depending on your workflow.
+- Run migrations in order. If using the Supabase CLI, set `SUPABASE_URL` and `SERVICE_ROLE_KEY` in your environment and run `supabase db push` or `supabase migration run` depending on your workflow.
 
 Functions (deploy & test)
 ------------------------
@@ -55,7 +55,7 @@ Functions (deploy & test)
 
 - Add required function environment variables in Supabase (Project -> Functions -> <function> -> Settings):
   - `SUPABASE_URL`
-  - `SUPABASE_SERVICE_ROLE_KEY`
+  - `SERVICE_ROLE_KEY`
 
 - Test functions with `curl` using an admin user's access token. See `supabase/functions/TESTING.md` for examples.
 
@@ -76,4 +76,3 @@ Security notes:
 - Use a dedicated, limited-scope test admin account for CI and rotate credentials regularly.
 - Never expose the `SUPABASE_SERVICE_ROLE_KEY` as a repo secret for Actions that run in untrusted contexts. Service-role key must only be used in function runtime settings or secure server environments.
 - Review the function responses and logs after a run to ensure no sensitive data is leaked into workflow logs.
-

@@ -1,8 +1,16 @@
 import { handleCors } from "../_shared/cors.ts";
 import { fail, json } from "../_shared/http.ts";
 import { getOptionalUser } from "../_shared/auth.ts";
-import { enforceIpRateLimit, enforceRateLimit, RateLimitExceededError } from "../_shared/rate-limit.ts";
-import { assertAllowedOrigin, assertHoneypot, readJsonObject } from "../_shared/security.ts";
+import {
+  enforceIpRateLimit,
+  enforceRateLimit,
+  RateLimitExceededError,
+} from "../_shared/rate-limit.ts";
+import {
+  assertAllowedOrigin,
+  assertHoneypot,
+  readJsonObject,
+} from "../_shared/security.ts";
 import {
   asEmail,
   asOptionalEmail,
@@ -12,6 +20,21 @@ import {
 } from "../_shared/validation.ts";
 import { createServiceClient } from "../_shared/supabase.ts";
 import { serveHttp } from "../_shared/runtime.ts";
+import { sendInquiryEmails } from "../_shared/inquiry-email.ts";
+
+function getFormType(sourceChannel: string): string {
+  switch (sourceChannel) {
+    case "buyer_quote_form":
+      return "Request Quote";
+    case "contact_export_inquiry_form":
+    case "home_export_inquiry_form":
+      return "Export Inquiry";
+    case "product_inquiry_form":
+      return "Product Inquiry";
+    default:
+      return "Website Inquiry";
+  }
+}
 
 serveHttp(async (req: Request) => {
   const cors = handleCors(req);
@@ -26,23 +49,35 @@ serveHttp(async (req: Request) => {
     const body = await readJsonObject(req);
     assertHoneypot(body);
 
-    const contactName = asOptionalString(body.contactName ?? body.buyerName ?? body.name, 180);
-    const companyName = asOptionalString(body.companyName, 180) ?? contactName ?? "Website Buyer";
+    const contactName = asOptionalString(
+      body.contactName ?? body.buyerName ?? body.name,
+      180,
+    );
+    const companyName = asOptionalString(body.companyName, 180) ??
+      contactName ?? "Website Buyer";
 
-    const workEmail =
-      asOptionalEmail(body.workEmail, "workEmail") ??
+    const workEmail = asOptionalEmail(body.workEmail, "workEmail") ??
       asOptionalEmail(body.buyerEmail, "buyerEmail") ??
       asEmail(body.email, "email");
 
-    const phoneWhatsApp = asOptionalString(body.phoneWhatsApp ?? body.phone, 80);
-    const countryRegion = asOptionalString(body.countryRegion ?? body.country, 120);
+    const phoneWhatsApp = asOptionalString(
+      body.phoneWhatsApp ?? body.phone,
+      80,
+    );
+    const countryRegion = asOptionalString(
+      body.countryRegion ?? body.country,
+      120,
+    );
     const destinationPort = asOptionalString(body.destinationPort, 160);
-    const preferredIncoterm = asOptionalString(body.preferredIncoterm ?? body.incoterm, 40);
+    const preferredIncoterm = asOptionalString(
+      body.preferredIncoterm ?? body.incoterm,
+      40,
+    );
     const qualitySpecs = asOptionalString(body.qualitySpecs, 1000);
     const message = asOptionalString(body.message ?? body.quoteMessage, 3000);
     const inquiryTopic =
       asOptionalString(body.inquiryTopic ?? body.topic, 120) ??
-      asOptionalString(body.productSelect, 120);
+        asOptionalString(body.productSelect, 120);
     const requiredVolumeMt = asOptionalPositiveNumber(
       body.requiredVolumeMt ?? body.quantity,
       "requiredVolumeMt",
@@ -62,10 +97,11 @@ serveHttp(async (req: Request) => {
     });
 
     let productId: string | null = null;
+    let productName: string | null = null;
     if (productSlug) {
       const { data: product, error: productError } = await admin
         .from("products")
-        .select("id")
+        .select("id, name")
         .eq("slug", productSlug)
         .single();
 
@@ -73,6 +109,7 @@ serveHttp(async (req: Request) => {
         return fail("Invalid product slug", 400, productError.message);
       }
       productId = product.id;
+      productName = product.name;
     }
 
     const { data: inquiry, error: insertError } = await admin
@@ -112,29 +149,44 @@ serveHttp(async (req: Request) => {
       },
     });
 
+    const emailStatus = await sendInquiryEmails({
+      formType: getFormType(sourceChannel),
+      buyerName: contactName,
+      buyerEmail: workEmail,
+      buyerPhone: phoneWhatsApp,
+      companyName,
+      productName: productName ?? inquiryTopic,
+      country: countryRegion,
+      message,
+      requestNumber: inquiry.request_number,
+      submittedAt: inquiry.created_at,
+    });
+
     return json({
       inquiryId: inquiry.id,
       requestNumber: inquiry.request_number,
       status: inquiry.status,
       createdAt: inquiry.created_at,
+      emailStatus,
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unexpected server error";
-    const status =
-      message === "Unauthorized"
-        ? 401
-        : message === "Origin is not allowed"
-          ? 403
-          : error instanceof RateLimitExceededError
-            ? 429
-            : 400;
+    const message = error instanceof Error
+      ? error.message
+      : "Unexpected server error";
+    const status = message === "Unauthorized"
+      ? 401
+      : message === "Origin is not allowed"
+      ? 403
+      : error instanceof RateLimitExceededError
+      ? 429
+      : 400;
     return fail(
       message,
       status,
       error instanceof RateLimitExceededError
         ? {
-            retryAfterSeconds: error.retryAfterSeconds,
-          }
+          retryAfterSeconds: error.retryAfterSeconds,
+        }
         : undefined,
     );
   }

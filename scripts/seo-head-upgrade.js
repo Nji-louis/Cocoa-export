@@ -67,9 +67,8 @@ function canonicalForRedirect(relativePath, content) {
 
 function isPrivatePage(relativePath) {
   return (
-    relativePath === 'login.html' ||
-    relativePath === 'admin_console.html' ||
-    relativePath === 'admin.console.html' ||
+    relativePath === 'auth/login.html' ||
+    relativePath === 'admin/login.html' ||
     relativePath.startsWith('admin/') ||
     relativePath.startsWith('buyer-portal/')
   );
@@ -81,16 +80,12 @@ function trimTitleSuffix(title, suffixPattern, fallbackValue) {
 }
 
 function inferDescription(relativePath, title) {
-  if (relativePath === 'login.html') {
+  if (relativePath === 'auth/login.html') {
     return 'Secure account access page for CHOCOCAM buyers, staff, and administrators.';
   }
 
-  if (relativePath === 'admin_console.html') {
-    return 'Administrative console for CHOCOCAM platform management.';
-  }
-
-  if (relativePath === 'admin.console.html') {
-    return 'Administrative redirect page for CHOCOCAM platform management.';
+  if (relativePath === 'admin/login.html') {
+    return 'Administrative access page for CHOCOCAM platform management.';
   }
 
   if (relativePath.startsWith('admin/')) {
@@ -154,7 +149,6 @@ function schemaFor({ title, description, canonical, noIndex }) {
 }
 
 function isRedirectPage(content, relativePath) {
-  if (relativePath === 'admin.console.html') return true;
   if (/product_(amelonado|bresilien|criollo|cundeamor|forastero|trinitario|cocoa_butter|cocoa_shell)\.html/i.test(relativePath)) return true;
   return /http-equiv\s*=\s*"refresh"/i.test(content);
 }

@@ -8,6 +8,7 @@
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
+import { getSupabaseAdminEnv } from "../_shared/env.ts";
 import { getPrimaryRole } from "../_shared/roles.ts";
 
 const ALLOWED_ROLES = ["buyer", "staff", "editor", "admin", "super_admin"] as const;
@@ -22,10 +23,7 @@ function normalizeRole(value: unknown): string {
 
 serve(async (req) => {
   try {
-    const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
-    const SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-    if (!SUPABASE_URL || !SERVICE_KEY) return new Response("Supabase config missing", { status: 500 });
-
+    const { supabaseUrl: SUPABASE_URL, supabaseServiceRoleKey: SERVICE_KEY } = getSupabaseAdminEnv();
     const supabaseAdmin: any = createClient(SUPABASE_URL, SERVICE_KEY);
 
     const authHeader = req.headers.get("authorization") || "";

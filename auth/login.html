@@ -1,59 +1,104 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Login</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/css/global.css">
-  <!-- Example: set these meta tags with your project values or use window.__SUPABASE_CONFIG__ -->
-  <meta name="supabase-url" content="https://YOUR_SUPABASE_URL">
-  <meta name="supabase-anon-key" content="YOUR_SUPABASE_ANON_KEY">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Buyer Login | CAMCOCOA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Source+Sans+3:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/font-awesome.min.css">
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/portal.css">
 </head>
-<body>
-  <main>
-    <h1>Login</h1>
-    <form id="loginForm">
-      <label>Email <input type="email" name="email" required></label>
-      <label>Password <input type="password" name="password" required></label>
-      <button type="submit">Login</button>
-    </form>
-    <p>Don't have an account? <a href="/auth/signup.html">Sign up</a></p>
+<body class="portal-auth-page" data-auth-entry="login">
+  <main class="auth-shell">
+    <section class="auth-hero">
+      <a class="auth-brand" href="../index.html">CAMCOCOA</a>
+      <h1>Buyer portal access</h1>
+      <p>Sign in to view export-ready cocoa products, send inquiries, track order conversations, and manage your buyer profile.</p>
+      <div class="auth-proof">
+        <span><i class="fa fa-lock"></i> Secure Supabase session</span>
+        <span><i class="fa fa-check-circle"></i> Protected buyer dashboard</span>
+        <span><i class="fa fa-ship"></i> Export inquiry workflow</span>
+      </div>
+    </section>
+
+    <section class="auth-panel" aria-label="Account access">
+      <div id="auth-setup-notice" class="auth-status error"></div>
+      <div id="auth-main-row" class="auth-grid">
+        <form id="login-form" class="portal-card auth-form" novalidate>
+          <p class="eyebrow">Existing buyer</p>
+          <h2>Sign in</h2>
+          <label for="login-email">Email</label>
+          <input id="login-email" class="form-control" type="email" autocomplete="email" required>
+          <label for="login-password">Password</label>
+          <input id="login-password" class="form-control" type="password" autocomplete="current-password" required>
+          <div id="login-status" class="auth-status"></div>
+          <button class="portal-btn primary" type="submit">Sign In</button>
+          <div class="auth-actions">
+            <button id="login-forgot" type="button">Forgot password?</button>
+            <button id="login-resend" type="button">Resend confirmation</button>
+          </div>
+        </form>
+
+        <form id="signup-form" class="portal-card auth-form" novalidate>
+          <p class="eyebrow">New buyer</p>
+          <h2>Create account</h2>
+          <label for="signup-full-name">Full name</label>
+          <input id="signup-full-name" class="form-control" type="text" autocomplete="name" required>
+          <label for="signup-company">Company name</label>
+          <input id="signup-company" class="form-control" type="text" autocomplete="organization" required>
+          <div class="split-fields">
+            <div>
+              <label for="signup-phone">Phone / WhatsApp</label>
+              <input id="signup-phone" class="form-control" type="tel" autocomplete="tel" required>
+            </div>
+            <div>
+              <label for="signup-country">Country / region</label>
+              <input id="signup-country" class="form-control" type="text" autocomplete="country-name" required>
+            </div>
+          </div>
+          <label for="signup-email">Work email</label>
+          <input id="signup-email" class="form-control" type="email" autocomplete="email" required>
+          <div class="split-fields">
+            <div>
+              <label for="signup-password">Password</label>
+              <input id="signup-password" class="form-control" type="password" autocomplete="new-password" minlength="8" required>
+            </div>
+            <div>
+              <label for="signup-confirm-password">Confirm</label>
+              <input id="signup-confirm-password" class="form-control" type="password" autocomplete="new-password" minlength="8" required>
+            </div>
+          </div>
+          <div id="signup-status" class="auth-status"></div>
+          <button class="portal-btn secondary" type="submit">Create Buyer Account</button>
+        </form>
+      </div>
+
+      <div id="recovery-row" class="portal-card auth-form recovery-card" style="display:none">
+        <p class="eyebrow">Password recovery</p>
+        <h2>Set a new password</h2>
+        <form id="recovery-form" novalidate>
+          <input id="recovery-username" class="sr-only" type="text" autocomplete="username" tabindex="-1" aria-hidden="true">
+          <label for="recovery-password">New password</label>
+          <input id="recovery-password" class="form-control" type="password" autocomplete="new-password" minlength="8" required>
+          <label for="recovery-confirm-password">Confirm password</label>
+          <input id="recovery-confirm-password" class="form-control" type="password" autocomplete="new-password" minlength="8" required>
+          <div id="recovery-status" class="auth-status"></div>
+          <button class="portal-btn primary" type="submit">Update Password</button>
+          <button id="recovery-back" class="link-btn" type="button">Back to sign in</button>
+        </form>
+      </div>
+    </section>
   </main>
-  <script type="module">
-    import { supabase, initSupabase } from '../js/supabaseClient.js'
 
-    // If you prefer runtime config, set window.__SUPABASE_CONFIG__ = { url: '...', anonKey: '...' }
-    if (window.__SUPABASE_CONFIG__) {
-      initSupabase(window.__SUPABASE_CONFIG__)
-    }
-
-    const form = document.getElementById('loginForm')
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const formData = new FormData(form)
-      const email = formData.get('email')
-      const password = formData.get('password')
-
-      const { error, data } = await supabase.auth.signInWithPassword({ email, password })
-      if (error) {
-        alert(error.message)
-        return
-      }
-
-      // fetch profile and redirect based on role
-      const { data: profile, error: pErr } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user.id)
-        .single()
-
-      const role = profile?.role ?? 'buyer'
-      if (role === 'admin') {
-        window.location.href = '/dashboard/admin/index.html'
-      } else {
-        window.location.href = '/dashboard/buyer/index.html'
-      }
-    })
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../js/supabase/config.min.js"></script>
+  <script src="../js/supabase/client.min.js"></script>
+  <script src="../js/supabase/auth.min.js"></script>
+  <script src="../js/auth-flow.js"></script>
 </body>
 </html>

@@ -6,14 +6,16 @@ usage() {
 Usage: $(basename "$0") <PROJECT_REF>
 
 Deploys all Edge Functions under supabase/functions to the given Supabase project
-and sets required secrets (SUPABASE_SERVICE_ROLE_KEY and SUPABASE_URL) using the
+and sets required secrets (SERVICE_ROLE_KEY and SUPABASE_URL) using the
 Supabase CLI. The script expects the following environment variables to be set:
 
-  SUPABASE_SERVICE_ROLE_KEY  (required) - your Supabase service_role key
-  SUPABASE_URL               (required) - https://<project>.supabase.co
+  SUPABASE_SERVICE_ROLE_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzeWF3dGtya2p2dWxyamhnYnluIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODA2NDc3MSwiZXhwIjoyMDkzNjQwNzcxfQ.uhYXeAaEd8Yl0x3DLgN8FmBDCFgKlQQrARnRtft44dA"
+  SUPABASE_URL= "https://zsyawtkrkjvulrjhgbyn.supabase.co"
+  ALLOWED_ORIGINS            (optional)  - comma-separated browser origins for Edge Functions
 
 Example:
   SUPABASE_SERVICE_ROLE_KEY="<service_key>" SUPABASE_URL="https://xyz.supabase.co" \
+    ALLOWED_ORIGINS="https://nji-louis.github.io,http://localhost:5500" \
     ./scripts/deploy-edge-functions.sh your-project-ref
 
 Requirements:
@@ -40,8 +42,17 @@ else
 fi
 
 if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
-  echo "ERROR: SUPABASE_SERVICE_ROLE_KEY environment variable is required."
-  exit 3
+  if [ -z "${SERVICE_ROLE_KEY:-}" ]; then
+    if [ -t 0 ]; then
+      printf 'Supabase service role key: '
+      read -r -s SERVICE_ROLE_KEY
+      printf '\n'
+    fi
+    if [ -z "${SERVICE_ROLE_KEY:-}" ]; then
+      echo "ERROR: SUPABASE_SERVICE_ROLE_KEY or SERVICE_ROLE_KEY environment variable is required."
+      exit 3
+    fi
+  fi
 fi
 if [ -z "${SUPABASE_URL:-}" ]; then
   echo "ERROR: SUPABASE_URL environment variable is required."
@@ -61,14 +72,36 @@ echo "Deploying Edge Functions from $FUNCTIONS_DIR to project $PROJECT_REF"
 for fn_path in "$FUNCTIONS_DIR"/*; do
   if [ -d "$fn_path" ]; then
     fn_name=$(basename "$fn_path")
+    case "$fn_name" in
+      _*)
+        echo "-> Skipping helper directory: $fn_name"
+        continue
+        ;;
+    esac
     echo "-> Deploying function: $fn_name"
     "${SUPABASE_CMD[@]}" functions deploy "$fn_name" --project-ref "$PROJECT_REF"
   fi
 done
 
 echo "Setting secrets in Supabase project (service role key + url)"
-"${SUPABASE_CMD[@]}" secrets set SUPABASE_SERVICE_ROLE_KEY="$SUPABASE_SERVICE_ROLE_KEY" --project-ref "$PROJECT_REF"
-"${SUPABASE_CMD[@]}" secrets set SUPABASE_URL="$SUPABASE_URL" --project-ref "$PROJECT_REF"
+SERVICE_ROLE_KEY_VALUE="${SERVICE_ROLE_KEY:-${SUPABASE_SERVICE_ROLE_KEY:-}}"
+if [ -z "$SERVICE_ROLE_KEY_VALUE" ]; then
+  echo "ERROR: missing service role key value."
+  exit 3
+fi
+SECRETS_FILE="$(mktemp /tmp/cocoabridge-supabase-secrets.XXXXXX.env)"
+cat > "$SECRETS_FILE" <<EOF
+SERVICE_ROLE_KEY=$SERVICE_ROLE_KEY_VALUE
+SUPABASE_URL=$SUPABASE_URL
+EOF
+if [ -n "${ALLOWED_ORIGINS:-}" ]; then
+  echo "Setting allowed origins in Supabase project"
+  printf 'ALLOWED_ORIGINS=%s\n' "$ALLOWED_ORIGINS" >> "$SECRETS_FILE"
+else
+  echo "ALLOWED_ORIGINS not set; Edge Functions will allow all origins. Set it for production."
+fi
+"${SUPABASE_CMD[@]}" secrets set --env-file "$SECRETS_FILE" --project-ref "$PROJECT_REF"
+rm -f "$SECRETS_FILE"
 
 echo "Listing deployed functions:" 
 "${SUPABASE_CMD[@]}" functions list --project-ref "$PROJECT_REF"

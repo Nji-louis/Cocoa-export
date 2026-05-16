@@ -419,8 +419,10 @@
 			import { submitInquiry } from '/js/forms.js'
 			const form = document.getElementById('product-inquiry-form')
 			const feedback = document.getElementById('product-inquiry-feedback')
+			const submitButton = form.querySelector('button[type="submit"]')
 			form.addEventListener('submit', async (e) => {
 				e.preventDefault()
+				submitButton.disabled = true
 				feedback.innerText = 'Sending...'
 				const productTitle = document.getElementById('product-detail-title-text')?.innerText || document.getElementById('product-detail-variety')?.innerText || ''
 				const fd = new FormData(form)
@@ -431,6 +433,8 @@
 					form.reset()
 				} catch (err) {
 					feedback.innerText = err.message || 'Failed to submit inquiry.'
+				} finally {
+					submitButton.disabled = false
 				}
 			})
 		</script>

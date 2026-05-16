@@ -91,6 +91,290 @@ color:#000;
 }
 /*********************about_end****************/
 
+/*********************camcocoa_team_partners****************/
+#camcocoa_team_partners,
+#camcocoa_partners{
+ position:relative;
+ overflow:hidden;
+ padding:72px 0;
+}
+#camcocoa_team_partners{
+ background:
+  radial-gradient(circle at top left,rgba(201,162,39,0.12),transparent 34%),
+  linear-gradient(180deg,#fffaf2 0%,#f7f1e6 100%);
+}
+#camcocoa_partners{
+ background:
+  radial-gradient(circle at top right,rgba(78,52,46,0.1),transparent 30%),
+  #fff;
+}
+#camcocoa_team_partners::before,
+#camcocoa_partners::before{
+ content:"";
+ position:absolute;
+ inset:0;
+ pointer-events:none;
+ background-image:linear-gradient(135deg,rgba(78,52,46,0.03) 25%,transparent 25%,transparent 50%,rgba(78,52,46,0.03) 50%,rgba(78,52,46,0.03) 75%,transparent 75%,transparent);
+ background-size:18px 18px;
+ opacity:.35;
+}
+.camcocoa-section-heading{
+ position:relative;
+ z-index:1;
+ max-width:860px;
+ margin:0 auto 34px;
+}
+.camcocoa-kicker{
+ margin:0 0 10px;
+ font-size:14px;
+ letter-spacing:2px;
+ text-transform:uppercase;
+ font-weight:700;
+ color:#c9a227;
+}
+.camcocoa-section-heading h2{
+ margin:0;
+ color:#2f201a;
+ font-size:40px;
+ line-height:1.15;
+}
+.camcocoa-subtitle{
+ margin:14px auto 0;
+ max-width:760px;
+ font-size:18px;
+ line-height:1.7;
+ color:#6f6258;
+}
+.camcocoa-intro-panel{
+ position:relative;
+ z-index:1;
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ gap:22px;
+ margin:0 0 28px;
+ padding:24px 26px;
+ border:1px solid rgba(78,52,46,0.12);
+ border-radius:22px;
+ background:rgba(255,255,255,0.82);
+ box-shadow:0 16px 36px rgba(44,28,18,0.08);
+ backdrop-filter:blur(10px);
+}
+.camcocoa-intro-panel--partners{
+ margin-top:4px;
+}
+.camcocoa-intro-copy{
+ flex:1 1 60%;
+}
+.camcocoa-intro-copy h3{
+ margin:0 0 10px;
+ font-size:26px;
+ line-height:1.28;
+ color:#3d261f;
+}
+.camcocoa-intro-copy p{
+ margin:0;
+ color:#64564b;
+ font-size:15px;
+ line-height:1.75;
+}
+.camcocoa-intro-points{
+ flex:0 0 320px;
+ display:flex;
+ flex-wrap:wrap;
+ gap:10px;
+ justify-content:flex-end;
+}
+.camcocoa-intro-points span{
+ display:inline-flex;
+ align-items:center;
+ gap:7px;
+ padding:9px 12px;
+ border-radius:999px;
+ border:1px solid rgba(201,162,39,0.22);
+ background:rgba(255,248,229,0.9);
+ color:#4e342e;
+ font-size:13px;
+ font-weight:700;
+}
+.camcocoa-intro-points i{
+ color:#c9a227;
+}
+.camcocoa-team-grid{
+ position:relative;
+ z-index:1;
+ display:grid;
+ grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:22px;
+}
+.camcocoa-team-card{
+ position:relative;
+ border:1px solid rgba(78,52,46,0.12);
+ border-radius:22px;
+ overflow:hidden;
+ background:rgba(255,255,255,0.78);
+ box-shadow:0 18px 45px rgba(44,28,18,0.08);
+ backdrop-filter:blur(10px);
+ transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.camcocoa-team-card:hover{
+ transform:translateY(-8px);
+ box-shadow:0 28px 55px rgba(44,28,18,0.14);
+ border-color:rgba(201,162,39,0.34);
+}
+.camcocoa-team-photo{
+ position:relative;
+ overflow:hidden;
+ aspect-ratio:1 / 1.02;
+ background:linear-gradient(135deg,rgba(78,52,46,0.1),rgba(201,162,39,0.1));
+}
+.camcocoa-team-photo::after{
+ content:"";
+ position:absolute;
+ inset:auto 0 0;
+ height:54%;
+ background:linear-gradient(180deg,rgba(24,15,11,0) 0%,rgba(24,15,11,0.08) 38%,rgba(24,15,11,0.82) 100%);
+}
+.camcocoa-team-photo img{
+ width:100%;
+ height:100%;
+ object-fit:cover;
+ display:block;
+ transition:transform .55s ease, filter .55s ease;
+ filter:saturate(.92) contrast(1.02);
+}
+.camcocoa-team-card:hover .camcocoa-team-photo img{
+ transform:scale(1.06);
+ filter:saturate(1.05) contrast(1.06);
+}
+.camcocoa-team-body{
+ position:relative;
+ padding:20px 20px 22px;
+}
+.camcocoa-team-role{
+ margin:0 0 8px;
+ font-size:13px;
+ font-weight:700;
+ letter-spacing:1.4px;
+ text-transform:uppercase;
+ color:#c9a227;
+}
+.camcocoa-team-body h3{
+ margin:0 0 10px;
+ font-size:22px;
+ line-height:1.25;
+ color:#3d261f;
+}
+.camcocoa-team-body p{
+ margin:0;
+ color:#64564b;
+ font-size:15px;
+ line-height:1.7;
+}
+.camcocoa-social{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-top:16px;
+}
+.camcocoa-social a{
+ width:38px;
+ height:38px;
+ border-radius:50%;
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ border:1px solid rgba(78,52,46,0.14);
+ background:rgba(255,255,255,0.84);
+ color:#4e342e;
+ box-shadow:0 8px 18px rgba(44,28,18,0.08);
+ transition:transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.camcocoa-social a:hover,
+.camcocoa-social a:focus{
+ transform:translateY(-2px);
+ background:#4e342e;
+ color:#fff;
+ border-color:#4e342e;
+}
+.camcocoa-partner-grid{
+ position:relative;
+ z-index:1;
+ display:grid;
+ grid-template-columns:repeat(5,minmax(0,1fr));
+ gap:18px;
+}
+.camcocoa-partner-card{
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+ text-align:center;
+ gap:14px;
+ min-height:100%;
+ padding:24px 18px 22px;
+ border-radius:20px;
+ border:1px solid rgba(78,52,46,0.12);
+ background:linear-gradient(180deg,rgba(255,255,255,0.92) 0%,rgba(248,242,231,0.96) 100%);
+ box-shadow:0 16px 34px rgba(44,28,18,0.08);
+ transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
+}
+.camcocoa-partner-card:hover{
+ transform:translateY(-6px);
+ box-shadow:0 24px 48px rgba(44,28,18,0.13);
+ border-color:rgba(201,162,39,0.34);
+}
+.camcocoa-partner-badge{
+ width:112px;
+ height:112px;
+ border-radius:28px;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ background:linear-gradient(145deg,#4e342e 0%,#67463d 45%,#c9a227 130%);
+ border:1px solid rgba(255,255,255,0.2);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 12px 24px rgba(44,28,18,0.12);
+ color:#fff7de;
+ font-size:32px;
+ font-weight:700;
+ letter-spacing:1px;
+ position:relative;
+ overflow:hidden;
+ transition:transform .28s ease, box-shadow .28s ease, filter .28s ease;
+}
+.camcocoa-partner-badge::before{
+ content:"";
+ position:absolute;
+ inset:10px;
+ border-radius:22px;
+ border:1px solid rgba(255,255,255,0.24);
+}
+.camcocoa-partner-card:hover .camcocoa-partner-badge{
+ transform:scale(1.03);
+ box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 18px 30px rgba(44,28,18,0.18);
+}
+.camcocoa-partner-copy h3{
+ margin:0 0 8px;
+ font-size:20px;
+ color:#3d261f;
+}
+.camcocoa-partner-copy p{
+ margin:0;
+ color:#65584f;
+ font-size:14px;
+ line-height:1.65;
+}
+.camcocoa-reveal{
+ opacity:0;
+ transform:translateY(22px) scale(.985);
+ transition:opacity .65s ease, transform .65s ease;
+ will-change:opacity, transform;
+}
+.camcocoa-reveal.is-visible{
+ opacity:1;
+ transform:translateY(0) scale(1);
+}
+/*********************camcocoa_team_partners_end****************/
+
 /*********************timeline****************/
 
 .timeline_m{
@@ -135,6 +419,50 @@ background:#999;
 display:inline-block;
 width:auto; 
  }
+#camcocoa_team_partners,
+#camcocoa_partners{
+ padding:52px 0;
+}
+.camcocoa-section-heading{
+ margin-bottom:22px;
+}
+.camcocoa-section-heading h2{
+ font-size:30px;
+}
+.camcocoa-subtitle{
+ font-size:16px;
+}
+.camcocoa-intro-panel{
+ flex-direction:column;
+ padding:18px 16px;
+ margin-bottom:22px;
+}
+.camcocoa-intro-copy h3{
+ font-size:22px;
+}
+.camcocoa-intro-points{
+ flex:1 1 auto;
+ justify-content:flex-start;
+}
+.camcocoa-team-grid,
+.camcocoa-partner-grid{
+ grid-template-columns:1fr;
+ gap:16px;
+}
+.camcocoa-team-body{
+ padding:18px 16px 20px;
+}
+.camcocoa-team-body h3{
+ font-size:20px;
+}
+.camcocoa-partner-card{
+ padding:22px 16px 20px;
+}
+.camcocoa-partner-badge{
+ width:96px;
+ height:96px;
+ font-size:28px;
+}
 #timeline{
 text-align:center; 
  }
@@ -170,8 +498,23 @@ padding-bottom:0;
  line-height:40px;
  font-size:18px; 
   }
+ .camcocoa-intro-panel{
+  flex-direction:column;
+ }
+ .camcocoa-team-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ .camcocoa-partner-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
  }
  @media (min-width:992px) and (max-width:1200px) {
+ .camcocoa-team-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ .camcocoa-partner-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr));
+ }
 
  }
 @media (min-width:1201px) and (max-width:1310px) {

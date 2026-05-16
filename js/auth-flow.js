@@ -134,7 +134,7 @@
       return undefined;
     }
 
-    const baseUrl = ns.resolveEmailRedirectUrl("/login.html");
+    const baseUrl = ns.resolveEmailRedirectUrl("/auth/login.html");
     if (!baseUrl) {
       return undefined;
     }
@@ -480,7 +480,7 @@
     });
 
     if (!session) {
-      const loginUrl = new URL(ns.getAppRoute ? ns.getAppRoute("login") : "/login.html", global.location.origin);
+      const loginUrl = new URL(ns.getAppRoute ? ns.getAppRoute("login") : "/auth/login.html", global.location.origin);
       loginUrl.searchParams.set("redirect", getRelativeCurrentPath());
       global.location.href = loginUrl.toString();
       return;

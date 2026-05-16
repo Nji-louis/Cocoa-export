@@ -1,57 +1,14 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Sign Up</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="/css/global.css">
-  <!-- Example: set these meta tags with your project values or use window.__SUPABASE_CONFIG__ -->
-  <meta name="supabase-url" content="https://YOUR_SUPABASE_URL">
-  <meta name="supabase-anon-key" content="YOUR_SUPABASE_ANON_KEY">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Create Buyer Account | CAMCOCOA</title>
+  <meta http-equiv="refresh" content="0; url=login.html">
+  <link rel="canonical" href="login.html">
 </head>
 <body>
-  <main>
-    <h1>Sign Up</h1>
-    <form id="signupForm">
-      <label>Email <input type="email" name="email" required></label>
-      <label>Password <input type="password" name="password" required></label>
-      <label>Company Name <input type="text" name="company_name"></label>
-      <button type="submit">Create account</button>
-    </form>
-    <p>Already have an account? <a href="/auth/login.html">Login</a></p>
-  </main>
-
-  <script type="module">
-    import { supabase, initSupabase } from '../js/supabaseClient.js'
-
-    // If you prefer runtime config, set window.__SUPABASE_CONFIG__ = { url: '...', anonKey: '...' }
-    if (window.__SUPABASE_CONFIG__) {
-      initSupabase(window.__SUPABASE_CONFIG__)
-    }
-
-    const form = document.getElementById('signupForm')
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault()
-      const fd = new FormData(form)
-      const email = fd.get('email')
-      const password = fd.get('password')
-      const company_name = fd.get('company_name') || null
-
-      const { data, error } = await supabase.auth.signUp({ email, password })
-      if (error) {
-        alert(error.message)
-        return
-      }
-
-      // Insert profile with default role buyer
-      const userId = data.user?.id
-      if (userId) {
-        await supabase.from('profiles').upsert({ id: userId, email, role: 'buyer', company_name })
-      }
-
-      // Redirect to login (or auto-login if email confirmed)
-      window.location.href = '/auth/login.html'
-    })
-  </script>
+  <p>Redirecting to <a href="login.html">buyer account access</a>...</p>
 </body>
 </html>

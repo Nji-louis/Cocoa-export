@@ -5,7 +5,7 @@ Updated for the current site flows on April 8, 2026.
 ## Automated Preflight Already Completed
 
 Status on April 8, 2026:
-- `PASS` Main smoke pages returned `200` locally: `index.html`, `about.html`, `product.html`, `product_detail.html`, `blog.html`, `blog_detail.html`, `contact.html`, `services.html`, `terms_and_conditions.html`, `privacy_policy.html`, `buyer-portal/dashboard.html`, `search_results.html`, `admin_console.html`.
+- `PASS` Main smoke pages returned `200` locally: `index.html`, `about.html`, `product.html`, `product_detail.html`, `blog.html`, `blog_detail.html`, `contact.html`, `services.html`, `terms_and_conditions.html`, `privacy_policy.html`, `buyer-portal/dashboard.html`, `search_results.html`, `admin/dashboard.html`.
 - `PASS` All scanned local HTML asset references resolved after repairs: `44` HTML files scanned, `155` unique local refs checked, `0` failures.
 - `PASS` JavaScript syntax check: `59` JS files checked with `node --check`, `0` failures.
 - `PASS` Broken local image references fixed before this checklist was updated.
@@ -22,7 +22,7 @@ Use the remaining sections below for the real browser + Supabase sign-off.
 3. Confirm `js/supabase/config.min.js` points to the live project and anon key.
 4. Confirm migrations and edge functions are already deployed to Supabase project `qnepxdyvfctreegcduxj`.
 5. Open browser DevTools before testing and keep the Console visible.
-6. In Supabase Dashboard `Authentication > URL Configuration`, confirm `Site URL` is `https://nji-louis.github.io/Cocoa-export` and `https://nji-louis.github.io/Cocoa-export/login.html` is allowed as a redirect URL.
+6. In Supabase Dashboard `Authentication > URL Configuration`, confirm `Site URL` is `https://nji-louis.github.io/Cocoa-export` and `https://nji-louis.github.io/Cocoa-export/auth/login.html` is allowed as a redirect URL.
 7. In Supabase Dashboard `Authentication > Email`, confirm the email provider is enabled, buyer email confirmation is enabled, and the sender/SMTP configuration is healthy before testing signup emails.
 
 ## 1) Public Pages Smoke Test
@@ -49,7 +49,7 @@ Pages to open:
 ## 2) Auth Flow Test
 
 Page:
-- `login.html`
+- `auth/login.html`
 
 Run these checks in order.
 
@@ -205,7 +205,7 @@ Page:
 - `buyer-portal/dashboard.html`
 
 1. Open while logged out.
-2. Pass if you are redirected to `login.html`.
+2. Pass if you are redirected to `auth/login.html`.
 3. Sign in as a buyer.
 4. Reopen the dashboard.
 5. Pass if you see your email and role rendered in the header.
@@ -215,7 +215,7 @@ Page:
 ## 8) Admin Console Access Control Test
 
 Page:
-- `admin_console.html`
+- `admin/dashboard.html`
 
 ### Logged out
 1. Open while logged out.
@@ -224,13 +224,13 @@ Page:
 
 ### Buyer account
 1. Log in as a normal buyer.
-2. Reopen `admin_console.html`.
+2. Reopen `admin/dashboard.html`.
 3. Pass if you see:
    `Access denied: your account is not assigned a staff/admin role.`
 
 ### Staff or admin account
 1. Log in as staff or admin.
-2. Open `admin_console.html`.
+2. Open `admin/dashboard.html`.
 3. Pass if the console loads inquiries and protected panels normally.
 
 ## 9) Staff/Admin Workflow Test

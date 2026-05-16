@@ -122,9 +122,77 @@
     });
   }
 
+  function initScrollReveal() {
+    var revealNodes = document.querySelectorAll('[data-reveal]');
+    if (!revealNodes.length) return;
+
+    for (var i = 0; i < revealNodes.length; i += 1) {
+      revealNodes[i].classList.add('camcocoa-reveal');
+    }
+
+    var prefersReducedMotion = false;
+    if (window.matchMedia) {
+      prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    if (!('IntersectionObserver' in window) || prefersReducedMotion) {
+      for (var j = 0; j < revealNodes.length; j += 1) {
+        revealNodes[j].classList.add('is-visible');
+      }
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries, io) {
+      for (var k = 0; k < entries.length; k += 1) {
+        if (!entries[k].isIntersecting) continue;
+        entries[k].target.classList.add('is-visible');
+        io.unobserve(entries[k].target);
+      }
+    }, {
+      root: null,
+      threshold: 0.16,
+      rootMargin: '0px 0px -8% 0px'
+    });
+
+    for (var n = 0; n < revealNodes.length; n += 1) {
+      observer.observe(revealNodes[n]);
+    }
+  }
+
+  function initCamcocoaMicroInteractions() {
+    var cards = document.querySelectorAll('.camcocoa-team-card, .camcocoa-partner-card');
+    if (!cards.length) return;
+
+    var canHover = false;
+    if (window.matchMedia) {
+      canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    }
+    if (!canHover) return;
+
+    for (var i = 0; i < cards.length; i += 1) {
+      (function (card) {
+        card.addEventListener('mouseenter', function () {
+          card.classList.add('is-hovered');
+        });
+        card.addEventListener('mouseleave', function () {
+          card.classList.remove('is-hovered');
+        });
+      })(cards[i]);
+    }
+  }
+
+  function initCamcocoaSections() {
+    initScrollReveal();
+    initCamcocoaMicroInteractions();
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHomeQuoteForm, { once: true });
+    document.addEventListener('DOMContentLoaded', function () {
+      initHomeQuoteForm();
+      initCamcocoaSections();
+    }, { once: true });
   } else {
     initHomeQuoteForm();
+    initCamcocoaSections();
   }
 })(window);

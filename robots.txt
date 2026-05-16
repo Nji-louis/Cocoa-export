@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /admin_console.html
-Disallow: /admin.console.html
+Disallow: /admin/
+Disallow: /auth/
 
 Sitemap: https://nji-louis.github.io/Cocoa-export/sitemap.xml
