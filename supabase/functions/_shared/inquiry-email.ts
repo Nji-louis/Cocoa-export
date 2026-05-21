@@ -71,7 +71,7 @@ function renderShell(title: string, body: string): string {
             <tr>
               <td style="padding:22px 24px;background:#3b2416;color:#ffffff;">
                 <div style="font-size:20px;font-weight:700;letter-spacing:0;">CocoaBridge</div>
-                <div style="font-size:13px;margin-top:4px;color:#eadfce;">CAMCOCOA buyer communications</div>
+                <div style="font-size:13px;margin-top:4px;color:#eadfce;">COCOABRIDGE buyer communications</div>
               </td>
             </tr>
             <tr>
@@ -81,7 +81,7 @@ function renderShell(title: string, body: string): string {
             </tr>
             <tr>
               <td style="padding:16px 24px;background:#fbf8f3;color:#6b5b4a;font-size:12px;line-height:1.5;">
-                COCOABRIDGE Ltd / CAMCOCOA<br>
+                COCOABRIDGE Ltd / Buyer<br>
                 Cocoa export sourcing, traceability, and buyer support.
               </td>
             </tr>
@@ -144,7 +144,7 @@ function renderBuyerEmail(payload: InquiryEmailPayload): string {
     "Inquiry received",
     `<h1 style="margin:0 0 16px;font-size:22px;line-height:1.3;color:#2b2118;">Your inquiry has been received</h1>
      <p style="margin:0 0 14px;color:#2b2118;font-size:15px;line-height:1.7;">${greeting}</p>
-     <p style="margin:0 0 14px;color:#2b2118;font-size:15px;line-height:1.7;">Thank you for contacting CAMCOCOA / CocoaBridge. We have received your ${
+     <p style="margin:0 0 14px;color:#2b2118;font-size:15px;line-height:1.7;">Thank you for contacting COCOABRIDGE Ltd. We have received your ${
       escapeHtml(payload.formType.toLowerCase())
     } and our team will review the details carefully.</p>
      <p style="margin:0 0 18px;color:#2b2118;font-size:15px;line-height:1.7;">A member of our cocoa export team will respond soon with the next steps, including product availability, documentation, logistics, or quotation details where applicable.</p>
@@ -210,7 +210,7 @@ export async function sendInquiryEmails(
   const adminSubject = `${subjectPrefix}: New ${payload.formType} from ${
     payload.buyerName ?? payload.buyerEmail
   }`;
-  const buyerSubject = "CAMCOCOA / CocoaBridge has received your inquiry";
+  const buyerSubject = "COCOABRIDGE Ltd has received your inquiry";
 
   const [adminNotification, buyerConfirmation] = await Promise.all([
     sendResendEmail({
