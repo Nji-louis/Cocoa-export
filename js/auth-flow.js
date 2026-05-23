@@ -3,9 +3,14 @@
   const PENDING_BUYER_PROFILE_KEY = "cocoa_pending_buyer_profile";
 
   function getClient() {
-    if (!ns.getSupabaseClient) throw new Error("Supabase client not available");
+    if (!ns.getSupabaseClient) throw new Error("Supabase client loader is not available");
     const client = ns.getSupabaseClient();
-    if (!client) throw new Error("Supabase client not configured");
+    if (!client) {
+      if (global.supabase && typeof global.supabase.createClient === "function") {
+        throw new Error("Supabase client is not configured. Check js/supabase/config.min.js for the project URL and anon key.");
+      }
+      throw new Error("Supabase browser library failed to load. Check js/vendor/supabase.umd.js and redeploy the latest files.");
+    }
     return client;
   }
 
@@ -97,6 +102,10 @@
       return fallbackMessage;
     }
 
+    if (/failed to fetch|networkerror|load failed|fetch failed/i.test(rawMessage)) {
+      return "Could not reach the authentication server. Check your internet connection, disable any blocker for Supabase, and try again.";
+    }
+
     if (/error sending confirmation email/i.test(rawMessage)) {
       return "We could not send the confirmation email right now. Please retry shortly. If this keeps happening, the Supabase Auth email provider needs attention.";
     }
@@ -106,6 +115,111 @@
     }
 
     return rawMessage || fallbackMessage;
+  }
+
+  function isFetchLikeAuthError(error) {
+    const rawMessage = error && error.message ? String(error.message).trim() : String(error || "");
+    return /failed to fetch|networkerror|load failed|fetch failed/i.test(rawMessage);
+  }
+
+  function getSupabaseAuthConfig() {
+    const config = ns.getSupabaseConfig ? ns.getSupabaseConfig() : global.__SUPABASE_CONFIG__;
+    if (!config || !config.url || !config.anonKey) {
+      throw new Error("Supabase client is not configured. Check js/supabase/config.min.js for the project URL and anon key.");
+    }
+    return {
+      url: String(config.url).replace(/\/+$/, ""),
+      anonKey: String(config.anonKey),
+    };
+  }
+
+  async function parseAuthResponse(response) {
+    const text = await response.text();
+    if (!text) return {};
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      return { msg: text };
+    }
+  }
+
+  function buildSignupMetadata(profilePayload) {
+    return {
+      full_name: profilePayload.full_name,
+      company_name: profilePayload.company_name,
+      phone_whatsapp: profilePayload.phone_whatsapp,
+      country_region: profilePayload.country_region,
+      role: "buyer",
+    };
+  }
+
+  async function signUpBuyer(email, password, profilePayload, redirectTo) {
+    const signupOptions = {
+      emailRedirectTo: redirectTo,
+      data: buildSignupMetadata(profilePayload),
+    };
+
+    try {
+      const client = getClient();
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: signupOptions,
+      });
+      if (error) throw error;
+      return data || {};
+    } catch (error) {
+      if (!isFetchLikeAuthError(error) || typeof global.fetch !== "function") {
+        throw error;
+      }
+
+      console.warn("Supabase JS signup failed; retrying with direct Auth REST request.", error);
+      const config = getSupabaseAuthConfig();
+      const endpoint = new URL(config.url + "/auth/v1/signup");
+      if (redirectTo) {
+        endpoint.searchParams.set("redirect_to", redirectTo);
+      }
+
+      let response;
+      try {
+        response = await global.fetch(endpoint.toString(), {
+          method: "POST",
+          headers: {
+            apikey: config.anonKey,
+            Authorization: "Bearer " + config.anonKey,
+            "Content-Type": "application/json",
+            "x-client-info": "seller-frontend-rest-fallback",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            data: signupOptions.data,
+          }),
+        });
+      } catch (restError) {
+        console.error("Direct Supabase Auth REST signup also failed.", restError);
+        throw restError;
+      }
+
+      const payload = await parseAuthResponse(response);
+      if (!response.ok) {
+        throw new Error(payload.msg || payload.message || payload.error_description || payload.error || "Failed to create account.");
+      }
+
+      return {
+        user: payload.user || null,
+        session: payload.session || null,
+      };
+    }
+  }
+
+  function getPasswordValidationError(password) {
+    const value = String(password || "");
+    if (value.length < 8) return "Password must be at least 8 characters.";
+    if (!/[A-Z]/.test(value)) return "Password must include at least one uppercase letter.";
+    if (!/[a-z]/.test(value)) return "Password must include at least one lowercase letter.";
+    if (!/[0-9]/.test(value)) return "Password must include at least one number.";
+    return "";
   }
 
   function resolvePrimaryRole(roles) {
@@ -315,8 +429,9 @@
       setStatus("signup-status", "All fields are required.", true);
       return;
     }
-    if (password.length < 8) {
-      setStatus("signup-status", "Password must be at least 8 characters.", true);
+    const passwordError = getPasswordValidationError(password);
+    if (passwordError) {
+      setStatus("signup-status", passwordError, true);
       return;
     }
     if (password !== confirm) {
@@ -331,23 +446,8 @@
       }
 
       const redirectTo = buildAuthEntryRedirect("signup");
-      const client = getClient();
       const profilePayload = buildBuyerProfilePayload(fullName, companyName, phone, country);
-      const { data, error } = await client.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectTo,
-          data: {
-            full_name: profilePayload.full_name,
-            company_name: profilePayload.company_name,
-            phone_whatsapp: profilePayload.phone_whatsapp,
-            country_region: profilePayload.country_region,
-            role: "buyer",
-          },
-        },
-      });
-      if (error) throw error;
+      const data = await signUpBuyer(email, password, profilePayload, redirectTo);
 
       if (data && data.user) {
         savePendingBuyerProfile(data.user, email, profilePayload);
@@ -434,8 +534,9 @@
     const password = (document.getElementById("recovery-password") || {}).value;
     const confirm = (document.getElementById("recovery-confirm-password") || {}).value;
 
-    if (!password || password.length < 8) {
-      setStatus("recovery-status", "Password must be at least 8 characters.", true);
+    const passwordError = getPasswordValidationError(password);
+    if (passwordError) {
+      setStatus("recovery-status", passwordError, true);
       return;
     }
     if (password !== confirm) {
