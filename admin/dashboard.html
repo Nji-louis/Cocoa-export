@@ -45,6 +45,7 @@
           <li class="nav-item"><a href="#overview" class="nav-link"><i class="nav-icon fa-solid fa-chart-line"></i><p>Overview</p></a></li>
           <li class="nav-item"><a href="#products" class="nav-link"><i class="nav-icon fa-solid fa-box"></i><p>Products</p></a></li>
           <li class="nav-item"><a href="#inquiries" class="nav-link"><i class="nav-icon fa-solid fa-envelope-open-text"></i><p>Inquiries</p></a></li>
+          <li class="nav-item"><a href="#buyers" class="nav-link"><i class="nav-icon fa-solid fa-user-check"></i><p>Buyers</p></a></li>
           <li class="nav-item"><a href="#content" class="nav-link"><i class="nav-icon fa-solid fa-pen-ruler"></i><p>Content</p></a></li>
           <li class="nav-item"><a href="#media" class="nav-link"><i class="nav-icon fa-solid fa-photo-film"></i><p>Media</p></a></li>
           <li class="nav-item"><a href="#users" class="nav-link"><i class="nav-icon fa-solid fa-users-gear"></i><p>Users</p></a></li>
@@ -149,6 +150,18 @@
           </div>
         </section>
 
+        <section id="buyers" class="admin-section section-anchor">
+          <div class="card">
+            <div class="card-header"><h3 class="card-title mb-0">Buyer Management</h3><div class="action-stack"><button id="refresh-buyers-btn" class="btn btn-sm btn-outline-secondary">Refresh</button></div></div>
+            <div class="card-body table-responsive">
+              <table class="table table-striped align-middle">
+                <thead><tr><th>Buyer</th><th>Company</th><th>Country</th><th>Status</th><th>Action</th></tr></thead>
+                <tbody id="buyers-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
         <section id="content" class="admin-section section-anchor">
           <div class="card content-editor">
             <div class="card-header"><h3 class="card-title mb-0">Website Content CMS</h3></div>
@@ -169,7 +182,7 @@
                 </form>
                 <div class="border rounded p-3 bg-light">
                   <h4 class="h6">Live Website Binding</h4>
-                  <p class="text-muted mb-3">Homepage hero, about, services, contact details, footer copy, and SEO fields are pulled from the Supabase <code>website_content</code> table.</p>
+                  <p class="text-muted mb-3">Homepage hero, about, services, contact details, and SEO fields are pulled from the Supabase <code>website_content</code> table. Footer copy stays in the frontend HTML.</p>
                   <div id="content-permission-list"></div>
                 </div>
               </div>

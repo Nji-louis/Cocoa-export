@@ -27,7 +27,7 @@
     "packageJson": {
       "dependencies": [
         "npm:@supabase/supabase-js@^2.105.3",
-        "npm:supabase@^2.95.0"
+        "npm:supabase@^2.99.0-beta.8"
       ]
     }
   }

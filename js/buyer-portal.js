@@ -1,0 +1,374 @@
+(function (global) {
+  const ns = global.AppBackend || {};
+  const state = {
+    user: null,
+    profile: null,
+    products: [],
+    inquiries: [],
+    favorites: [],
+  };
+
+  function qs(selector) {
+    return document.querySelector(selector);
+  }
+
+  function escapeHtml(value) {
+    return String(value || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function notify(message, isError) {
+    const stack = qs("#toast-stack");
+    if (!stack) return;
+    const node = document.createElement("div");
+    node.className = isError ? "portal-toast error" : "portal-toast";
+    node.textContent = message;
+    stack.appendChild(node);
+    global.setTimeout(function () {
+      node.remove();
+    }, 4200);
+  }
+
+  function setStatus(message, isError) {
+    const node = qs("#buyer-status");
+    if (!node) return;
+    node.textContent = message || "";
+    node.className = isError ? "auth-status error" : "auth-status";
+    node.style.display = message ? "block" : "none";
+  }
+
+  function formatDate(value) {
+    if (!value) return "-";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "-";
+    return date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  }
+
+  function getClient() {
+    const client = ns.getSupabaseClient && ns.getSupabaseClient();
+    if (!client) throw new Error("Supabase client is not configured");
+    return client;
+  }
+
+  function productImage(item) {
+    const rawUrl = item.main_image_url || item.primary_image_url || item.image_url || "";
+    if (/^https?:\/\//i.test(rawUrl)) return rawUrl;
+    if (rawUrl.indexOf("/") > 0) {
+      const parts = rawUrl.split("/");
+      const bucket = parts.shift();
+      const path = parts.join("/");
+      const client = ns.getSupabaseClient && ns.getSupabaseClient();
+      if (client && client.storage && bucket && path) {
+        const result = client.storage.from(bucket).getPublicUrl(path);
+        return result && result.data && result.data.publicUrl ? result.data.publicUrl : "../img/cacao.jpg";
+      }
+    }
+    return "../img/cacao.jpg";
+  }
+
+  function productTitle(item) {
+    return item.name || item.product_name || item.title || "Cocoa product";
+  }
+
+  function productSummary(item) {
+    return item.short_description || item.description || item.summary || "Export-ready cocoa product available for buyer inquiry.";
+  }
+
+  function productSlug(item) {
+    return item.slug || item.product_slug || "";
+  }
+
+  function isFavorite(productId) {
+    return state.favorites.some(function (item) {
+      return item.product_id === productId;
+    });
+  }
+
+  async function ensureSession() {
+    const session = await ns.authApi.getSession();
+    if (!session) {
+      const loginUrl = new URL(ns.getAppRoute ? ns.getAppRoute("login") : "../auth/login.html", global.location.origin);
+      loginUrl.searchParams.set("redirect", global.location.pathname + global.location.search + global.location.hash);
+      global.location.href = loginUrl.toString();
+      return false;
+    }
+    const user = session.user || await ns.authApi.getUser();
+    const roles = await ns.authApi.getMyRoles(user);
+    const adminRoles = ["super_admin", "admin", "editor", "staff"];
+    const isAdmin = roles.some(function (role) {
+      return adminRoles.indexOf(String(role).toLowerCase()) >= 0;
+    });
+    if (isAdmin) {
+      global.location.href = ns.getAppRoute ? ns.getAppRoute("admin") : "../admin/dashboard.html";
+      return false;
+    }
+    state.user = user;
+    return true;
+  }
+
+  async function loadProfile() {
+    const client = getClient();
+    const { data, error } = await client
+      .from("user_profiles")
+      .select("id, full_name, company_name, phone_whatsapp, country_region, default_role, buyer_status")
+      .eq("id", state.user.id)
+      .maybeSingle();
+    if (error) throw error;
+    state.profile = data || {};
+
+    const name = state.profile.full_name || state.user.email || "Buyer";
+    const nameNode = qs("[data-buyer-name]");
+    if (nameNode) nameNode.textContent = name;
+    qs("#buyer-full-name").value = state.profile.full_name || "";
+    qs("#buyer-company").value = state.profile.company_name || "";
+    qs("#buyer-phone").value = state.profile.phone_whatsapp || "";
+    qs("#buyer-country").value = state.profile.country_region || "";
+
+    if (state.profile.buyer_status === "disabled") {
+      setStatus("This buyer account is disabled. You can update your profile, but new inquiries may be reviewed before action.", true);
+    }
+  }
+
+  async function loadProducts(query) {
+    const grid = qs("#buyer-products-grid");
+    if (grid) grid.classList.add("loading-row");
+    const result = await ns.catalogApi.searchProducts({ query: query || null, page: 1, pageSize: 12 });
+    state.products = result.items || [];
+    renderProducts();
+    if (grid) grid.classList.remove("loading-row");
+  }
+
+  async function loadInquiries() {
+    const result = await ns.inquiryApi.listMyInquiries({ page: 1, pageSize: 25 });
+    state.inquiries = result.items || [];
+    renderInquiries();
+  }
+
+  async function loadFavorites() {
+    const client = getClient();
+    const { data, error } = await client
+      .from("buyer_favorites")
+      .select("id, product_id, created_at, products(id, slug, name, short_description, status)")
+      .eq("user_id", state.user.id)
+      .order("created_at", { ascending: false });
+    if (error) {
+      if (/buyer_favorites/i.test(error.message || "")) {
+        state.favorites = [];
+        return;
+      }
+      throw error;
+    }
+    state.favorites = data || [];
+    renderFavorites();
+  }
+
+  function renderMetrics() {
+    qs("#metric-buyer-products").textContent = String(state.products.length);
+    qs("#metric-buyer-inquiries").textContent = String(state.inquiries.length);
+    qs("#metric-buyer-favorites").textContent = String(state.favorites.length);
+  }
+
+  function renderProducts() {
+    const grid = qs("#buyer-products-grid");
+    if (!grid) return;
+    if (!state.products.length) {
+      grid.innerHTML = '<div class="portal-card empty-state">No products match this search.</div>';
+      renderMetrics();
+      return;
+    }
+    grid.innerHTML = state.products.map(function (item) {
+      const id = item.id || item.product_id || "";
+      const slug = productSlug(item);
+      return '<article class="portal-card product-card">'
+        + '<img src="' + escapeHtml(productImage(item)) + '" alt="' + escapeHtml(productTitle(item)) + '">'
+        + '<div class="product-card-body">'
+        + '<h3>' + escapeHtml(productTitle(item)) + '</h3>'
+        + '<p>' + escapeHtml(productSummary(item)) + '</p>'
+        + '<div class="product-meta">' + escapeHtml(item.origin_country || "Cameroon") + '</div>'
+        + '<div class="card-actions">'
+        + '<button class="portal-btn primary small js-open-inquiry" data-slug="' + escapeHtml(slug) + '" data-title="' + escapeHtml(productTitle(item)) + '">Inquire</button>'
+        + '<button class="portal-btn ghost small js-toggle-favorite" data-id="' + escapeHtml(id) + '">' + (isFavorite(id) ? "Saved" : "Save") + '</button>'
+        + (slug ? '<a class="portal-btn ghost small" href="../product_detail.html?product=' + encodeURIComponent(slug) + '">Details</a>' : "")
+        + '</div></div></article>';
+    }).join("");
+    renderMetrics();
+  }
+
+  function renderInquiries() {
+    const body = qs("#buyer-inquiries-body");
+    if (!body) return;
+    if (!state.inquiries.length) {
+      body.innerHTML = '<tr><td colspan="4" class="empty-state">No inquiries yet. Start from a product card above.</td></tr>';
+      renderMetrics();
+      return;
+    }
+    body.innerHTML = state.inquiries.map(function (item) {
+      return '<tr><td>#' + escapeHtml(item.request_number || item.id) + '</td>'
+        + '<td>' + escapeHtml(item.company_name || "-") + '<div class="product-meta">' + escapeHtml(item.work_email || "") + '</div></td>'
+        + '<td>' + escapeHtml(item.status || "new") + '</td>'
+        + '<td>' + escapeHtml(formatDate(item.created_at)) + '</td></tr>';
+    }).join("");
+    renderMetrics();
+  }
+
+  function renderFavorites() {
+    const list = qs("#buyer-favorites-list");
+    if (!list) return;
+    if (!state.favorites.length) {
+      list.innerHTML = '<div class="portal-card empty-state">Saved products will appear here.</div>';
+      renderMetrics();
+      renderProducts();
+      return;
+    }
+    list.innerHTML = state.favorites.map(function (favorite) {
+      const product = favorite.products || {};
+      return '<article class="portal-card metric"><span>Saved product</span><strong style="font-size:22px">' + escapeHtml(product.name || "Product") + '</strong>'
+        + '<p>' + escapeHtml(product.short_description || "") + '</p></article>';
+    }).join("");
+    renderMetrics();
+    renderProducts();
+  }
+
+  async function toggleFavorite(productId) {
+    if (!productId) return;
+    const client = getClient();
+    const existing = state.favorites.find(function (item) {
+      return item.product_id === productId;
+    });
+    if (existing) {
+      const { error } = await client.from("buyer_favorites").delete().eq("id", existing.id);
+      if (error) throw error;
+      notify("Product removed from favorites.");
+    } else {
+      const { error } = await client.from("buyer_favorites").insert({
+        user_id: state.user.id,
+        product_id: productId,
+      });
+      if (error) throw error;
+      notify("Product saved to favorites.");
+    }
+    await loadFavorites();
+  }
+
+  function openInquiryModal(slug, title) {
+    qs("#inquiry-product-slug").value = slug || "";
+    qs("#inquiry-product-title").textContent = title ? "Request offer for " + title : "Request cocoa offer";
+    qs("#buyer-inquiry-modal").hidden = false;
+  }
+
+  function closeInquiryModal() {
+    qs("#buyer-inquiry-modal").hidden = true;
+    qs("#buyer-inquiry-form").reset();
+  }
+
+  async function submitInquiry(event) {
+    event.preventDefault();
+    const profile = state.profile || {};
+    const payload = {
+      productSlug: qs("#inquiry-product-slug").value || null,
+      companyName: profile.company_name || "Buyer Company",
+      contactName: profile.full_name || state.user.email,
+      workEmail: state.user.email,
+      phoneWhatsApp: profile.phone_whatsapp || null,
+      countryRegion: profile.country_region || null,
+      requiredVolumeMt: qs("#inquiry-volume").value || null,
+      preferredIncoterm: qs("#inquiry-incoterm").value || null,
+      destinationPort: qs("#inquiry-port").value || null,
+      message: qs("#inquiry-message").value,
+      sourceChannel: "buyer_portal",
+    };
+    if (!payload.message) {
+      notify("Add a message before sending the inquiry.", true);
+      return;
+    }
+    await ns.inquiryApi.submitInquiry(payload);
+    closeInquiryModal();
+    notify("Inquiry sent to the export team.");
+    await loadInquiries();
+  }
+
+  async function updateProfile(event) {
+    event.preventDefault();
+    const client = getClient();
+    const payload = {
+      id: state.user.id,
+      full_name: qs("#buyer-full-name").value.trim() || null,
+      company_name: qs("#buyer-company").value.trim() || null,
+      phone_whatsapp: qs("#buyer-phone").value.trim() || null,
+      country_region: qs("#buyer-country").value.trim() || null,
+      default_role: "buyer",
+    };
+    const { error } = await client.from("user_profiles").upsert(payload);
+    if (error) throw error;
+    notify("Profile updated.");
+    await loadProfile();
+  }
+
+  async function refreshAll() {
+    setStatus("Loading buyer portal...", false);
+    await loadProfile();
+    await Promise.all([
+      loadProducts(qs("#product-search").value),
+      loadInquiries(),
+      loadFavorites(),
+    ]);
+    setStatus("", false);
+  }
+
+  function wireEvents() {
+    qs("#refresh-buyer-data").addEventListener("click", function () {
+      refreshAll().catch(function (error) {
+        setStatus(error.message || "Refresh failed.", true);
+      });
+    });
+    qs("#product-search").addEventListener("input", function (event) {
+      clearTimeout(wireEvents.searchTimer);
+      wireEvents.searchTimer = setTimeout(function () {
+        loadProducts(event.target.value).catch(function (error) {
+          notify(error.message || "Product search failed.", true);
+        });
+      }, 250);
+    });
+    qs("#buyer-profile-form").addEventListener("submit", function (event) {
+      updateProfile(event).catch(function (error) {
+        notify(error.message || "Profile update failed.", true);
+      });
+    });
+    qs("#buyer-inquiry-form").addEventListener("submit", function (event) {
+      submitInquiry(event).catch(function (error) {
+        notify(error.message || "Inquiry failed.", true);
+      });
+    });
+    qs("#close-inquiry-modal").addEventListener("click", closeInquiryModal);
+    document.addEventListener("click", function (event) {
+      const inquiry = event.target.closest(".js-open-inquiry");
+      const favorite = event.target.closest(".js-toggle-favorite");
+      if (inquiry) {
+        openInquiryModal(inquiry.getAttribute("data-slug"), inquiry.getAttribute("data-title"));
+      }
+      if (favorite) {
+        toggleFavorite(favorite.getAttribute("data-id")).catch(function (error) {
+          notify(error.message || "Favorite update failed.", true);
+        });
+      }
+    });
+  }
+
+  async function init() {
+    if (!ns.authApi || !ns.catalogApi || !ns.inquiryApi) return;
+    const ok = await ensureSession();
+    if (!ok) return;
+    wireEvents();
+    await refreshAll();
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    init().catch(function (error) {
+      setStatus(error.message || "Buyer portal failed to load.", true);
+    });
+  });
+})(window);

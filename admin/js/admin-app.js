@@ -7,6 +7,7 @@
     products: [],
     categories: [],
     inquiries: [],
+    buyers: [],
     contents: [],
     media: [],
     users: [],
@@ -17,6 +18,7 @@
     overview: ["super_admin", "admin", "editor", "staff"],
     products: ["super_admin", "admin"],
     inquiries: ["super_admin", "admin", "staff"],
+    buyers: ["super_admin", "admin", "staff"],
     content: ["super_admin", "admin", "editor"],
     media: ["super_admin", "admin"],
     users: ["super_admin"],
@@ -204,6 +206,20 @@
     }).join("") || '<tr><td colspan="7">No inquiries found.</td></tr>';
   }
 
+  function renderBuyers() {
+    const body = qs("#buyers-table-body");
+    if (body == null) return;
+    body.innerHTML = (state.buyers || []).map(function (item) {
+      return '<tr>'
+        + '<td>' + escapeHtml(item.full_name || "-") + '<div class="text-muted small">' + escapeHtml(item.email || item.id || "") + '</div></td>'
+        + '<td>' + escapeHtml(item.company_name || "-") + '</td>'
+        + '<td>' + escapeHtml(item.country_region || "-") + '</td>'
+        + '<td>' + escapeHtml(item.buyer_status || "pending") + '</td>'
+        + '<td><div class="action-stack"><button class="btn btn-sm btn-outline-success js-buyer-approve" data-id="' + escapeHtml(item.id) + '">Approve</button><button class="btn btn-sm btn-outline-warning js-buyer-disable" data-id="' + escapeHtml(item.id) + '">Disable</button></div></td>'
+        + '</tr>';
+    }).join("") || '<tr><td colspan="5">No buyer profiles found.</td></tr>';
+  }
+
   function renderContent() {
     const body = qs("#content-table-body");
     if (body == null) return;
@@ -307,6 +323,12 @@
     renderInquiries();
   }
 
+  async function loadBuyers() {
+    if (canAccess("buyers") === false) return;
+    state.buyers = await ns.adminApi.listBuyers();
+    renderBuyers();
+  }
+
   async function loadContent() {
     state.contents = await ns.adminApi.listWebsiteContent();
     renderContent();
@@ -327,6 +349,7 @@
     await loadSummary();
     if (canAccess("products")) await loadProducts();
     if (canAccess("inquiries")) await loadInquiries();
+    if (canAccess("buyers")) await loadBuyers();
     if (canAccess("content")) await loadContent();
     if (canAccess("media")) await loadMedia();
     if (canAccess("users")) await loadUsers();
@@ -446,6 +469,7 @@
     });
 
     qs("#refresh-inquiries-btn").addEventListener("click", function () { void loadInquiries(); });
+    qs("#refresh-buyers-btn").addEventListener("click", function () { void loadBuyers(); });
     qs("#export-inquiries-btn").addEventListener("click", exportInquiriesCsv);
 
     qs("#content-form").addEventListener("submit", async function (event) {
@@ -526,6 +550,8 @@
       const deleteProduct = event.target.closest(".js-delete-product");
       const replyInquiry = event.target.closest(".js-inquiry-reply");
       const archiveInquiry = event.target.closest(".js-inquiry-archive");
+      const approveBuyer = event.target.closest(".js-buyer-approve");
+      const disableBuyer = event.target.closest(".js-buyer-disable");
       const editContent = event.target.closest(".js-edit-content");
       const deleteMedia = event.target.closest(".js-delete-media");
       const roleUser = event.target.closest(".js-role-user");
@@ -551,6 +577,14 @@
           await ns.adminApi.updateInquiryStatus(archiveInquiry.getAttribute("data-id"), "archived", "Archived from admin dashboard");
           await loadInquiries();
           await loadSummary();
+        }
+        if (approveBuyer) {
+          await ns.adminApi.updateBuyerStatus(approveBuyer.getAttribute("data-id"), "approved");
+          await loadBuyers();
+        }
+        if (disableBuyer) {
+          await ns.adminApi.updateBuyerStatus(disableBuyer.getAttribute("data-id"), "disabled");
+          await loadBuyers();
         }
         if (editContent) {
           const item = state.contents.find(function (row) { return row.id === editContent.getAttribute("data-id"); });

@@ -298,6 +298,32 @@
       };
     },
 
+    async listBuyers() {
+      const client = getClient();
+      const { data, error } = await client
+        .from("user_profiles")
+        .select("id, full_name, company_name, phone_whatsapp, country_region, default_role, buyer_status, created_at, updated_at")
+        .eq("default_role", "buyer")
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+
+    async updateBuyerStatus(userId, status) {
+      const allowed = new Set(["pending", "approved", "disabled"]);
+      if (!userId) throw new Error("Buyer id is required");
+      if (!allowed.has(String(status))) throw new Error("Invalid buyer status");
+      const { data, error } = await getClient()
+        .from("user_profiles")
+        .update({ buyer_status: status })
+        .eq("id", userId)
+        .eq("default_role", "buyer")
+        .select("id, buyer_status")
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
     async listWebsiteContent() {
       const client = getClient();
       const { data, error } = await client

@@ -57,8 +57,6 @@
 
   function applyGlobalContent(rows) {
     const contact = rows.find(function (item) { return item.page_key === "global" && item.section_key === "contact"; });
-    const footer = rows.find(function (item) { return item.page_key === "global" && item.section_key === "footer"; });
-
     if (contact) {
       const content = contact.content || {};
       const phone = contact.contact_phone || content.whatsapp || "";
@@ -69,10 +67,6 @@
       const footerEmailNodes = document.querySelectorAll("#footer .footer-meta");
       if (footerEmailNodes[2] && email) footerEmailNodes[2].textContent = email;
       if (footerEmailNodes[1] && address) footerEmailNodes[1].textContent = address;
-    }
-
-    if (footer) {
-      setText("#footer_bottom .footer_bottom_1 p", footer.body || footer.title);
     }
   }
 

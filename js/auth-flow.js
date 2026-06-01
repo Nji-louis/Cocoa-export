@@ -374,6 +374,24 @@
     return synced;
   }
 
+  function navigateAfterAuth(roles) {
+    const target = ns.authController && ns.authController.resolvePostAuthUrl
+      ? ns.authController.resolvePostAuthUrl(roles || [])
+      : (ns.getRoleHomeUrl ? ns.getRoleHomeUrl(roles || []) : null);
+    if (target) {
+      global.location.href = target;
+    }
+  }
+
+  if (ns.authController) {
+    ns.authController.beforePostAuthRedirect = async function beforePostAuthRedirect(detail) {
+      if (detail && detail.user) {
+        await syncPendingBuyerProfile(detail.user);
+      }
+      return true;
+    };
+  }
+
   async function handleLogin(event) {
     event.preventDefault();
     clearStatuses();
@@ -405,6 +423,10 @@
 
       await syncPendingBuyerProfile(user);
       setStatus("login-status", "Signed in. Redirecting...", false);
+      const roles = user ? await ns.authApi.getMyRoles(user).catch(function () {
+        return [];
+      }) : [];
+      navigateAfterAuth(roles);
     } catch (error) {
       if (ns.authController && ns.authController.clearPendingRedirect) {
         ns.authController.clearPendingRedirect();
@@ -463,7 +485,11 @@
       }
 
       if (data && data.session) {
+        const roles = data.user ? await ns.authApi.getMyRoles(data.user).catch(function () {
+          return ["buyer"];
+        }) : ["buyer"];
         setStatus("signup-status", "Account created. Redirecting...", false);
+        navigateAfterAuth(roles);
         return;
       }
 

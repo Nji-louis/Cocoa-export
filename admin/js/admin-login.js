@@ -9,6 +9,33 @@
     node.style.display = message ? "block" : "none";
   }
 
+  function getPasswordValidationError(password) {
+    const value = String(password || "");
+    if (value.length < 8) return "Password must be at least 8 characters.";
+    if (!/[A-Z]/.test(value)) return "Password must include at least one uppercase letter.";
+    if (!/[a-z]/.test(value)) return "Password must include at least one lowercase letter.";
+    if (!/[0-9]/.test(value)) return "Password must include at least one number.";
+    return "";
+  }
+
+  function getFriendlyError(error, fallbackMessage) {
+    if (ns.normalizeError) {
+      return ns.normalizeError(error, fallbackMessage);
+    }
+    const message = error && error.message ? String(error.message) : "";
+    if (/failed to fetch|networkerror|load failed|fetch failed/i.test(message)) {
+      return "Could not reach the authentication server. Check your internet connection, disable any blocker for Supabase, and try again.";
+    }
+    return message || fallbackMessage;
+  }
+
+  function getAdminRedirectUrl() {
+    if (ns.resolveEmailRedirectUrl) {
+      return ns.resolveEmailRedirectUrl("/admin/login.html") || ns.resolveEmailRedirectUrl("/auth/login.html") || undefined;
+    }
+    return global.location.origin + global.location.pathname;
+  }
+
   async function handleLogin(event) {
     event.preventDefault();
     try {
@@ -29,7 +56,7 @@
       }
       global.location.href = "dashboard.html";
     } catch (error) {
-      setStatus(error.message || "Unable to sign in.", true);
+      setStatus(getFriendlyError(error, "Unable to sign in."), true);
     }
   }
 
@@ -40,11 +67,15 @@
       const email = document.getElementById("admin-signup-email").value.trim();
       const company = document.getElementById("admin-signup-company").value.trim();
       const password = document.getElementById("admin-signup-password").value;
-      await ns.authApi.signUp(email, password, fullName, global.location.origin + global.location.pathname);
+      const passwordError = getPasswordValidationError(password);
+      if (passwordError) {
+        throw new Error(passwordError);
+      }
+      await ns.authApi.signUp(email, password, fullName, getAdminRedirectUrl());
       setStatus("Access request created. Confirm your email. A super admin must still assign your dashboard role.", false);
       event.target.reset();
     } catch (error) {
-      setStatus(error.message || "Access request failed.", true);
+      setStatus(getFriendlyError(error, "Access request failed."), true);
     }
   }
 
@@ -54,10 +85,10 @@
       if (email === "") {
         throw new Error("Enter your email first.");
       }
-      await ns.authApi.resetPassword(email, global.location.origin + global.location.pathname);
+      await ns.authApi.resetPassword(email, getAdminRedirectUrl());
       setStatus("Password reset email sent.", false);
     } catch (error) {
-      setStatus(error.message || "Reset request failed.", true);
+      setStatus(getFriendlyError(error, "Reset request failed."), true);
     }
   }
 

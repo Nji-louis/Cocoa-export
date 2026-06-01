@@ -88,6 +88,20 @@ serveHttp(async (req: Request) => {
     const user = await getOptionalUser(req);
     const admin = createServiceClient();
 
+    if (user?.id) {
+      const { data: profile, error: profileError } = await admin
+        .from("user_profiles")
+        .select("buyer_status")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (profileError) {
+        return fail("Failed to verify buyer account", 500, profileError.message);
+      }
+      if (profile?.buyer_status === "disabled") {
+        return fail("This buyer account is disabled", 403);
+      }
+    }
+
     await enforceIpRateLimit(admin, req, "submit-inquiry-ip", 20, 3600);
     await enforceRateLimit(admin, {
       functionName: "submit-inquiry-email",

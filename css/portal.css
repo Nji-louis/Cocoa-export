@@ -394,6 +394,39 @@
   gap: 10px;
 }
 
+.buyer-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(23, 15, 11, 0.58);
+}
+
+.buyer-modal[hidden] {
+  display: none;
+}
+
+.buyer-modal-panel {
+  position: relative;
+  width: min(100%, 640px);
+  padding: 26px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: #f4ece1;
+  color: #4e342e;
+  font-weight: 800;
+}
+
 .portal-toast {
   max-width: 360px;
   padding: 12px 14px;
