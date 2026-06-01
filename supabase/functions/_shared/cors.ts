@@ -1,18 +1,22 @@
 import { getAllowedOrigins } from "./security.ts";
 
 export const corsHeaders: Record<string, string> = {
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
   Vary: "Origin",
 };
 
+const defaultAllowedHeaders =
+  "authorization, x-client-info, apikey, content-type";
+
 export function buildCorsHeaders(req: Request): Record<string, string> {
   const origin = req.headers.get("origin");
+  const requestedHeaders = req.headers.get("access-control-request-headers");
   const allowedOrigins = getAllowedOrigins();
   const isAllowed = allowedOrigins.size === 0 || !origin || allowedOrigins.has(origin);
 
   return {
     ...corsHeaders,
+    "Access-Control-Allow-Headers": requestedHeaders ?? defaultAllowedHeaders,
     "Access-Control-Allow-Origin":
       allowedOrigins.size === 0 ? "*" : isAllowed ? (origin ?? "null") : "null",
   };
