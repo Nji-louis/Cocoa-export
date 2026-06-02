@@ -2,5 +2,7 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /auth/
+Disallow: /buyer-portal/
+Disallow: /test-connection.html
 
-Sitemap: https://nji-louis.github.io/Cocoa-export/sitemap.xml
+Sitemap: https://cocoabridge.com/sitemap.xml
