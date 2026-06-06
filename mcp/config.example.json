@@ -1,0 +1,7 @@
+{
+  "mcp_server": "https://your-mcp-server.example",
+  "client_id": "your-client-id",
+  "client_secret": "your-client-secret",
+  "workspace": "COCOABRIDGE Ltd",
+  "notes": "Rename this file to config.json and fill values, or set equivalent env vars as required by your MCP client. Do NOT commit secrets to git."
+}

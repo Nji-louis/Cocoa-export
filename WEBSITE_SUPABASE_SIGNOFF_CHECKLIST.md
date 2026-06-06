@@ -20,9 +20,9 @@ Use the remaining sections below for the real browser + Supabase sign-off.
 2. Open:
    `http://127.0.0.1:5500/index.html`
 3. Confirm `js/supabase/config.min.js` points to the live project and anon key.
-4. Confirm migrations and edge functions are already deployed to Supabase project `qnepxdyvfctreegcduxj`.
+4. Confirm migrations and edge functions are already deployed to Supabase project `zsyawtkrkjvulrjhgbyn`.
 5. Open browser DevTools before testing and keep the Console visible.
-6. In Supabase Dashboard `Authentication > URL Configuration`, confirm `Site URL` is `https://nji-louis.github.io/Cocoa-export` and `https://nji-louis.github.io/Cocoa-export/auth/login.html` is allowed as a redirect URL.
+6. In Supabase Dashboard `Authentication > URL Configuration`, confirm `Site URL` is `https://cocoabridge.com` and these redirect URLs are allowed: `https://cocoabridge.com/auth/login.html`, `https://cocoabridge.com/admin/login.html`, and any staging/local URL used for testing.
 7. In Supabase Dashboard `Authentication > Email`, confirm the email provider is enabled, buyer email confirmation is enabled, and the sender/SMTP configuration is healthy before testing signup emails.
 
 ## 1) Public Pages Smoke Test

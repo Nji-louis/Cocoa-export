@@ -9,8 +9,8 @@ Deploys all Edge Functions under supabase/functions to the given Supabase projec
 and sets required secrets (SERVICE_ROLE_KEY and SUPABASE_URL) using the
 Supabase CLI. The script expects the following environment variables to be set:
 
-  SUPABASE_SERVICE_ROLE_KEY ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzeWF3dGtya2p2dWxyamhnYnluIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3ODA2NDc3MSwiZXhwIjoyMDkzNjQwNzcxfQ.uhYXeAaEd8Yl0x3DLgN8FmBDCFgKlQQrARnRtft44dA"
-  SUPABASE_URL= "https://zsyawtkrkjvulrjhgbyn.supabase.co"
+  SUPABASE_SERVICE_ROLE_KEY  - service role key from Supabase Dashboard
+  SUPABASE_URL               - project API URL, e.g. https://zsyawtkrkjvulrjhgbyn.supabase.co
   ALLOWED_ORIGINS            (optional)  - comma-separated browser origins for Edge Functions
 
 Example:
