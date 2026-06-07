@@ -113,7 +113,7 @@ function schemaFor({ title, description, canonical, noIndex }) {
       logo: DEFAULT_OG_IMAGE,
       image: DEFAULT_OG_IMAGE,
       email: 'export@chococam-sarl.com',
-      telephone: '+237671742824',
+      telephone: '+237699745546',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Bonaberi Industrial Zone',

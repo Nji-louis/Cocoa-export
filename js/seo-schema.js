@@ -39,7 +39,7 @@
       url: 'https://nji-louis.github.io/Cocoa-export/',
       logo: 'https://nji-louis.github.io/Cocoa-export/img/cacao.jpg',
       email: 'export@chococam-sarl.com',
-      telephone: '+237671742824',
+      telephone: '+237699745546',
       address: {
         '@type': 'PostalAddress',
         streetAddress: 'Bonaberi Industrial Zone',

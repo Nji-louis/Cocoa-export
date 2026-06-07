@@ -6,7 +6,7 @@ const ROOT = path.resolve(__dirname, '..');
 const BASE_URL = 'https://nji-louis.github.io/Cocoa-export/';
 const SITE_NAME = 'CHOCOCAM S.A.R.L';
 const CONTACT_EMAIL = 'export@chococam-sarl.com';
-const CONTACT_PHONE = '+237671742824';
+const CONTACT_PHONE = '+237699745546';
 const GITHUB_FOOTER_DATE = '2026';
 const LASTMOD = '2026-03-30';
 const sortedPosts = [...posts].sort((a, b) => new Date(b.published) - new Date(a.published));
@@ -175,7 +175,7 @@ function topBar(prefix) {
       </select>
      </div>
     </div>
-    <div class="col-sm-2"><div class="top_i1 clearfix"><p class="top_contact"><i class="fa fa-phone"></i> +237 671 742 824</p></div></div>
+    <div class="col-sm-2"><div class="top_i1 clearfix"><p class="top_contact"><i class="fa fa-phone"></i> +237699745546</p></div></div>
     <div class="col-sm-2"><div class="top_i1 clearfix"><p class="top_contact top_contact-link"><a href="mailto:${CONTACT_EMAIL}"><i class="fa fa-envelope"></i> ${CONTACT_EMAIL}</a></p></div></div>
     <div class="col-sm-6"><div class="top_i2 clearfix"><div class="top_theme"><button type="button" class="theme-toggle-btn" aria-label="Toggle dark mode" aria-pressed="false"><i class="fa fa-moon-o"></i> <span class="theme-toggle-label">Dark Mode</span></button></div></div></div>
    </div>
@@ -233,7 +233,7 @@ function footer(prefix) {
  <div class="container">
   <div class="row">
    <div class="footer_1 clearfix">
-    <div class="col-sm-4"><div class="footer_1i clearfix"><p class="footer-card-title mgt">Export Contact</p><div class="clearfix footer_1ii"><div class="col-sm-1 space_all"><span><i class="fa fa-phone"></i></span></div><div class="col-sm-11 space_all"><p class="footer-meta mgt">+237 671 742 824</p><p class="footer-meta mgt">+237 699 745 546</p></div></div></div></div>
+    <div class="col-sm-4"><div class="footer_1i clearfix"><p class="footer-card-title mgt">Export Contact</p><div class="clearfix footer_1ii"><div class="col-sm-1 space_all"><span><i class="fa fa-phone"></i></span></div><div class="col-sm-11 space_all"><p class="footer-meta mgt">+237699745546</p><p class="footer-meta mgt">+237 699 745 546</p></div></div></div></div>
     <div class="col-sm-4"><div class="footer_1i clearfix"><p class="footer-card-title mgt">Location</p><div class="clearfix footer_1ii"><div class="col-sm-1 space_all"><span><i class="fa fa-map-marker"></i></span></div><div class="col-sm-11 space_all"><p class="footer-meta mgt">Bonaberi Industrial Zone, Douala</p><p class="footer-meta mgt">Littoral Region, Cameroon</p></div></div></div></div>
     <div class="col-sm-4"><div class="footer_1i clearfix"><p class="footer-card-title mgt">Export Email</p><div class="clearfix footer_1ii"><div class="col-sm-1 space_all"><span><i class="fa fa-envelope"></i></span></div><div class="col-sm-11 space_all"><p class="footer-meta mgt">${CONTACT_EMAIL}</p><p class="footer-meta mgt">WhatsApp: +237 699 745 546</p></div></div></div></div>
    </div>

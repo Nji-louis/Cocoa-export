@@ -1,0 +1,51 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const ROOT = path.resolve(__dirname, '..');
+const ignored = ['.git', 'node_modules', 'img', 'fonts'];
+const textExt = ['.html', '.htm', '.js', '.css', '.json', '.md', '.txt', '.xml'];
+
+function walk(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (ignored.includes(entry.name)) continue;
+      walk(full);
+      continue;
+    }
+    const ext = path.extname(entry.name).toLowerCase();
+    if (!textExt.includes(ext)) continue;
+    processFile(full);
+  }
+}
+
+function processFile(file) {
+  let src = fs.readFileSync(file, 'utf8');
+  let out = src;
+
+  // Brand replacements (case variants)
+  out = out.replace(/CAMCOCOA/g, 'COCOABRIDGE');
+  out = out.replace(/camcocoa/g, 'cocoabridge');
+  out = out.replace(/Camcocoa/g, 'Cocoabridge');
+
+  // Safe phone replacements: specific old Cameroon number variations -> new
+  // Match +237 671 742 824 in various separators, with or without +
+  out = out.replace(/\+?237[\s\-]?671[\s\-]?742[\s\-]?824/g, '+237699745546');
+  // data-number attributes without +
+  out = out.replace(/data-number="237671742824"/g, 'data-number="237699745546"');
+  // wa.me links
+  out = out.replace(/wa\.me\/237671742824/g, 'wa.me/237699745546');
+  // CONTACT_PHONE constant
+  out = out.replace(/CONTACT_PHONE\s*=\s*['"]\+?237671742824['"]/g, 'CONTACT_PHONE = \'+237699745546\'');
+
+  if (out !== src) {
+    const bak = file + '.bak.safe';
+    if (!fs.existsSync(bak)) fs.copyFileSync(file, bak);
+    fs.writeFileSync(file, out, 'utf8');
+    console.log('Updated:', path.relative(ROOT, file));
+  }
+}
+
+walk(ROOT);
+console.log('Safe replacements complete');

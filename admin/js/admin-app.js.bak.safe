@@ -367,7 +367,7 @@
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "cocoabridge-inquiries.csv";
+    link.download = "camcocoa-inquiries.csv";
     link.click();
     URL.revokeObjectURL(url);
   }

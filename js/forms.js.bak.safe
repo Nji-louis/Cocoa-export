@@ -135,6 +135,6 @@ export async function submitInquiry(input) {
 }
 
 if (typeof window !== 'undefined') {
-  window.COCOABRIDGE_FORMS = window.COCOABRIDGE_FORMS || {}
-  window.COCOABRIDGE_FORMS.submitInquiry = submitInquiry
+  window.CAMCOCOA_FORMS = window.CAMCOCOA_FORMS || {}
+  window.CAMCOCOA_FORMS.submitInquiry = submitInquiry
 }

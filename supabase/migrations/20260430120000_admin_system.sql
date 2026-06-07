@@ -368,8 +368,8 @@ values
   ('home', 'hero', 'Cameroon Cocoa Export Supply', 'Premium cocoa beans and cocoa products ready for export.', 'Manage this hero section from the dashboard.', '{"cta_label":"Request Quote","cta_href":"contact.html","badge":"Export-ready lots"}'::jsonb, 'Cameroon Cocoa Export Supply | CAMCOCOA', 'Premium cocoa exports from Cameroon managed through CAMCOCOA.', array['cameroon cocoa export','cocoa beans supplier','bulk cocoa export']),
   ('home', 'about', 'Trusted cocoa export operations', 'Structured sourcing, quality review, and shipment preparation.', 'This record can be connected to the public homepage about section.', '{}'::jsonb, null, null, '{}'::text[]),
   ('home', 'services', 'Export services', 'Origin sourcing, quality control, documentation, and logistics.', 'Use the dashboard to keep service copy aligned with operations.', '{}'::jsonb, null, null, '{}'::text[]),
-  ('global', 'contact', 'Contact CAMCOCOA', 'Douala, Cameroon', 'Contact information shared across the website footer and contact panels.', '{"whatsapp":"+237 000 000 000","address":"Douala, Cameroon"}'::jsonb, null, null, '{}'::text[]),
-  ('global', 'footer', 'CAMCOCOA', 'Cocoa export management', 'Footer copy controlled from the dashboard.', '{"copyright":"CAMCOCOA S.A.R.L Ltd"}'::jsonb, null, null, '{}'::text[])
+  ('global', 'contact', 'Contact COCOABRIDGE', 'Douala, Cameroon', 'Contact information shared across the website footer and contact panels.', '{"whatsapp":"+237699745546","address":"Douala, Cameroon"}'::jsonb, null, null, '{}'::text[]),
+  ('global', 'footer', 'COCOABRIDGE', 'Cocoa export management', 'Footer copy controlled from the dashboard.', '{"copyright":"COCOABRIDGE S.A.R.L Ltd"}'::jsonb, null, null, '{}'::text[])
 on conflict (page_key, section_key) do nothing;
 
 alter table public.admin_accounts enable row level security;

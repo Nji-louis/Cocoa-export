@@ -388,25 +388,25 @@ color:#000;
 }
 /*********************home_new_sections_end****************/
 
-/*********************cocoabridge_team_partners****************/
-#cocoabridge_team_partners,
-#cocoabridge_partners{
+/*********************camcocoa_team_partners****************/
+#camcocoa_team_partners,
+#camcocoa_partners{
  position:relative;
  overflow:hidden;
  padding:72px 0;
 }
-#cocoabridge_team_partners{
+#camcocoa_team_partners{
  background:
   radial-gradient(circle at top left,rgba(201,162,39,0.12),transparent 34%),
   linear-gradient(180deg,#fffaf2 0%,#f7f1e6 100%);
 }
-#cocoabridge_partners{
+#camcocoa_partners{
  background:
   radial-gradient(circle at top right,rgba(78,52,46,0.1),transparent 30%),
   #fff;
 }
-#cocoabridge_team_partners::before,
-#cocoabridge_partners::before{
+#camcocoa_team_partners::before,
+#camcocoa_partners::before{
  content:"";
  position:absolute;
  inset:0;
@@ -415,13 +415,13 @@ color:#000;
  background-size:18px 18px;
  opacity:.35;
 }
-.cocoabridge-section-heading{
+.camcocoa-section-heading{
  position:relative;
  z-index:1;
  max-width:860px;
  margin:0 auto 34px;
 }
-.cocoabridge-kicker{
+.camcocoa-kicker{
  margin:0 0 10px;
  font-size:14px;
  letter-spacing:2px;
@@ -429,34 +429,34 @@ color:#000;
  font-weight:700;
  color:#c9a227;
 }
-.cocoabridge-section-heading h2{
+.camcocoa-section-heading h2{
  margin:0;
  color:#2f201a;
  font-size:40px;
  line-height:1.15;
 }
-.cocoabridge-subtitle{
+.camcocoa-subtitle{
  margin:14px auto 0;
  max-width:760px;
  font-size:18px;
  line-height:1.7;
  color:#6f6258;
 }
-.cocoabridge-team-grid{
+.camcocoa-team-grid{
  position:relative;
  z-index:1;
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
  gap:22px;
 }
-.cocoabridge-preview-grid{
+.camcocoa-preview-grid{
  position:relative;
  z-index:1;
  display:grid;
  grid-template-columns:repeat(3,minmax(0,1fr));
  gap:18px;
 }
-.cocoabridge-team-card{
+.camcocoa-team-card{
  position:relative;
  border:1px solid rgba(78,52,46,0.12);
  border-radius:22px;
@@ -466,25 +466,25 @@ color:#000;
  backdrop-filter:blur(10px);
  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
 }
-.cocoabridge-team-card:hover{
+.camcocoa-team-card:hover{
  transform:translateY(-8px);
  box-shadow:0 28px 55px rgba(44,28,18,0.14);
  border-color:rgba(201,162,39,0.34);
 }
-.cocoabridge-team-photo{
+.camcocoa-team-photo{
  position:relative;
  overflow:hidden;
  aspect-ratio:1 / 1.02;
  background:linear-gradient(135deg,rgba(78,52,46,0.1),rgba(201,162,39,0.1));
 }
-.cocoabridge-team-photo::after{
+.camcocoa-team-photo::after{
  content:"";
  position:absolute;
  inset:auto 0 0;
  height:54%;
  background:linear-gradient(180deg,rgba(24,15,11,0) 0%,rgba(24,15,11,0.08) 38%,rgba(24,15,11,0.82) 100%);
 }
-.cocoabridge-team-photo img{
+.camcocoa-team-photo img{
  width:100%;
  height:100%;
  object-fit:cover;
@@ -492,15 +492,15 @@ color:#000;
  transition:transform .55s ease, filter .55s ease;
  filter:saturate(.92) contrast(1.02);
 }
-.cocoabridge-team-card:hover .cocoabridge-team-photo img{
+.camcocoa-team-card:hover .camcocoa-team-photo img{
  transform:scale(1.06);
  filter:saturate(1.05) contrast(1.06);
 }
-.cocoabridge-team-body{
+.camcocoa-team-body{
  position:relative;
  padding:20px 20px 22px;
 }
-.cocoabridge-team-role{
+.camcocoa-team-role{
  margin:0 0 8px;
  font-size:13px;
  font-weight:700;
@@ -508,25 +508,25 @@ color:#000;
  text-transform:uppercase;
  color:#c9a227;
 }
-.cocoabridge-team-body h3{
+.camcocoa-team-body h3{
  margin:0 0 10px;
  font-size:22px;
  line-height:1.25;
  color:#3d261f;
 }
-.cocoabridge-team-body p{
+.camcocoa-team-body p{
  margin:0;
  color:#64564b;
  font-size:15px;
  line-height:1.7;
 }
-.cocoabridge-social{
+.camcocoa-social{
  display:flex;
  align-items:center;
  gap:10px;
  margin-top:16px;
 }
-.cocoabridge-social a{
+.camcocoa-social a{
  width:38px;
  height:38px;
  border-radius:50%;
@@ -539,21 +539,21 @@ color:#000;
  box-shadow:0 8px 18px rgba(44,28,18,0.08);
  transition:transform .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
 }
-.cocoabridge-social a:hover,
-.cocoabridge-social a:focus{
+.camcocoa-social a:hover,
+.camcocoa-social a:focus{
  transform:translateY(-2px);
  background:#4e342e;
  color:#fff;
  border-color:#4e342e;
 }
-.cocoabridge-partner-grid{
+.camcocoa-partner-grid{
  position:relative;
  z-index:1;
  display:grid;
  grid-template-columns:repeat(5,minmax(0,1fr));
  gap:18px;
 }
-.cocoabridge-partner-card{
+.camcocoa-partner-card{
  display:flex;
  flex-direction:column;
  align-items:center;
@@ -567,12 +567,12 @@ color:#000;
  box-shadow:0 16px 34px rgba(44,28,18,0.08);
  transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease, background-color .28s ease;
 }
-.cocoabridge-partner-card:hover{
+.camcocoa-partner-card:hover{
  transform:translateY(-6px);
  box-shadow:0 24px 48px rgba(44,28,18,0.13);
  border-color:rgba(201,162,39,0.34);
 }
-.cocoabridge-partner-badge{
+.camcocoa-partner-badge{
  width:112px;
  height:112px;
  border-radius:28px;
@@ -590,46 +590,46 @@ color:#000;
  overflow:hidden;
  transition:transform .28s ease, box-shadow .28s ease, filter .28s ease;
 }
-.cocoabridge-partner-badge::before{
+.camcocoa-partner-badge::before{
  content:"";
  position:absolute;
  inset:10px;
  border-radius:22px;
  border:1px solid rgba(255,255,255,0.24);
 }
-.cocoabridge-partner-card:hover .cocoabridge-partner-badge{
+.camcocoa-partner-card:hover .camcocoa-partner-badge{
  transform:scale(1.03);
  box-shadow:inset 0 1px 0 rgba(255,255,255,0.18),0 18px 30px rgba(44,28,18,0.18);
 }
-.cocoabridge-partner-copy h3{
+.camcocoa-partner-copy h3{
  margin:0 0 8px;
  font-size:20px;
  color:#3d261f;
 }
-.cocoabridge-partner-copy p{
+.camcocoa-partner-copy p{
  margin:0;
  color:#65584f;
  font-size:14px;
  line-height:1.65;
 }
-.cocoabridge-reveal{
+.camcocoa-reveal{
  opacity:0;
  transform:translateY(22px) scale(.985);
  transition:opacity .65s ease, transform .65s ease;
  will-change:opacity, transform;
 }
-.cocoabridge-reveal.is-visible{
+.camcocoa-reveal.is-visible{
  opacity:1;
  transform:translateY(0) scale(1);
 }
-.cocoabridge-preview-actions{
+.camcocoa-preview-actions{
  margin-top:24px;
 }
-.cocoabridge-preview-actions .button,
-.cocoabridge-preview-actions .button_1{
+.camcocoa-preview-actions .button,
+.camcocoa-preview-actions .button_1{
  min-width:220px;
 }
-/*********************cocoabridge_team_partners_end****************/
+/*********************camcocoa_team_partners_end****************/
 
 /*********************about_home****************/
 #about_home{
@@ -1112,31 +1112,31 @@ bottom:-90px;
 .buyer-quote-grid{
  grid-template-columns:1fr;
  }
-.cocoabridge-team-grid,
-.cocoabridge-preview-grid,
-.cocoabridge-partner-grid{
+.camcocoa-team-grid,
+.camcocoa-preview-grid,
+.camcocoa-partner-grid{
  grid-template-columns:1fr;
  gap:16px;
 }
-.cocoabridge-section-heading{
+.camcocoa-section-heading{
  margin-bottom:22px;
 }
-.cocoabridge-section-heading h2{
+.camcocoa-section-heading h2{
  font-size:30px;
 }
-.cocoabridge-subtitle{
+.camcocoa-subtitle{
  font-size:16px;
 }
-.cocoabridge-team-body{
+.camcocoa-team-body{
  padding:18px 16px 20px;
 }
-.cocoabridge-team-body h3{
+.camcocoa-team-body h3{
  font-size:20px;
 }
-.cocoabridge-partner-card{
+.camcocoa-partner-card{
  padding:22px 16px 20px;
 }
-.cocoabridge-partner-logo{
+.camcocoa-partner-logo{
  width:96px;
  height:96px;
 }
@@ -1231,13 +1231,13 @@ padding-bottom:0;
 .home-blog-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
  }
-.cocoabridge-team-grid{
+.camcocoa-team-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
 }
-.cocoabridge-preview-grid{
+.camcocoa-preview-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
 }
-.cocoabridge-partner-grid{
+.camcocoa-partner-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
 }
 .buyer-quote-grid{
@@ -1271,13 +1271,13 @@ font-size:12px;
 .home-blog-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
  }
-.cocoabridge-team-grid{
+.camcocoa-team-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
 }
-.cocoabridge-preview-grid{
+.camcocoa-preview-grid{
  grid-template-columns:repeat(2,minmax(0,1fr));
 }
-.cocoabridge-partner-grid{
+.camcocoa-partner-grid{
  grid-template-columns:repeat(3,minmax(0,1fr));
 }
 .buyer-quote-grid{

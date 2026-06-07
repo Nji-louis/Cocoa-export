@@ -1,4 +1,4 @@
-Supabase setup notes — COCOABRIDGE
+Supabase setup notes — CAMCOCOA
 =================================
 
 This document contains minimal setup instructions, schema notes, and RLS guidance for integrating the website with Supabase.

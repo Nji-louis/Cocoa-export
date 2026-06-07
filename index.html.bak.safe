@@ -394,118 +394,118 @@
  </div>
 </section>
 
-<section id="cocoabridge_team_partners" class="cocoabridge-section">
+<section id="camcocoa_team_partners" class="camcocoa-section">
  <div class="container">
   <div class="row">
    <div class="col-sm-12">
-    <div class="cocoabridge-section-heading text-center">
-     <p class="cocoabridge-kicker">COCOABRIDGE Leadership</p>
+    <div class="camcocoa-section-heading text-center">
+     <p class="camcocoa-kicker">COCOABRIDGE Leadership</p>
      <h2>Meet the COCOABRIDGE Team</h2>
-     <p class="cocoabridge-subtitle">Dedicated professionals ensuring quality cocoa exports from Cameroon to the global market.</p>
+     <p class="camcocoa-subtitle">Dedicated professionals ensuring quality cocoa exports from Cameroon to the global market.</p>
     </div>
    </div>
    <div class="col-sm-12">
-    <div class="cocoabridge-preview-grid">
-     <article class="cocoabridge-team-card" data-reveal>
-      <div class="cocoabridge-team-photo">
+    <div class="camcocoa-preview-grid">
+     <article class="camcocoa-team-card" data-reveal>
+      <div class="camcocoa-team-photo">
        <img loading="lazy" src="img/tearm1.jpeg" alt="Chindoh David, Founder and CEO at COCOABRIDGE">
       </div>
-      <div class="cocoabridge-team-body">
-       <p class="cocoabridge-team-role">Founder &amp; CEO</p>
+      <div class="camcocoa-team-body">
+       <p class="camcocoa-team-role">Founder &amp; CEO</p>
        <p>Leads COCOABRIDGE with a strong focus on export excellence, buyer trust, and long-term cocoa trade growth.</p>
-       <div class="cocoabridge-social">
+       <div class="camcocoa-social">
         <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="Chindoh David on LinkedIn"><i class="fa fa-linkedin"></i></a>
         <a href="mailto:info@cocoabridge.com" aria-label="Email COCOABRIDGE leadership"><i class="fa fa-envelope"></i></a>
        </div>
       </div>
      </article>
-     <article class="cocoabridge-team-card" data-reveal>
-      <div class="cocoabridge-team-photo">
+     <article class="camcocoa-team-card" data-reveal>
+      <div class="camcocoa-team-photo">
        <img loading="lazy" src="img/tearm2.jpeg" alt="Export Operations Manager at COCOABRIDGE">
       </div>
-      <div class="cocoabridge-team-body">
-       <p class="cocoabridge-team-role">Operations</p>
+      <div class="camcocoa-team-body">
+       <p class="camcocoa-team-role">Operations</p>
        <h3>Export Operations Manager</h3>
        <p>Coordinates shipment planning, warehouse readiness, and export timelines for reliable delivery execution.</p>
-       <div class="cocoabridge-social">
+       <div class="camcocoa-social">
         <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="Export Operations Manager on LinkedIn"><i class="fa fa-linkedin"></i></a>
         <a href="mailto:info@cocoabridge.com" aria-label="Email COCOABRIDGE leadership"><i class="fa fa-envelope"></i></a>
        </div>
       </div>
      </article>
-     <article class="cocoabridge-team-card" data-reveal>
-      <div class="cocoabridge-team-photo">
+     <article class="camcocoa-team-card" data-reveal>
+      <div class="camcocoa-team-photo">
        <img loading="lazy" src="img/tearm3.jpeg" alt="Software Engineer at COCOABRIDGE">
       </div>
-      <div class="cocoabridge-team-body">
-       <p class="cocoabridge-team-role">Software Engineer</p>
+      <div class="camcocoa-team-body">
+       <p class="camcocoa-team-role">Software Engineer</p>
        <h3>Software & Web Systems Engineer</h3>
        <p>Develops and maintains the company’s digital systems and online export platform for smooth business operations.</p>
-       <div class="cocoabridge-social">
+       <div class="camcocoa-social">
         <a href="https://www.linkedin.com/" target="_blank" rel="noopener noreferrer" aria-label="Quality Control Officer on LinkedIn"><i class="fa fa-linkedin"></i></a>
         <a href="mailto:infor@cocoabridge.com" aria-label="Email COCOABRIDGE leadership"><i class="fa fa-envelope"></i></a>
        </div>
       </div>
      </article>
     </div>
-    <div class="cocoabridge-preview-actions text-center">
-     <a class="button" href="about.html#cocoabridge_team_partners"><span>VIEW FULL TEAM</span> <i class="fa fa-chevron-right"></i></a>
+    <div class="camcocoa-preview-actions text-center">
+     <a class="button" href="about.html#camcocoa_team_partners"><span>VIEW FULL TEAM</span> <i class="fa fa-chevron-right"></i></a>
     </div>
    </div>
   </div>
  </div>
 </section>
 
-<section id="cocoabridge_partners" class="cocoabridge-section cocoabridge-section--alt">
+<section id="camcocoa_partners" class="camcocoa-section camcocoa-section--alt">
  <div class="container">
   <div class="row">
    <div class="col-sm-12">
-    <div class="cocoabridge-section-heading text-center">
-     <p class="cocoabridge-kicker">Trusted Network</p>
+    <div class="camcocoa-section-heading text-center">
+     <p class="camcocoa-kicker">Trusted Network</p>
      <h2>Our Trusted Partners</h2>
-     <p class="cocoabridge-subtitle">Working together with trusted partners to deliver premium Cameroonian cocoa worldwide.</p>
+     <p class="camcocoa-subtitle">Working together with trusted partners to deliver premium Cameroonian cocoa worldwide.</p>
     </div>
    </div>
    <div class="col-sm-12">
-    <div class="cocoabridge-preview-grid">
-     <article class="cocoabridge-partner-card" data-reveal>
-      <div class="cocoabridge-partner-badge" aria-hidden="true">CC</div>
-      <div class="cocoabridge-partner-copy">
+    <div class="camcocoa-preview-grid">
+     <article class="camcocoa-partner-card" data-reveal>
+      <div class="camcocoa-partner-badge" aria-hidden="true">CC</div>
+      <div class="camcocoa-partner-copy">
        <h3>Cocoa Cooperatives</h3>
        <p>Producer groups and sourcing communities that help secure traceable, export-ready cocoa lots.</p>
       </div>
      </article>
-     <article class="cocoabridge-partner-card" data-reveal>
-      <div class="cocoabridge-partner-badge" aria-hidden="true">SL</div>
-      <div class="cocoabridge-partner-copy">
+     <article class="camcocoa-partner-card" data-reveal>
+      <div class="camcocoa-partner-badge" aria-hidden="true">SL</div>
+      <div class="camcocoa-partner-copy">
        <h3>Shipping &amp; Logistics</h3>
        <p>Freight and shipping partners supporting container movement, port coordination, and delivery timing.</p>
       </div>
      </article>
-     <article class="cocoabridge-partner-card" data-reveal>
-      <div class="cocoabridge-partner-badge" aria-hidden="true">EA</div>
-      <div class="cocoabridge-partner-copy">
+     <article class="camcocoa-partner-card" data-reveal>
+      <div class="camcocoa-partner-badge" aria-hidden="true">EA</div>
+      <div class="camcocoa-partner-copy">
        <h3>Export Agencies</h3>
        <p>Documentation, customs, and compliance partners that keep export workflows efficient and audit ready.</p>
       </div>
      </article>
-     <article class="cocoabridge-partner-card" data-reveal>
-      <div class="cocoabridge-partner-badge" aria-hidden="true">CO</div>
-      <div class="cocoabridge-partner-copy">
+     <article class="camcocoa-partner-card" data-reveal>
+      <div class="camcocoa-partner-badge" aria-hidden="true">CO</div>
+      <div class="camcocoa-partner-copy">
        <h3>Certification Organizations</h3>
        <p>Quality and sustainability bodies that support standards, traceability, and buyer confidence.</p>
       </div>
      </article>
-     <article class="cocoabridge-partner-card" data-reveal>
-      <div class="cocoabridge-partner-badge" aria-hidden="true">AP</div>
-      <div class="cocoabridge-partner-copy">
+     <article class="camcocoa-partner-card" data-reveal>
+      <div class="camcocoa-partner-badge" aria-hidden="true">AP</div>
+      <div class="camcocoa-partner-copy">
        <h3>Agricultural Partners</h3>
        <p>Agronomy and field-support partners that strengthen yields, farmer capacity, and crop resilience.</p>
       </div>
      </article>
     </div>
-    <div class="cocoabridge-preview-actions text-center">
-     <a class="button_1" href="about.html#cocoabridge_partners"><span>SEE ALL PARTNERS</span> <i class="fa fa-chevron-right"></i></a>
+    <div class="camcocoa-preview-actions text-center">
+     <a class="button_1" href="about.html#camcocoa_partners"><span>SEE ALL PARTNERS</span> <i class="fa fa-chevron-right"></i></a>
     </div>
    </div>
   </div>

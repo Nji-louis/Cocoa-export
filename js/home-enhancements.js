@@ -127,7 +127,7 @@
     if (!revealNodes.length) return;
 
     for (var i = 0; i < revealNodes.length; i += 1) {
-      revealNodes[i].classList.add('camcocoa-reveal');
+      revealNodes[i].classList.add('cocoabridge-reveal');
     }
 
     var prefersReducedMotion = false;
@@ -159,8 +159,8 @@
     }
   }
 
-  function initCamcocoaMicroInteractions() {
-    var cards = document.querySelectorAll('.camcocoa-team-card, .camcocoa-partner-card');
+  function initCocoabridgeMicroInteractions() {
+    var cards = document.querySelectorAll('.cocoabridge-team-card, .cocoabridge-partner-card');
     if (!cards.length) return;
 
     var canHover = false;
@@ -181,18 +181,18 @@
     }
   }
 
-  function initCamcocoaSections() {
+  function initCocoabridgeSections() {
     initScrollReveal();
-    initCamcocoaMicroInteractions();
+    initCocoabridgeMicroInteractions();
   }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
       initHomeQuoteForm();
-      initCamcocoaSections();
+      initCocoabridgeSections();
     }, { once: true });
   } else {
     initHomeQuoteForm();
-    initCamcocoaSections();
+    initCocoabridgeSections();
   }
 })(window);
