@@ -16,7 +16,7 @@
 <body class="buyer-portal-page" data-guard="buyer">
   <div class="buyer-layout">
     <aside class="buyer-sidebar">
-      <a class="brand" href="/">COCOABRIDGE</a>
+      <a class="brand" href="../index.html">COCOABRIDGE</a>
       <nav class="buyer-nav" aria-label="Buyer portal">
         <a class="active" href="#overview"><i class="fa fa-dashboard"></i>Overview</a>
         <a href="#products"><i class="fa fa-cubes"></i>Products</a>

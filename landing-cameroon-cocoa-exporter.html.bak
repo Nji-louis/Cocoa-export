@@ -50,7 +50,7 @@
   </script>
 </head>
 <body>
-  <header><div class="wrap"><a href="/">COCOABRIDGE</a> &nbsp; <a href="product.html">Products</a> &nbsp; <a href="services.html">Services</a> &nbsp; <a href="contact.html">Contact</a></div></header>
+  <header><div class="wrap"><a href="index.html">COCOABRIDGE</a> &nbsp; <a href="product.html">Products</a> &nbsp; <a href="services.html">Services</a> &nbsp; <a href="contact.html">Contact</a></div></header>
   <main>
     <section class="hero">
       <div class="wrap">

@@ -3,23 +3,23 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="contact Cameroon exporter, cocoa export quote, coffee export quote, bulk cocoa inquiry, bulk coffee inquiry, COCOABRIDGE contact">
-    <meta name="description" content="Contact COCOABRIDGE Ltd for quotes on cocoa and coffee exports from Cameroon, bulk supply requests, documentation support, and international shipment coordination.">
-    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
-    <link rel="canonical" href="https://cocoabridge.com/contact.html">
+    <meta name="keywords" content="Cameroon cocoa exporter, cocoa specifications, bulk cocoa beans supplier, cocoa shipping information, premium cocoa Cameroon">
+    <meta name="description" content="Detailed cocoa export specifications from COCOABRIDGE Ltd including origin, moisture, bean count, fermentation, packaging, and shipping terms.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://cocoabridge.com/product_detail.html">
     <link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
     <link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
     <meta name="theme-color" content="#4E342E">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="COCOABRIDGE Ltd">
     <meta property="og:locale" content="en_CM">
-    <meta property="og:title" content="Contact COCOABRIDGE Ltd | Cocoa & Coffee Export Inquiries">
-    <meta property="og:description" content="Contact COCOABRIDGE Ltd for cocoa and coffee export quotes, bulk supply requests, sourcing support, and shipment coordination from Cameroon.">
-    <meta property="og:url" content="https://cocoabridge.com/contact.html">
+    <meta property="og:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
+    <meta property="og:description" content="Detailed cocoa export specifications from COCOABRIDGE Ltd including origin, moisture, bean count, fermentation, packaging, and shipping terms.">
+    <meta property="og:url" content="https://cocoabridge.com/product_detail.html">
     <meta property="og:image" content="https://cocoabridge.com/img/cacao.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Contact COCOABRIDGE Ltd | Cocoa & Coffee Export Inquiries">
-    <meta name="twitter:description" content="Contact COCOABRIDGE Ltd for cocoa and coffee export quotes, sourcing support, and shipment coordination from Cameroon.">
+    <meta name="twitter:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
+    <meta name="twitter:description" content="Detailed cocoa export specifications from COCOABRIDGE Ltd including origin, moisture, bean count, fermentation, packaging, and shipping terms.">
     <meta name="twitter:image" content="https://cocoabridge.com/img/cacao.jpg">
     <script type="application/ld+json" data-static-schema="true">
     [
@@ -47,9 +47,9 @@
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Contact COCOABRIDGE Ltd | Cocoa Export Inquiry",
-        "description": "Contact COCOABRIDGE Ltd for cocoa export quotes, sourcing support, and shipment coordination.",
-        "url": "https://cocoabridge.com/contact.html",
+        "name": "Cocoa Product Detail | COCOABRIDGE Ltd",
+        "description": "Detailed cocoa export specifications from COCOABRIDGE Ltd including origin, moisture, bean count, fermentation, packaging, and shipping terms.",
+        "url": "https://cocoabridge.com/product_detail.html",
         "inLanguage": "en",
         "isPartOf": {
           "@type": "WebSite",
@@ -60,41 +60,67 @@
     ]
     </script>
 
-    <script type="application/ld+json" data-static-schema="true">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "COCOABRIDGE Ltd",
-      "url": "https://cocoabridge.com/",
-      "telephone": "+237699745546",
-      "email": "info@cocoabridge.com",
-      "image": "https://cocoabridge.com/img/cacao.jpg",
-      "priceRange": "$$",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Bonaberi Industrial Zone",
-        "addressLocality": "Douala",
-        "addressRegion": "Littoral Region",
-        "addressCountry": "CM"
-      },
-      "areaServed": ["Europe","North America","Asia","Middle East","Africa"]
-    }
-    </script>
-
-    <title>Contact COCOABRIDGE Ltd | Cocoa & Coffee Export Inquiries</title>
+    <title>Cocoa Product Detail | COCOABRIDGE Ltd</title>
 	<link href="https://fonts.googleapis.com/css?family=Righteous&display=swap" rel="stylesheet">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/global.min.css" rel="stylesheet">
-	<link href="css/contact.min.css" rel="stylesheet">
+	<link href="css/product_detail.min.css" rel="stylesheet">
 	<link href="css/whatsapp-suite.min.css" rel="stylesheet">
 	<link href="css/language-switcher.min.css" rel="stylesheet">
 	<link href="css/newsletter.min.css" rel="stylesheet">
 	<link href="css/dark-mode.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
-	<script src="js/jquery-2.1.1.min.js" defer></script>
-    <script src="js/bootstrap.min.js" defer></script>
+  <style>
+    .testimonial-reply-thread {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+    .testimonial-reply-thread.is-empty {
+      display: none;
+    }
+    .testimonial-reply-item {
+      background: #fbf7ef;
+      border: 1px solid rgba(243, 178, 4, 0.22);
+      border-left: 4px solid #f3b204;
+      border-radius: 14px;
+      padding: 14px 16px;
+    }
+    .testimonial-reply-badge {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f3b204;
+      color: #111;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .testimonial-reply-item h6 {
+      margin: 0 0 8px 0;
+      color: #4e342e;
+      font-weight: 700;
+    }
+    .testimonial-reply-item h6 span {
+      font-weight: 400;
+      color: #7b7068;
+      margin-left: 8px;
+    }
+    .testimonial-reply-item p {
+      margin: 0;
+      line-height: 1.7em;
+      color: #44362f;
+    }
+    .testimonial-reply-form .form-control {
+      border-radius: 12px;
+    }
+  </style>
+	<script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
   </head>
-  
+
 <body>
 <section id="top">
  <div class="container">
@@ -116,22 +142,22 @@
             <option value="ja">Japanese</option>
             <option value="it">Italian</option>
          </select>
-	 </div> 
+	 </div>
 	</div>
 	<div class="col-sm-2">
 	 <div class="top_i1 clearfix">
 	    <h5><i class="fa fa-phone"></i>+237699745546</h5>
-	 </div> 
+	 </div>
 	</div>
 	<div class="col-sm-2">
 	 <div class="top_i1 clearfix">
-	    <h5><a href="mailto:info@cocoabridge.com"><i class="fa fa-envelope"></i>info@cocoabridge.com</a></h5>
-	 </div> 
+	    <h5><a href="mailto:info@cocoabridge.com"><i class="fa fa-envelope"></i>  info@cocoabridge.com</a></h5>
+	 </div>
 	</div>
 	<div class="col-sm-6">
 	 <div class="top_i2 clearfix">
 	    <h5><button type="button" class="theme-toggle-btn" aria-label="Toggle dark mode" aria-pressed="false"><i class="fa fa-moon-o"></i> <span class="theme-toggle-label">Dark Mode</span></button></h5>
-	 </div> 
+	 </div>
 	</div>
    </div>
   </div>
@@ -149,7 +175,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><i class="fa fa-copyright"></i>COCOABRIDGE</a>
+                <a class="navbar-brand" href="index.html"><i class="fa fa-copyright"></i>COCOABRIDGE</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -158,16 +184,16 @@
                     <li>
                         <a class="tag_m" href="/">Home</a>
                     </li>
-                     
+
                     <li>
                         <a class="tag_m" href="about.html">About Us</a>
                     </li>
-					
+
 					<li>
                         <a class="tag_m" href="services.html">Services</a>
                     </li>
-					
-                    
+
+
 					<li>
                         <a class="tag_m" href="export.html">Export</a>
                     </li>
@@ -180,21 +206,22 @@
                         <li><a href="traceability.html">Traceability</a></li>
                        </ul>
                   </li>
-					
-						<li class="dropdown">
-	                     <a href="#" class="dropdown-toggle tag_m" data-toggle="dropdown">Blog <span class="caret" aria-hidden="true"></span></a>
-	                     <ul class="dropdown-menu drop_m">
-	                        <li><a href="blog.html">Blog</a></li>
-	                        <li><a href="blog_detail.html">Blog Detail</a></li>
-	                       </ul>
-	                  </li>
-						<li>
-	                        <a class="tag_m active_tab" href="contact.html">Contact</a>
-	                    </li>
-		
-					
+
+					<li class="dropdown">
+                     <a href="#" class="dropdown-toggle tag_m" data-toggle="dropdown">Blog <span class="caret" aria-hidden="true"></span></a>
+                     <ul class="dropdown-menu drop_m">
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="blog_detail.html">Blog Detail</a></li>
+                       </ul>
+                  </li>
+
+					<li>
+                        <a class="tag_m" href="contact.html">Contact</a>
+                    </li>
+
+
                 </ul>
-				 
+
             </div>
             <!-- /.navbar-collapse -->
         </div>
@@ -202,13 +229,11 @@
     </nav>
 </section>
 
-    <main id="main" role="main">
-
-    <section id="center" class="center_about clearfix">
+<section id="center" class="center_about clearfix">
   <div class="container">
    <div class="row">
     <div class="center_about_1 text-center clearfix">
-	  <h1 class="mgt">Contact Cameroon Cocoa Export Desk</h1>
+	  <h1 class="mgt">Product Specifications for Export Buyers</h1>
 	</div>
    </div>
   </div>
@@ -222,7 +247,7 @@
 	 <div class="col-sm-6 space_left">
 	  <ul class="mgt">
 	   <li>Home <i class="fa fa-chevron-right"></i> </li>
-	   <li><a href="#">Contact Us</a> </li>
+	   <li><a href="product.html">Product</a> </li>
 	  </ul>
 	 </div>
 	 <div class="col-sm-6 space_right">
@@ -240,170 +265,187 @@
  </div>
 </section>
 
-<section id="contact_page">
+<section id="blog">
  <div class="container">
   <div class="row">
-    <div class="contact_page_1 clearfix">
-	 <div class="col-sm-4">
-	  <div class="contact_page_1i text-center clearfix">
-	   <span><i class="fa fa-map"></i></span>
-	   <div class="about_h clearfix">
-			 <h4>Export Office</h4>
-		 <hr>
-       </div>
-		   <p class="mgt">Bonaberi Industrial Zone, Douala<br>Littoral Region, Cameroon</p>
-	  </div>
-	 </div>
-	 <div class="col-sm-4">
-	  <div class="contact_page_1i text-center clearfix">
-	   <span><i class="fa fa-clock-o"></i></span>
-	   <div class="about_h clearfix">
-		 <h4>Office Schedule</h4>
-		 <hr>
-       </div>
-		   <p class="mgt">Monday to Friday: 8:30AM - 6:00PM <br> Saturday: 9:00AM - 2:00PM</p>
-	  </div>
-	 </div>
-	 <div class="col-sm-4">
-	  <div class="contact_page_1i text-center clearfix">
-	   <span><i class="fa fa-phone"></i></span>
-	   <div class="about_h clearfix">
-		 <h4>Contact Us</h4>
-		 <hr>
-       </div>
-		   <p class="mgt">+237699745546<br>info@cocoabridge.com</p>
-	  </div>
-	 </div>
-	</div>
-	<div class="contact_page_2 clearfix">
-	 <div class="col-sm-6">
-	  <div class="blog_d_page_li3 clearfix">
-	     <div class="about_h clearfix">
-				 <h3 class="mgt">Export Inquiry Form</h3>
-			 <hr>
-       </div>
-      <form id="contact-inquiry-form">
-        <div class="blog_d_page_li3i cleafix">
-         <div class="col-sm-6 space_left">
-           <input id="contact-company" name="company_name" class="form-control" type="text" placeholder="Company Name">
-         </div>
-         <div class="col-sm-6 space_right">
-           <input id="contact-phone" name="phone" class="form-control" type="text" placeholder="Phone / WhatsApp">
-         </div>
-        </div>
-        <div class="blog_d_page_li3i cleafix">
-         <div class="col-sm-6 space_left">
-           <input id="contact-email" name="workEmail" class="form-control" type="text" placeholder="Work Email">
-         </div>
-         <div class="col-sm-6 space_right">
-           <input id="contact-quantity" name="quantity" class="form-control" type="text" placeholder="Required Volume (MT)">
-         </div>
-        </div>
-        <div class="blog_d_page_li3i cleafix">
-          <div class="col-sm-12 space_all">
-           <textarea id="contact-inquiry-message" name="message" placeholder="Destination port, cocoa variety, quality specs, and preferred Incoterm." class="form-control form_1"></textarea>
-           <div class="mgt"><button type="submit" class="button_1"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></button></div>
-           <p class="quote-form-feedback" id="contact-inquiry-feedback" aria-live="polite"></p>
-          </div>
-        </div>
-       </form>
-       <script type="module">
-         import { submitInquiry } from './js/forms.js'
-         const contactForm = document.getElementById('contact-inquiry-form')
-         const contactFeedback = document.getElementById('contact-inquiry-feedback')
-         const contactSubmit = contactForm.querySelector('button[type="submit"]')
-         contactForm.addEventListener('submit', async (e) => {
-           e.preventDefault()
-           contactSubmit.disabled = true
-           contactFeedback.innerText = 'Sending...'
-           try {
-             await submitInquiry(contactForm)
-             contactFeedback.innerText = 'Inquiry submitted — thank you.'
-             contactForm.reset()
-           } catch (err) {
-             contactFeedback.innerText = err.message || 'Failed to submit inquiry.'
-           } finally {
-             contactSubmit.disabled = false
-           }
-         })
-       </script>
-       <script type="module">
-         window.addEventListener('DOMContentLoaded', () => {
-           const backend = window.AppBackend || {}
-           const form = document.getElementById('buyer-updates-form')
-           const feedback = document.getElementById('buyer-updates-feedback')
+   <div class="blog clearfix">
+    <div class="col-sm-3">
+	 <div class="blog_left clearfix">
+		<div class="blog_left_1">
+		    <h3>CLASSIFICATION</h3>
+				<h4><a href="product.html">All Products</a></h4>
+			<p><a href="product_detail.html?variety=amelonado" data-variety-link="amelonado">Amelonado - View Details</a></p>
+			<p><a href="product_detail.html?variety=bresilien" data-variety-link="bresilien">Bresilien - View Details</a></p>
+			<p><a href="product_detail.html?variety=cundeamor" data-variety-link="cundeamor">Cundeamor - View Details</a></p>
+			<p><a href="product_detail.html?variety=forastero" data-variety-link="forastero">Forastero - View Details</a></p>
+			<p><a href="product_detail.html?variety=criollo" data-variety-link="criollo">Criollo - View Details</a></p>
+				<p><a href="product_detail.html?variety=trinitario" data-variety-link="trinitario">Trinitario - View Details</a></p>
+				<p><a href="product_detail.html?variety=cocoa_butter" data-variety-link="cocoa_butter">Cocoa Butter - View Details</a></p>
+				<p><a href="product_detail.html?variety=cocoa_shells" data-variety-link="cocoa_shells">Cocoa Shells - View Details</a></p>
+				<p><a href="product_detail.html?variety=cameroon_arabica" data-variety-link="cameroon_arabica">Cameroon Arabica Coffee Beans - View Details</a></p>
+				<p><a href="product_detail.html?variety=cameroon_robusta" data-variety-link="cameroon_robusta">Cameroon Robusta Coffee Beans - View Details</a></p>
 
-           if (!form) return
-
-           form.addEventListener('submit', async (event) => {
-             event.preventDefault()
-             const email = (form.querySelector('input[name="email"]')?.value || '').trim()
-             const fullName = (form.querySelector('input[name="fullName"]')?.value || '').trim()
-
-             if (!email) {
-               feedback.textContent = 'Please enter your email address.'
-               feedback.classList.add('is-error')
-               return
-             }
-
-             if (!backend.subscriptionApi || typeof backend.subscriptionApi.subscribe !== 'function') {
-               feedback.textContent = 'Subscription service is not available right now.'
-               feedback.classList.add('is-error')
-               return
-             }
-
-             feedback.textContent = 'Subscribing...'
-             feedback.classList.remove('is-error')
-
-             try {
-               const result = await backend.subscriptionApi.subscribe({
-                 fullName,
-                 email,
-                 sourceChannel: 'contact_buyer_updates'
-               })
-               form.reset()
-               feedback.textContent = (result && result.message) ? result.message : 'You are now subscribed to buyer updates.'
-               feedback.classList.remove('is-error')
-             } catch (error) {
-               feedback.textContent = error && error.message ? error.message : 'Failed to subscribe.'
-               feedback.classList.add('is-error')
-             }
-           })
-         })
-       </script>
-	 </div>
-	<div class="col-sm-6">
-	  <div class="contact_page_2i clearfix">
-		   <h3 class="mgt">Buyer Updates</h3>
-		   <p>Receive crop forecasts, shipment windows, market notes, and documentation updates from our export desk.</p>
-		   <form id="buyer-updates-form" class="contact-page-updates-form" novalidate>
-		     <input id="buyer-updates-name" class="form-control" type="text" name="fullName" placeholder="Your name">
-		     <input id="buyer-updates-email" class="form-control" type="email" name="email" placeholder="Your email" required>
-		     <button class="button_2" type="submit"><span>SUBSCRIBE</span> <i class="fa fa-chevron-right"></i></button>
-		     <p class="contact-page-updates-feedback" id="buyer-updates-feedback" aria-live="polite"></p>
-		   </form>
-	  </div>
-	  <div class="contact_page_2ii clearfix">
-	    <ul class="social-network social-circle mgt">
-                        <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li>
-                        <li><a href="#" class="icoFacebook" title="Facebook"><i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#" class="icoTwitter" title="Twitter"><i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#" class="icoGoogle" title="Google +"><i class="fa fa-google-plus"></i></a></li>
-                        <li><a href="#" class="icoLinkedin" title="Linkedin"><i class="fa fa-linkedin"></i></a></li>
-       </ul>
+		   </div>
+	   <div class="blog_left_2">
+		    <p><a href="#">Buyer Shortlist <i class="fa fa-heart-o pull-right"></i></a></p>
+	   </div>
+	   <div class="blog_left_1">
+		    <h3>MARKET VIEW</h3>
+			<h4><a id="market-view-current-link" href="product_detail.html?variety=forastero">Forastero Market View</a></h4>
+			<p><a id="market-view-container-link" href="export.html">Container Program &amp; Export Workflow</a></p>
+			<p><a id="market-view-traceability-link" href="traceability.html">Traceability &amp; Lot Readiness</a></p>
+			<p><a id="market-view-quote-link" href="index.html#buyer_quote_home">Request Quote</a></p>
 	   </div>
 	 </div>
 	</div>
-	<div class="contact_page_3 clearfix">
-	 <div class="col-sm-12">
-		  <iframe src="https://www.google.com/maps?q=Douala%20Cameroon&output=embed" width="100%" height="450px" frameborder="0" style="border:0" allowfullscreen=""></iframe>
-	 </div>
-	 </div>
+	<div class="col-sm-9">
+		<div class="blog_right clearfix" style="margin-bottom: 0;">
+		<div class="col-sm-12" style="padding: 0;">
+		<div class="blog_right_inner clearfix">
+
+		<div class="blog_right_inner_1" >
+			<img loading="lazy" id="product-detail-image" src="img/For5.jpg" class="iw" alt="Forastero cocoa beans from Cameroon">
+		</div>
+		</div>
+		<div class="blog_right_1">
+			<h3><span id="product-detail-title-text">Premium Forastero Cocoa Beans from Cameroon</span>  <i class="fa fa-heart-o"></i></h3>
+			<p id="product-detail-intro">COCOABRIDGE Ltd supplies Forastero cocoa from trusted Cameroonian cooperatives, known for strong cocoa body and reliable industrial performance.</p>
+		</div>
+		</div>
+
+		</div>
+		<div class="blog_right_detail col-sm-12 clearfix">
+			  <h3>Product &amp; Export Specification</h3>
+			  <p id="product-detail-spec-1">Lots are prepared for export with consistent fermentation, controlled moisture, and standardized sorting suited for blends and bulk manufacturing.</p>
+			  <p id="product-detail-spec-2">Quality checks cover moisture, cut tests, bean count, and foreign matter, with a full export document package for each shipment.</p>
+			  <p id="product-detail-spec-3">Long-term farmer partnerships support dependable annual and spot volumes shipped through Douala and Kribi with traceable lot references.</p>
+		</div>
+		<div class="product-specs col-sm-12 clearfix">
+		  <h2 class="section-title" id="product-detail-spec-title">Premium Forastero Cocoa Beans - Export Specifications</h2>
+		  <p class="section-subtitle">Our cocoa beans meet EU, Asian, and Middle Eastern import standards with full traceability.</p>
+		  <div class="spec-table-wrapper">
+		    <table class="spec-table">
+		      <tr>
+		        <th>Specification Item</th>
+		        <th>Details</th>
+		      </tr>
+		      <tr>
+		        <td><strong>Cocoa Type</strong></td>
+		        <td id="product-detail-variety">Forastero</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Origin</strong></td>
+		        <td id="product-detail-origin">Cameroon</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Moisture Content</strong></td>
+		        <td id="product-detail-moisture">6-7%</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Bean Count</strong></td>
+		        <td id="product-detail-bean-count">90-100 beans / 100g</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Fermentation Rate</strong></td>
+		        <td id="product-detail-fermentation">≥ 85%</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Drying Method</strong></td>
+		        <td id="product-detail-drying-method">Sun-dried</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Flavor Profile</strong></td>
+		        <td id="product-detail-flavor">Deep cocoa notes, mild bitterness, balanced acidity</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Packaging</strong></td>
+		        <td id="product-detail-packaging">Jute bags (50kg or 65kg)</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Minimum Order</strong></td>
+		        <td id="product-detail-min-order">1 x 20ft container (19-20 MT)</td>
+		      </tr>
+		      <tr>
+		        <td><strong>Shipping Ports</strong></td>
+		        <td id="product-detail-shipping-ports">Douala Port, Kribi Deep Seaport</td>
+		      </tr>
+		    </table>
+		  </div>
+		</div>
+		<div class="product-extra-info col-sm-12 clearfix">
+		 <div class="row">
+		  <div class="col-sm-6">
+		   <article class="product-extra-card">
+		    <h4>Flavor Profile</h4>
+		    <p id="product-detail-flavor-profile">Structured cocoa body with balanced acidity and consistent industrial performance.</p>
+		   </article>
+		  </div>
+		  <div class="col-sm-6">
+		   <article class="product-extra-card">
+		    <h4>Harvest Season</h4>
+		    <p id="product-detail-harvest-season">Main crop: October to March. Mid crop: April to July.</p>
+		   </article>
+		  </div>
+		  <div class="col-sm-6">
+		   <article class="product-extra-card">
+		    <h4>Export Packaging</h4>
+		    <p id="product-detail-export-packaging">New export-grade jute bags, lot coded and pallet-ready for container loading plans.</p>
+		   </article>
+		  </div>
+		  <div class="col-sm-6">
+		   <article class="product-extra-card">
+		    <h4>Shipping Information</h4>
+		    <p id="product-detail-shipping-info">FOB/CIF options available with full export documentation and shipment tracking references.</p>
+		   </article>
+		  </div>
+		 </div>
+		</div>
+
+		<div class="detail_comments col-sm-12" id="product-testimonials-section">
+			 <h3 class="heading_1">Buyer Testimonials (<span id="product-testimonial-count">0</span>)</h3>
+		 <div class="article_page_left_inner_5 clearfix" id="product-testimonials" aria-live="polite">
+		  <p class="product-testimonials-loading">Loading buyer testimonials...</p>
+	   </div>
+		</div>
+
+				<form class="comment_1 col-sm-12 clearfix" id="product-inquiry-form">
+							 <h3 class="heading_1">Send Product Inquiry</h3>
+						 <textarea id="product-inquiry-message" name="message" class="form-control select_1" placeholder="Required variety, volume (MT), destination port*"></textarea>
+						 <input id="product-inquiry-company" name="company_name" type="text" placeholder="Company Name*" class="form-control text_1_box">
+						 <input id="product-inquiry-email" name="workEmail" type="text" placeholder="Work Email*" class="form-control text_1_box">
+						 <input id="product-inquiry-country" name="country" type="text" placeholder="Country / Region" class="form-control text_1_box">
+						 <div><button type="submit" class="button_2"><span>SUBMIT INQUIRY</span> <i class="fa fa-chevron-right"></i></button></div>
+			 <p class="quote-form-feedback" id="product-inquiry-feedback" aria-live="polite"></p>
+			 </form>
+		<script type="module">
+			import { submitInquiry } from './js/forms.js'
+			const form = document.getElementById('product-inquiry-form')
+			const feedback = document.getElementById('product-inquiry-feedback')
+			const submitButton = form.querySelector('button[type="submit"]')
+			form.addEventListener('submit', async (e) => {
+				e.preventDefault()
+				submitButton.disabled = true
+				feedback.innerText = 'Sending...'
+				const productTitle = document.getElementById('product-detail-title-text')?.innerText || document.getElementById('product-detail-variety')?.innerText || ''
+				const fd = new FormData(form)
+				fd.set('product', productTitle)
+				try {
+					await submitInquiry(fd)
+					feedback.innerText = 'Inquiry submitted — thank you.'
+					form.reset()
+				} catch (err) {
+					feedback.innerText = err.message || 'Failed to submit inquiry.'
+				} finally {
+					submitButton.disabled = false
+				}
+			})
+		</script>
+
+	</div>
+   </div>
   </div>
  </div>
 </section>
-
-</main>
 
 <section id="footer">
  <div class="container">
@@ -444,8 +486,8 @@
 	    <span><i class="fa fa-envelope"></i></span>
 	   </div>
 	   <div class="col-sm-11 space_all">
-	     <h6 class="mgt">info@cocoabridge.com</h6>
-		 <h6 class="mgt"> sales@cocoabridge.com</h6>
+	     <h6 class="mgt"> info@cocoabridge.com</h6>
+		 <h6 class="mgt">sales@cocoabridge.com</h6>
 	   </div>
 	  </div>
 	 </div>
@@ -454,7 +496,7 @@
    <div class="footer_2 clearfix">
     <div class="col-sm-3">
 	 <div class="footer_2i clearfix">
-	   <a class="navbar-brand" href="/"><i class="fa fa-copyright"></i> COCOABRIDGE</a>
+	   <a class="navbar-brand" href="index.html"><i class="fa fa-copyright"></i> COCOABRIDGE</a>
 	   <p> Cameroon cocoa exporter delivering traceable beans, strict quality control, and dependable international logistics for industrial and specialty buyers.</p>
 	   <ul class="social-network social-circle">
                         <li><a href="#" class="icoRss" title="Rss"><i class="fa fa-rss"></i></a></li>
@@ -469,15 +511,15 @@
 	 <div class="footer_2i1 clearfix">
 	   <h4 class="mgt">QUICK LINK</h4>
 	   <hr>
-    <ul>
-     <li><a href="/"><i class="fa fa-arrow-right"></i> Cameroon Cocoa & Coffee Exporter</a></li>
-     <li><a href="about.html"><i class="fa fa-arrow-right"></i> About COCOABRIDGE — Exporter from Cameroon</a></li>
-     <li><a href="services.html"><i class="fa fa-arrow-right"></i> Cocoa & Coffee Export Services</a></li>
-     <li><a href="product.html"><i class="fa fa-arrow-right"></i> Cocoa & Coffee Products (Forastero, Criollo, Trinitario)</a></li>
-     <li><a href="traceability.html"><i class="fa fa-arrow-right"></i> Cocoa Traceability & Sourcing</a></li>
-     <li><a href="contact.html"><i class="fa fa-arrow-right"></i> Contact Export Desk — Get a Quote</a></li>
-     <li><a href="privacy_policy.html"><i class="fa fa-arrow-right"></i> Privacy Policy</a></li>
-    </ul>
+	   <ul>
+        <li><a href="index.html"><i class="fa fa-arrow-right"></i> Home</a></li>
+        <li><a href="about.html"><i class="fa fa-arrow-right"></i> About Us</a></li>
+        <li><a href="services.html"><i class="fa fa-arrow-right"></i> Services</a></li>
+        <li><a href="traceability.html"><i class="fa fa-arrow-right"></i> Traceability</a></li>
+        <li><a href="contact.html"><i class="fa fa-arrow-right"></i> Contact</a></li>
+        <li><a href="terms_and_conditions.html"><i class="fa fa-arrow-right"></i> Terms &amp; Conditions</a></li>
+        <li><a href="privacy_policy.html"><i class="fa fa-arrow-right"></i> Privacy Policy</a></li>
+       </ul>
 	 </div>
 	</div>
 	<div class="col-sm-3">
@@ -501,7 +543,7 @@
           <span>SUBSCRIBE</span> <i class="fa fa-chevron-right"></i>
         </button>
        </form>
-      
+
 	 </div>
 	</div>
 	<div class="col-sm-3">
@@ -560,7 +602,7 @@ $(document).ready(function(){
 		} else {
 			$('#toTop').fadeOut();
 		}
-	}); 
+	});
 $('#toTop').click(function(){
 	$("html, body").animate({ scrollTop: 0 }, 600);
 	return false;
@@ -569,6 +611,8 @@ $('#toTop').click(function(){
 
 </script>
 
+
+<script src="js/product-detail-switcher.min.js"></script>
 <script src="js/site-search.min.js"></script>
 
 <script src="js/theme-toggle.min.js"></script>
@@ -579,7 +623,7 @@ $('#toTop').click(function(){
 <script src="js/language-switcher.min.js"></script>
 <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-<!-- COCOABRIDGE SARL Ltd - Ultra Modern WhatsApp Chat Suite -->
+<!-- COCOABRIDGE Ltd - Ultra Modern WhatsApp Chat Suite -->
 <div class="wa-suite">
 
   <!-- Floating Welcome Bubble -->
@@ -597,7 +641,7 @@ $('#toTop').click(function(){
 
     <!-- HEADER -->
     <div class="wa-suite-header">
-      <h4>COCOABRIDGE Ltd</h4>
+      <h4>COCOABRIDGE</h4>
       <p>Your Cocoa Export Partner</p>
     </div>
 
@@ -663,6 +707,8 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase/config.min.js"></script>
 <script src="js/supabase/client.min.js"></script>
@@ -672,9 +718,9 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/supabase/inquiries.min.js"></script>
 <script src="js/supabase/subscriptions.min.js"></script>
 <script src="js/supabase/blog.min.js"></script>
-<script src="js/supabase/content.js"></script>
-<script type="module" src="js/blog-forms.js"></script>
+<script src="js/supabase/product-testimonials.min.js"></script>
 <script src="js/supabase/init.min.js"></script>
+
 </body>
- 
+
 </html>

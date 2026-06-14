@@ -16,7 +16,7 @@
 <body class="portal-auth-page" data-auth-entry="login">
   <main class="auth-shell">
     <section class="auth-hero">
-      <a class="auth-brand" href="/">COCOABRIDGE</a>
+      <a class="auth-brand" href="../index.html">COCOABRIDGE</a>
       <h1>Buyer portal access</h1>
       <p>Sign in to view export-ready cocoa products, send inquiries, track order conversations, and manage your buyer profile.</p>
       <div class="auth-proof">

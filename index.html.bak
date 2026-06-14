@@ -209,7 +209,7 @@
                     <span class="icon-bar"></span>
                 </button>
 
-                <a class="navbar-brand" href="/"> <i class="fa fa-copyright"></i>COCOABRIDGE</a>
+                <a class="navbar-brand" href="index.html"> <i class="fa fa-copyright"></i>COCOABRIDGE</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -1420,7 +1420,7 @@
    <div class="footer_2 clearfix">
 	<div class="col-sm-3">
 	 <div class="footer_2i clearfix">
-	   <a class="navbar-brand" href="/"><i class="fa fa-copyright"></i> COCOABRIDGE</a>
+	   <a class="navbar-brand" href="index.html"><i class="fa fa-copyright"></i> COCOABRIDGE</a>
 	   <p> Cameroon cocoa exporter delivering traceable beans, strict quality control, and dependable international logistics for industrial and specialty buyers.</p>
 	   <ul class="social-network social-circle">
                         <li><a href="https://www.facebook.com/profile.php?id=61582469037982" class="icoFacebook" title="Facebook" aria-label="Visit COCOABRIDGE on Facebook"><i class="fa fa-facebook"></i></a></li>
@@ -1435,7 +1435,7 @@
 	   <p class="footer-list-title mgt">Quick Links</p>
 	   <hr>
 	   <ul>
-        <li><a href="/"><i class="fa fa-arrow-right"></i> Cameroon Cocoa & Coffee Exporter</a></li>
+        <li><a href="index.html"><i class="fa fa-arrow-right"></i> Cameroon Cocoa & Coffee Exporter</a></li>
         <li><a href="about.html"><i class="fa fa-arrow-right"></i> About COCOABRIDGE — Exporter from Cameroon</a></li>
         <li><a href="services.html"><i class="fa fa-arrow-right"></i> Cocoa & Coffee Export Services</a></li>
         <li><a href="landing-cameroon-cocoa-exporter.html"><i class="fa fa-arrow-right"></i> Cameroon Cocoa Exporter</a></li>
