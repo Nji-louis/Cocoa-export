@@ -335,6 +335,39 @@
       return data || [];
     },
 
+    async listAiBlogDrafts() {
+      const client = getClient();
+      const { data, error } = await client
+        .from("blog_posts")
+        .select("id, title, slug, excerpt, content, featured_image, category, category_id, seo_title, seo_description, keywords, source_country, industry_type, internal_linking_suggestions, created_at, updated_at, blog_categories(name, slug)")
+        .eq("ai_generated", true)
+        .eq("status", "draft")
+        .order("created_at", { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data || [];
+    },
+
+    async publishAiBlogDraft(postId) {
+      if (!postId) throw new Error("Draft id is required");
+      const client = getClient();
+      const userId = await getCurrentUserIdSafe(client);
+      const { data, error } = await client
+        .from("blog_posts")
+        .update({
+          status: "published",
+          published_at: new Date().toISOString(),
+          updated_by: userId,
+        })
+        .eq("id", postId)
+        .eq("ai_generated", true)
+        .eq("status", "draft")
+        .select("id, title, slug, status, published_at")
+        .single();
+      if (error) throw error;
+      return data;
+    },
+
     async upsertWebsiteContent(payload) {
       const client = getClient();
       const userId = await getCurrentUserIdSafe(client);

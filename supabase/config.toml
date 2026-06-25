@@ -76,3 +76,6 @@ verify_jwt = true
 
 [functions.update-inquiry-status]
 verify_jwt = true
+
+[functions.generate-blog-news]
+verify_jwt = false

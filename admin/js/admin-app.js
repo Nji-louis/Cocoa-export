@@ -11,6 +11,8 @@
     contents: [],
     media: [],
     users: [],
+    aiDrafts: [],
+    activeAiDraftId: "",
     chart: null,
   };
 
@@ -80,6 +82,24 @@
       .split(",")
       .map(function (item) { return item.trim(); })
       .filter(Boolean);
+  }
+
+  function sanitizeDraftHtml(value) {
+    const template = document.createElement("template");
+    template.innerHTML = String(value || "");
+    template.content.querySelectorAll("script, style, iframe, object, embed, link, meta").forEach(function (node) {
+      node.remove();
+    });
+    template.content.querySelectorAll("*").forEach(function (node) {
+      Array.from(node.attributes || []).forEach(function (attribute) {
+        const name = attribute.name.toLowerCase();
+        const rawValue = String(attribute.value || "").trim().toLowerCase();
+        if (name.indexOf("on") === 0 || rawValue.indexOf("javascript:") === 0) {
+          node.removeAttribute(attribute.name);
+        }
+      });
+    });
+    return template.innerHTML;
   }
 
   function fillSelect(select, items, labelKey) {
@@ -268,6 +288,63 @@
     }).join("") || '<tr><td colspan="5">No admin users found.</td></tr>';
   }
 
+  function renderAiDraftNotifications() {
+    const node = qs("#ai-draft-notification-list");
+    if (node == null) return;
+    node.innerHTML = (state.aiDrafts || []).map(function (item) {
+      const relation = Array.isArray(item.blog_categories) ? item.blog_categories[0] : item.blog_categories;
+      const category = item.category || (relation && relation.name) || "-";
+      return '<div class="list-group-item d-flex flex-column flex-md-row justify-content-between gap-2">'
+        + '<div><div class="fw-semibold">' + escapeHtml(item.title || "Untitled draft") + '</div>'
+        + '<small class="text-muted">' + escapeHtml(category) + ' · ' + escapeHtml(formatDate(item.created_at)) + '</small></div>'
+        + '<div class="action-stack"><button class="btn btn-sm btn-outline-secondary js-review-ai-draft" data-id="' + escapeHtml(item.id) + '">Review</button>'
+        + '<button class="btn btn-sm btn-primary js-publish-ai-draft" data-id="' + escapeHtml(item.id) + '">Publish</button></div>'
+        + '</div>';
+    }).join("") || '<div class="text-muted">No AI drafts awaiting review.</div>';
+  }
+
+  function openAiDraftReview(postId) {
+    const item = state.aiDrafts.find(function (row) { return row.id === postId; });
+    if (!item) return;
+    state.activeAiDraftId = item.id;
+    const relation = Array.isArray(item.blog_categories) ? item.blog_categories[0] : item.blog_categories;
+    const category = item.category || (relation && relation.name) || "-";
+    const titleNode = qs("#ai-draft-review-title");
+    const metaNode = qs("#ai-draft-review-meta");
+    const contentNode = qs("#ai-draft-review-content");
+    if (titleNode) titleNode.textContent = item.title || "AI Draft Review";
+    if (metaNode) {
+      metaNode.innerHTML = [
+        "<strong>Category:</strong> " + escapeHtml(category),
+        "<strong>Generated:</strong> " + escapeHtml(formatDate(item.created_at)),
+        "<strong>Industry:</strong> " + escapeHtml(item.industry_type || "-"),
+        "<strong>Country:</strong> " + escapeHtml(item.source_country || "-"),
+        "<strong>SEO title:</strong> " + escapeHtml(item.seo_title || "-"),
+        "<strong>SEO description:</strong> " + escapeHtml(item.seo_description || "-"),
+        "<strong>Keywords:</strong> " + escapeHtml(Array.isArray(item.keywords) ? item.keywords.join(", ") : "-"),
+      ].join("<br>");
+    }
+    if (contentNode) {
+      contentNode.innerHTML = '<p class="lead">' + escapeHtml(item.excerpt || "") + '</p>' + sanitizeDraftHtml(item.content || "");
+    }
+    if (global.bootstrap && qs("#ai-draft-review-modal")) {
+      global.bootstrap.Modal.getOrCreateInstance(qs("#ai-draft-review-modal")).show();
+    }
+  }
+
+  async function publishAiDraft(postId) {
+    const confirmed = global.confirm("Publish this AI-generated draft?");
+    if (!confirmed) return;
+    await ns.adminApi.publishAiBlogDraft(postId);
+    showStatus("AI draft published.");
+    state.activeAiDraftId = "";
+    if (global.bootstrap && qs("#ai-draft-review-modal")) {
+      global.bootstrap.Modal.getOrCreateInstance(qs("#ai-draft-review-modal")).hide();
+    }
+    await loadAiDrafts();
+    await loadSummary();
+  }
+
   function fillProductForm(item) {
     qs("#product-id").value = item.id || "";
     qs("#product-name").value = item.name || "";
@@ -345,8 +422,15 @@
     renderUsers();
   }
 
+  async function loadAiDrafts() {
+    if (canAccess("overview") === false || !ns.adminApi.listAiBlogDrafts) return;
+    state.aiDrafts = await ns.adminApi.listAiBlogDrafts();
+    renderAiDraftNotifications();
+  }
+
   async function refreshVisibleData() {
     await loadSummary();
+    await loadAiDrafts();
     if (canAccess("products")) await loadProducts();
     if (canAccess("inquiries")) await loadInquiries();
     if (canAccess("buyers")) await loadBuyers();
@@ -557,8 +641,16 @@
       const roleUser = event.target.closest(".js-role-user");
       const toggleUser = event.target.closest(".js-toggle-user");
       const deleteUser = event.target.closest(".js-delete-user");
+      const reviewAiDraft = event.target.closest(".js-review-ai-draft");
+      const publishAiDraftButton = event.target.closest(".js-publish-ai-draft");
 
       try {
+        if (reviewAiDraft) {
+          openAiDraftReview(reviewAiDraft.getAttribute("data-id"));
+        }
+        if (publishAiDraftButton) {
+          await publishAiDraft(publishAiDraftButton.getAttribute("data-id"));
+        }
         if (editProduct) {
           const item = state.products.find(function (row) { return row.id === editProduct.getAttribute("data-id"); });
           if (item) fillProductForm(item);
@@ -622,6 +714,15 @@
         }
       } catch (error) {
         showStatus(error.message || "Action failed.", true);
+      }
+    });
+
+    qs("#ai-draft-review-publish").addEventListener("click", async function () {
+      try {
+        if (!state.activeAiDraftId) return;
+        await publishAiDraft(state.activeAiDraftId);
+      } catch (error) {
+        showStatus(error.message || "Publish failed.", true);
       }
     });
   }

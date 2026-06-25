@@ -87,6 +87,16 @@
               </div>
             </div>
           </div>
+          <div class="row g-3 mt-1">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header"><h3 class="card-title mb-0">New AI Draft Available</h3></div>
+                <div class="card-body">
+                  <div id="ai-draft-notification-list" class="list-group list-group-flush"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section id="products" class="admin-section section-anchor">
@@ -251,6 +261,25 @@
       </div>
     </div>
   </main>
+</div>
+
+<div class="modal fade" id="ai-draft-review-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="ai-draft-review-title">AI Draft Review</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div id="ai-draft-review-meta" class="text-muted small mb-3"></div>
+        <div id="ai-draft-review-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="ai-draft-review-publish">Publish</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
