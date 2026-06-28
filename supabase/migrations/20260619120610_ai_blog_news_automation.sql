@@ -9,6 +9,7 @@ alter table if exists public.blog_posts
   add column if not exists keywords text[] not null default '{}'::text[],
   add column if not exists source_country text,
   add column if not exists industry_type text,
+  add column if not exists product_family text,
   add column if not exists source_url text,
   add column if not exists source_title text,
   add column if not exists featured_image_prompt text,
@@ -18,11 +19,33 @@ alter table if exists public.blog_posts
   add column if not exists ai_generation_sources jsonb not null default '[]'::jsonb,
   add column if not exists ai_similarity_score numeric(5,4);
 
+alter table public.blog_posts
+  drop constraint if exists blog_posts_industry_type_check;
+
+alter table public.blog_posts
+  add constraint blog_posts_industry_type_check
+  check (industry_type is null or industry_type in ('cocoa', 'coffee', 'agriculture'));
+
 do $$
 begin
   alter table public.blog_posts
-    add constraint blog_posts_industry_type_check
-    check (industry_type is null or industry_type in ('cocoa', 'coffee'));
+    add constraint blog_posts_product_family_check
+    check (
+      product_family is null or product_family in (
+        'cocoa-beans',
+        'amelonado-cocoa',
+        'bresilien-cocoa',
+        'cundeamor-cocoa',
+        'forastero-cocoa',
+        'criollo-cocoa',
+        'trinitario-cocoa',
+        'cocoa-butter',
+        'cocoa-shell',
+        'arabica-coffee',
+        'robusta-coffee',
+        'agricultural-export-services'
+      )
+    );
 exception
   when duplicate_object then null;
 end $$;
@@ -47,13 +70,23 @@ where source_url is not null;
 create index if not exists idx_blog_posts_keywords_gin
 on public.blog_posts using gin (keywords);
 
+create index if not exists idx_blog_posts_product_family
+on public.blog_posts(product_family, created_at desc)
+where product_family is not null;
+
 insert into public.blog_categories (slug, name, description)
 values
   ('cocoa-beans', 'Cocoa Beans', 'Cocoa bean sourcing, quality, origin, and export intelligence.'),
+  ('amelonado-cocoa', 'Amelonado Cocoa', 'Amelonado cocoa sourcing, quality, origin, and export intelligence.'),
+  ('bresilien-cocoa', 'Bresilien Cocoa', 'Bresilien cocoa sourcing, quality, origin, and export intelligence.'),
+  ('cundeamor-cocoa', 'Cundeamor Cocoa', 'Cundeamor cocoa sourcing, quality, origin, and export intelligence.'),
   ('cocoa-powder', 'Cocoa Powder', 'Cocoa powder processing, supply, quality, and market guidance.'),
   ('cocoa-liquor', 'Cocoa Liquor', 'Cocoa liquor and semi-finished cocoa product insights.'),
+  ('cocoa-butter', 'Cocoa Butter', 'Cocoa butter sourcing, ingredients, processing, and export guidance.'),
+  ('cocoa-shell', 'Cocoa Shell', 'Cocoa shell and cocoa by-product sourcing and export guidance.'),
   ('arabica-coffee', 'Arabica Coffee', 'Arabica coffee sourcing, quality, and export intelligence.'),
   ('robusta-coffee', 'Robusta Coffee', 'Robusta coffee sourcing, quality, and export intelligence.'),
+  ('agricultural-export-services', 'Agricultural Export Services', 'Sourcing, quality control, documentation, and logistics guidance for African agricultural exports.'),
   ('market-news', 'Market News', 'Cocoa and coffee market news for international buyers.'),
   ('export-guides', 'Export Guides', 'Practical import and export guidance for bulk buyers.'),
   ('industry-insights', 'Industry Insights', 'Industry analysis for cocoa, coffee, food, chocolate, and beverage manufacturers.')

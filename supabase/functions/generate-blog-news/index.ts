@@ -6,7 +6,20 @@ import { createServiceClient } from "../_shared/supabase.ts";
 import { serveHttp } from "../_shared/runtime.ts";
 import { assertAllowedOrigin, readJsonObject } from "../_shared/security.ts";
 
-type Industry = "cocoa" | "coffee";
+type Industry = "cocoa" | "coffee" | "agriculture";
+type ProductFamily =
+  | "cocoa-beans"
+  | "amelonado-cocoa"
+  | "bresilien-cocoa"
+  | "cundeamor-cocoa"
+  | "forastero-cocoa"
+  | "criollo-cocoa"
+  | "trinitario-cocoa"
+  | "cocoa-butter"
+  | "cocoa-shell"
+  | "arabica-coffee"
+  | "robusta-coffee"
+  | "agricultural-export-services";
 
 type NewsItem = {
   title: string;
@@ -32,6 +45,7 @@ type GeneratedArticle = {
   internal_linking_suggestions: string[];
   source_country: string;
   industry_type: Industry;
+  product_family: ProductFamily;
 };
 
 type RelatedArticleSuggestion = {
@@ -68,8 +82,11 @@ const CATEGORIES = new Set([
   "Cocoa Beans",
   "Cocoa Powder",
   "Cocoa Liquor",
+  "Cocoa Butter",
+  "Cocoa Shell",
   "Arabica Coffee",
   "Robusta Coffee",
+  "Agricultural Export Services",
   "Market News",
   "Export Guides",
   "Industry Insights",
@@ -90,47 +107,221 @@ const KEYWORDS = [
 const IMAGE_FALLBACKS: Record<Industry, string> = {
   cocoa: "img/blog1.png",
   coffee: "img/arabic1.jpeg",
+  agriculture: "img/shipping.jpg",
 };
 
-const OPENAI_DEFAULT_MODEL = "gpt-5.5";
+const PRODUCT_IMAGE_FALLBACKS: Record<ProductFamily, string> = {
+  "cocoa-beans": "img/cacao.jpg",
+  "amelonado-cocoa": "img/Ame5.png",
+  "bresilien-cocoa": "img/Bri2.png",
+  "cundeamor-cocoa": "img/Cun.png",
+  "forastero-cocoa": "img/fore.jpg",
+  "criollo-cocoa": "img/Cri1.png",
+  "trinitario-cocoa": "img/ATri.png",
+  "cocoa-butter": "img/cocoabut.png",
+  "cocoa-shell": "img/cocoashell.png",
+  "arabica-coffee": "img/arabic2.jpeg",
+  "robusta-coffee": "img/robusta1.jpeg",
+  "agricultural-export-services": "img/shipping.jpg",
+};
+
+const OPENAI_DEFAULT_MODEL = "gpt-5";
 const OPENAI_API_URL = "https://api.openai.com/v1/responses";
 
-const CONTENT_PROFILE_CONFIG: Record<Industry, {
+const CONTENT_PROFILE_CONFIG: Record<ProductFamily, {
+  industry: Industry;
   label: string;
   productTerms: string[];
   internalLinks: string[];
   cta: string;
   relatedSearchTerms: string[];
 }> = {
-  cocoa: {
-    label: "Cocoa",
-    productTerms: ["cocoa beans", "cocoa powder", "cocoa liquor", "cocoa butter"],
+  "cocoa-beans": {
+    industry: "cocoa",
+    label: "Cocoa Beans",
+    productTerms: ["cocoa beans", "bulk cocoa beans", "fermented cocoa beans", "dry cocoa beans"],
     internalLinks: [
+      "/cameroon-cocoa-exporter/",
       "/product_forastero.html",
       "/product_criollo.html",
       "/product_trinitario.html",
+      "/product.html",
       "/services.html",
       "/contact.html",
-      "/quote.html",
     ],
-    cta: "Looking for a trusted cocoa supplier from Cameroon? Contact CocoaBridge for premium export-quality cocoa beans, cocoa powder, and cocoa liquor.",
-    relatedSearchTerms: ["cocoa", "beans", "powder", "liquor", "export"],
+    cta: "Looking for a trusted cocoa bean supplier from Cameroon? Contact CocoaBridge for premium, traceable, export-quality cocoa beans.",
+    relatedSearchTerms: ["cocoa", "beans", "bulk cocoa", "quality", "export"],
   },
-  coffee: {
-    label: "Coffee",
-    productTerms: ["arabica coffee", "robusta coffee", "green coffee", "coffee beans"],
+  "amelonado-cocoa": {
+    industry: "cocoa",
+    label: "Amelonado Cocoa",
+    productTerms: ["Amelonado cocoa", "Amelonado cocoa beans", "bulk Amelonado beans"],
     internalLinks: [
+      "/product_amelonado.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Amelonado cocoa from Cameroon? Contact CocoaBridge for export-ready Amelonado cocoa lots and quality documentation.",
+    relatedSearchTerms: ["amelonado", "cocoa", "beans", "cameroon", "export"],
+  },
+  "bresilien-cocoa": {
+    industry: "cocoa",
+    label: "Bresilien Cocoa",
+    productTerms: ["Bresilien cocoa", "Cacao Bresilien beans", "Bresilien cocoa beans"],
+    internalLinks: [
+      "/product_bresilien.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Bresilien cocoa supply? Contact CocoaBridge for buyer-ready cocoa lots, export handling, and logistics support.",
+    relatedSearchTerms: ["bresilien", "cacao bresilien", "cocoa beans", "export"],
+  },
+  "cundeamor-cocoa": {
+    industry: "cocoa",
+    label: "Cundeamor Cocoa",
+    productTerms: ["Cundeamor cocoa", "Cundeamor cocoa beans", "specialty Cundeamor beans"],
+    internalLinks: [
+      "/product_cundeamor.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Cundeamor cocoa from Cameroon? Contact CocoaBridge for specialty cocoa sourcing and export coordination.",
+    relatedSearchTerms: ["cundeamor", "specialty cocoa", "cocoa beans", "cameroon", "export"],
+  },
+  "forastero-cocoa": {
+    industry: "cocoa",
+    label: "Forastero Cocoa",
+    productTerms: ["Forastero cocoa", "Forastero cocoa beans", "bulk Forastero beans"],
+    internalLinks: [
+      "/product_forastero.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Forastero cocoa from Cameroon? Contact CocoaBridge for export-ready Forastero cocoa lots and buyer documentation.",
+    relatedSearchTerms: ["forastero", "cocoa", "beans", "cameroon", "export"],
+  },
+  "criollo-cocoa": {
+    industry: "cocoa",
+    label: "Criollo Cocoa",
+    productTerms: ["Criollo cocoa", "Criollo cocoa beans", "specialty cocoa"],
+    internalLinks: [
+      "/product_criollo.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Criollo cocoa supply from Cameroon? Contact CocoaBridge for specialty cocoa sourcing, verification, and export support.",
+    relatedSearchTerms: ["criollo", "specialty cocoa", "cocoa beans", "quality", "export"],
+  },
+  "trinitario-cocoa": {
+    industry: "cocoa",
+    label: "Trinitario Cocoa",
+    productTerms: ["Trinitario cocoa", "Trinitario cocoa beans", "fine flavour cocoa"],
+    internalLinks: [
+      "/product_trinitario.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Trinitario cocoa from Cameroon? Contact CocoaBridge for traceable Trinitario cocoa lots and export guidance.",
+    relatedSearchTerms: ["trinitario", "fine flavour cocoa", "cocoa beans", "cameroon", "export"],
+  },
+  "cocoa-butter": {
+    industry: "cocoa",
+    label: "Cocoa Butter",
+    productTerms: ["cocoa butter", "bulk cocoa butter", "cocoa processing"],
+    internalLinks: [
+      "/product_cocoa_butter.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for cocoa butter sourcing support from Cameroon and Africa? Contact CocoaBridge for product availability and export coordination.",
+    relatedSearchTerms: ["cocoa butter", "cocoa processing", "ingredients", "export"],
+  },
+  "cocoa-shell": {
+    industry: "cocoa",
+    label: "Cocoa Shell",
+    productTerms: ["cocoa shell", "cocoa shells", "cocoa by-products", "cocoa shell supply"],
+    internalLinks: [
+      "/product_cocoa_shell.html",
+      "/cameroon-cocoa-exporter/",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for cocoa shell or cocoa by-product sourcing? Contact CocoaBridge for buyer-ready export support from Cameroon.",
+    relatedSearchTerms: ["cocoa shell", "cocoa by-products", "cocoa processing", "export"],
+  },
+  "arabica-coffee": {
+    industry: "coffee",
+    label: "Arabica Coffee",
+    productTerms: ["arabica coffee", "green Arabica coffee", "Arabica coffee beans"],
+    internalLinks: [
+      "/arabica-coffee-supplier/",
       "/landing-arabica-coffee-supplier.html",
+      "/product.html",
+      "/services.html",
+      "/contact.html",
+    ],
+    cta: "Looking for Arabica coffee from Cameroon and Africa? Contact CocoaBridge for green coffee sourcing and export support.",
+    relatedSearchTerms: ["arabica", "coffee", "green coffee", "cameroon", "export"],
+  },
+  "robusta-coffee": {
+    industry: "coffee",
+    label: "Robusta Coffee",
+    productTerms: ["robusta coffee", "green Robusta coffee", "Robusta coffee beans"],
+    internalLinks: [
+      "/robusta-coffee-supplier/",
       "/landing-robusta-coffee-supplier.html",
       "/product.html",
       "/services.html",
       "/contact.html",
-      "/quote.html",
     ],
-    cta: "Looking for a trusted coffee supplier from Cameroon? Contact CocoaBridge for premium export-quality Arabica coffee, Robusta coffee, and green coffee lots.",
-    relatedSearchTerms: ["coffee", "arabica", "robusta", "green coffee", "export"],
+    cta: "Looking for Robusta coffee from Cameroon and Africa? Contact CocoaBridge for green coffee lots, documentation, and export coordination.",
+    relatedSearchTerms: ["robusta", "coffee", "green coffee", "cameroon", "export"],
+  },
+  "agricultural-export-services": {
+    industry: "agriculture",
+    label: "Agricultural Export Services",
+    productTerms: ["agricultural export services", "export documentation", "quality control", "shipping coordination"],
+    internalLinks: [
+      "/agricultural-export-services/",
+      "/landing-agricultural-export-services.html",
+      "/services.html",
+      "/traceability.html",
+      "/contact.html",
+    ],
+    cta: "Need agricultural export support from Cameroon? Contact CocoaBridge for sourcing, quality control, documentation, and logistics coordination.",
+    relatedSearchTerms: ["agricultural export", "cameroon export", "quality control", "logistics", "documentation"],
   },
 };
+
+const DEFAULT_PRODUCT_FAMILIES: ProductFamily[] = [
+  "cocoa-beans",
+  "amelonado-cocoa",
+  "bresilien-cocoa",
+  "cundeamor-cocoa",
+  "forastero-cocoa",
+  "criollo-cocoa",
+  "trinitario-cocoa",
+  "cocoa-butter",
+  "cocoa-shell",
+  "arabica-coffee",
+  "robusta-coffee",
+  "agricultural-export-services",
+];
 
 const SOURCES: Array<{ industry: Industry; country?: string; source: string; url: string }> = [
   { industry: "cocoa", country: "Cameroon", source: "Cameroon cocoa industry", url: "https://news.google.com/rss/search?q=Cameroon%20cocoa%20industry%20export&hl=en&gl=US&ceid=US:en" },
@@ -151,6 +342,9 @@ const SOURCES: Array<{ industry: Industry; country?: string; source: string; url
   { industry: "coffee", country: "Rwanda", source: "Rwanda coffee industry", url: "https://news.google.com/rss/search?q=Rwanda%20coffee%20industry%20export&hl=en&gl=US&ceid=US:en" },
   { industry: "coffee", country: "Burundi", source: "Burundi coffee industry", url: "https://news.google.com/rss/search?q=Burundi%20coffee%20industry%20export&hl=en&gl=US&ceid=US:en" },
   { industry: "coffee", source: "International Coffee Organization", url: "https://news.google.com/rss/search?q=International%20Coffee%20Organization%20coffee%20market&hl=en&gl=US&ceid=US:en" },
+  { industry: "agriculture", country: "Cameroon", source: "Cameroon agricultural exports", url: "https://news.google.com/rss/search?q=Cameroon%20agricultural%20exports%20quality%20logistics&hl=en&gl=US&ceid=US:en" },
+  { industry: "agriculture", source: "Africa agricultural trade", url: "https://news.google.com/rss/search?q=Africa%20agricultural%20exports%20trade%20logistics&hl=en&gl=US&ceid=US:en" },
+  { industry: "agriculture", source: "African food export markets", url: "https://news.google.com/rss/search?q=African%20food%20exports%20quality%20documentation&hl=en&gl=US&ceid=US:en" },
 ];
 
 function normalizeSlug(value: string): string {
@@ -255,6 +449,31 @@ async function fetchNews(industry: Industry): Promise<NewsItem[]> {
   return batches.flat().slice(0, 24);
 }
 
+function buildFallbackNewsItems(productFamily: ProductFamily): NewsItem[] {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const publishedAt = new Date().toUTCString();
+  return [
+    {
+      title: `${profile.label} buyer monitoring update for Cameroon and African export markets`,
+      url: "https://cocoabridge.com/product.html",
+      source: "CocoaBridge market monitor",
+      summary: `External RSS feeds did not return usable items during this run. Prepare a buyer-focused ${profile.label.toLowerCase()} update using evergreen sourcing checks for Cameroon first, then wider African export context around quality, availability, documentation, and logistics.`,
+      publishedAt,
+      country: "Cameroon",
+      industry: profile.industry,
+    },
+    {
+      title: `${profile.label} sourcing checklist for importers reviewing African supply`,
+      url: "https://cocoabridge.com/services.html",
+      source: "CocoaBridge export desk",
+      summary: `Use this cycle to refresh practical buyer guidance for ${profile.productTerms.join(", ")} with emphasis on traceability, specifications, shipment readiness, and supplier communication.`,
+      publishedAt,
+      country: "regional",
+      industry: profile.industry,
+    },
+  ];
+}
+
 function resolveRelativeUrl(value: string, baseUrl: string): string {
   const normalized = String(value || "").trim();
   if (!normalized) return "";
@@ -337,12 +556,15 @@ function jaccard(a: string, b: string): number {
   return intersection / (left.size + right.size - intersection);
 }
 
-function normalizeArticle(article: GeneratedArticle, industry: Industry): GeneratedArticle {
+function normalizeArticle(article: GeneratedArticle, productFamily: ProductFamily): GeneratedArticle {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const industry = profile.industry;
   const category = CATEGORIES.has(article.category) ? article.category : "Industry Insights";
   const slug = normalizeSlug(article.slug || article.title);
   const keywords = Array.from(new Set([
     ...((article.keywords || []).map((item) => String(item).trim()).filter(Boolean)),
     ...KEYWORDS.filter((keyword) => keyword.toLowerCase().includes(industry)),
+    ...profile.productTerms,
   ])).slice(0, 14);
 
   return {
@@ -351,12 +573,13 @@ function normalizeArticle(article: GeneratedArticle, industry: Industry): Genera
     category,
     slug,
     keywords,
-    featured_image: article.featured_image || IMAGE_FALLBACKS[industry],
+    featured_image: article.featured_image || PRODUCT_IMAGE_FALLBACKS[productFamily] || IMAGE_FALLBACKS[industry],
     content: String(article.content || "").trim(),
     excerpt: String(article.excerpt || "").trim().slice(0, 420),
     seo_title: String(article.seo_title || article.title || "").trim().slice(0, 70),
     seo_description: String(article.seo_description || article.excerpt || "").trim().slice(0, 170),
     source_country: String(article.source_country || "").trim(),
+    product_family: productFamily,
     internal_linking_suggestions: Array.isArray(article.internal_linking_suggestions)
       ? article.internal_linking_suggestions.slice(0, 8)
       : [],
@@ -368,6 +591,10 @@ function uniqueValues(values: string[]): string[] {
 }
 
 function pickFocusCountry(items: NewsItem[]): string {
+  if (items.some((item) => String(item.country || "").trim().toLowerCase() === "cameroon")) {
+    return "Cameroon";
+  }
+
   const counts = new Map<string, number>();
   for (const item of items) {
     const country = String(item.country || "").trim();
@@ -420,8 +647,9 @@ function summarizeSignals(items: NewsItem[]): string {
     .join("; ");
 }
 
-function buildKeywords(industry: Industry, themes: string[], country: string): string[] {
-  const coreKeywords = industry === "cocoa"
+function buildKeywords(productFamily: ProductFamily, themes: string[], country: string): string[] {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const coreKeywords = profile.industry === "cocoa"
     ? [
       "cocoa exporter",
       "cocoa beans supplier",
@@ -429,23 +657,32 @@ function buildKeywords(industry: Industry, themes: string[], country: string): s
       "Cameroon cocoa exporter",
       "cocoa market news",
     ]
-    : [
+    : profile.industry === "coffee"
+      ? [
       "coffee exporter",
       "bulk coffee supplier",
       "Arabica coffee exporter",
       "Robusta coffee supplier",
       "coffee market news",
-    ];
+      ]
+      : [
+        "agricultural export services",
+        "Cameroon agricultural exporter",
+        "Africa agricultural exports",
+        "export documentation",
+        "bulk agricultural supplier",
+      ];
 
   return uniqueValues([
     ...coreKeywords,
-    ...themes.map((theme) => `${theme} ${industry}`.trim()),
-    country ? `${country} ${industry}`.trim() : "",
+    ...profile.productTerms,
+    ...themes.map((theme) => `${theme} ${profile.label}`.trim()),
+    country ? `${country} ${profile.label}`.trim() : "",
   ]).slice(0, 10);
 }
 
-function buildInternalLinks(industry: Industry, themes: string[]): string[] {
-  const profile = CONTENT_PROFILE_CONFIG[industry];
+function buildInternalLinks(productFamily: ProductFamily, themes: string[]): string[] {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
   const links = profile.internalLinks;
 
   const themeLinks = themes.includes("traceability") ? ["/traceability.html"] : [];
@@ -460,8 +697,8 @@ function formatReadingTimeMinutes(wordCount: number): number {
   return Math.max(1, Math.ceil(Math.max(0, wordCount) / 180));
 }
 
-function buildSuggestedTags(industry: Industry, country: string, themes: string[], signalSummary: string): string[] {
-  const profile = CONTENT_PROFILE_CONFIG[industry];
+function buildSuggestedTags(productFamily: ProductFamily, country: string, themes: string[], signalSummary: string): string[] {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
   return uniqueValues([
     `${country} ${profile.label}`,
     `${profile.label} Export`,
@@ -497,8 +734,8 @@ function buildSocialCopy(title: string, excerpt: string, cta: string, tags: stri
   };
 }
 
-function buildFaqItems(industry: Industry, country: string, themes: string[], cta: string): FaqItem[] {
-  const label = CONTENT_PROFILE_CONFIG[industry].label.toLowerCase();
+function buildFaqItems(productFamily: ProductFamily, country: string, themes: string[], cta: string): FaqItem[] {
+  const label = CONTENT_PROFILE_CONFIG[productFamily].label.toLowerCase();
   const themeHint = themes[0] || "export planning";
   return [
     {
@@ -525,7 +762,7 @@ function buildFaqItems(industry: Industry, country: string, themes: string[], ct
 }
 
 function buildArticleSections(
-  industry: Industry,
+  productFamily: ProductFamily,
   country: string,
   themes: string[],
   items: NewsItem[],
@@ -535,7 +772,7 @@ function buildArticleSections(
   sourceUrl?: string,
   sourceTitle?: string,
 ): string {
-  const profile = CONTENT_PROFILE_CONFIG[industry];
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
   const topItems = items.slice(0, 4);
   return [
     "<h2>What the latest signals suggest</h2>",
@@ -667,8 +904,9 @@ function parseOpenAIJson(value: string): Record<string, unknown> | null {
   }
 }
 
-function buildOpenAIPayload(industry: Industry, items: NewsItem[], sourceUrl: string, sourceTitle: string): string {
-  const profile = CONTENT_PROFILE_CONFIG[industry];
+function buildOpenAIPayload(productFamily: ProductFamily, items: NewsItem[], sourceUrl: string, sourceTitle: string): string {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const industry = profile.industry;
   const monitoredLocations = SOURCES
     .filter((source) => source.industry === industry)
     .map((source) => `${source.source}${source.country ? ` (${source.country})` : ""}`)
@@ -677,12 +915,14 @@ function buildOpenAIPayload(industry: Industry, items: NewsItem[], sourceUrl: st
 
   return [
     `You are writing for a professional B2B export company. Create a completely original news article in English.`,
-    `Topic family: ${profile.label}.`,
+    `Product focus: ${profile.label}.`,
+    `Product terms to cover naturally when relevant: ${profile.productTerms.join(", ")}.`,
     `Audience: cocoa buyers, coffee buyers, importers, distributors, food manufacturers, chocolate manufacturers, and beverage manufacturers.`,
     `Length: 800-1500 words.`,
     `Style: professional export-industry editorial with clear headings and practical buyer guidance.`,
     `Use only the source brief below. Do not copy sentences verbatim. Do not invent facts.`,
-    `The article must reflect the latest available news from all monitored locations for this industry.`,
+    `The article must prioritize Cameroon when Cameroon signals are present, then explain the wider African context for comparison.`,
+    `The article must reflect the latest available news from all monitored locations for this product family and industry.`,
     `Monitored locations/sources: ${monitoredLocations}.`,
     `Primary source page: ${sourceTitle} - ${sourceUrl}.`,
     `Source digest:\n${sourceDigest}`,
@@ -732,7 +972,7 @@ function normalizeRelatedSuggestions(value: unknown): RelatedArticleSuggestion[]
 }
 
 async function generateOpenAIArticle(
-  industry: Industry,
+  productFamily: ProductFamily,
   items: NewsItem[],
   sourceUrl: string,
   sourceTitle: string,
@@ -752,7 +992,7 @@ async function generateOpenAIArticle(
       model,
       input: [
         { role: "system", content: [{ type: "input_text", text: "You are a senior B2B export news editor." }] },
-        { role: "user", content: [{ type: "input_text", text: buildOpenAIPayload(industry, items, sourceUrl, sourceTitle) }] },
+        { role: "user", content: [{ type: "input_text", text: buildOpenAIPayload(productFamily, items, sourceUrl, sourceTitle) }] },
       ],
       text: {
         format: {
@@ -763,6 +1003,7 @@ async function generateOpenAIArticle(
             additionalProperties: false,
             required: [
               "title",
+              "slug",
               "excerpt",
               "content",
               "seo_title",
@@ -858,6 +1099,7 @@ async function generateOpenAIArticle(
   const country = pickFocusCountry(items);
   const themes = extractThemes(items);
   const category = themes.includes("market conditions") ? "Market News" : themes.includes("export readiness") ? "Export Guides" : "Industry Insights";
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
 
   return {
     article: normalizeArticle({
@@ -865,7 +1107,7 @@ async function generateOpenAIArticle(
       slug: String(parsed.slug || title),
       excerpt,
       content,
-      featured_image: IMAGE_FALLBACKS[industry],
+      featured_image: PRODUCT_IMAGE_FALLBACKS[productFamily] || IMAGE_FALLBACKS[profile.industry],
       featured_image_prompt: String(parsed.featured_image_prompt || "").trim(),
       category,
       seo_title: seoTitle,
@@ -873,8 +1115,9 @@ async function generateOpenAIArticle(
       keywords: normalizeOpenAIKeywords(parsed.keywords),
       internal_linking_suggestions: normalizeOpenAIKeywords(parsed.internal_linking_suggestions),
       source_country: country,
-      industry_type: industry,
-    }, industry),
+      industry_type: profile.industry,
+      product_family: productFamily,
+    }, productFamily),
     assets: {
       suggested_tags: normalizeOpenAIKeywords(parsed.suggested_tags),
       social_facebook_post: String((parsed as Record<string, unknown>).social_facebook_post || "").trim(),
@@ -907,11 +1150,12 @@ function scoreRelatedPost(article: GeneratedArticle, post: { title?: string | nu
 async function findRelatedArticles(
   admin: ReturnType<typeof createServiceClient>,
   article: GeneratedArticle,
-  industry: Industry,
+  productFamily: ProductFamily,
 ): Promise<RelatedArticleSuggestion[]> {
+  const industry = CONTENT_PROFILE_CONFIG[productFamily].industry;
   const { data, error } = await admin
     .from("blog_posts")
-    .select("id, slug, title, excerpt, category, industry_type, status, published_at")
+    .select("id, slug, title, excerpt, category, industry_type, product_family, status, published_at")
     .eq("status", "published")
     .order("published_at", { ascending: false })
     .limit(40);
@@ -922,6 +1166,8 @@ async function findRelatedArticles(
 
   return data
     .filter((post) => {
+      const postProductFamily = String(post.product_family || "").toLowerCase();
+      if (postProductFamily && postProductFamily === productFamily) return true;
       const postIndustry = String(post.industry_type || "").toLowerCase();
       return !postIndustry || postIndustry === industry;
     })
@@ -940,26 +1186,27 @@ async function findRelatedArticles(
     .map(({ score, ...post }) => post);
 }
 
-function buildArticle(industry: Industry, items: NewsItem[], variant = 1): GeneratedArticle {
+function buildArticle(productFamily: ProductFamily, items: NewsItem[], variant = 1): GeneratedArticle {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const industry = profile.industry;
   const country = pickFocusCountry(items);
   const themes = extractThemes(items);
   const signalSummary = summarizeSignals(items);
-  const profile = CONTENT_PROFILE_CONFIG[industry];
   const industryLabel = profile.label;
   const monthYear = new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
   }).format(new Date());
   const title = `${country} ${industryLabel} export update: buyer signals for ${monthYear}`;
-  const keywords = buildKeywords(industry, themes, country);
-  const internalLinkingSuggestions = buildInternalLinks(industry, themes);
-  const excerpt = `${industryLabel} buyers should watch ${country} sourcing signals, current market themes, and practical export risks highlighted by the latest industry updates.`;
+  const keywords = buildKeywords(productFamily, themes, country);
+  const internalLinkingSuggestions = buildInternalLinks(productFamily, themes);
+  const excerpt = `${industryLabel} buyers should watch Cameroon first, compare wider African sourcing signals, and review practical export risks highlighted by the latest industry updates.`;
   const featuredImagePrompt = `${industryLabel} export market scene for CocoaBridge: clean warehouse or shipping context, professional B2B style, realistic, bright natural light, buyers reviewing quality and logistics documents.`;
   const category = themes.includes("market conditions") ? "Market News" : themes.includes("export readiness") ? "Export Guides" : "Industry Insights";
   const cta = profile.cta;
-  const suggestedTags = buildSuggestedTags(industry, country, themes, signalSummary);
-  const faqItems = buildFaqItems(industry, country, themes, cta);
-  const content = buildArticleSections(industry, country, themes, items, signalSummary, cta, faqItems);
+  const suggestedTags = buildSuggestedTags(productFamily, country, themes, signalSummary);
+  const faqItems = buildFaqItems(productFamily, country, themes, cta);
+  const content = buildArticleSections(productFamily, country, themes, items, signalSummary, cta, faqItems);
   const adjustedContent = variant > 1
     ? [
       content,
@@ -977,7 +1224,7 @@ function buildArticle(industry: Industry, items: NewsItem[], variant = 1): Gener
     slug: normalizeSlug(title),
     excerpt: excerpt.slice(0, 420),
     content: adjustedContent,
-    featured_image: IMAGE_FALLBACKS[industry],
+    featured_image: PRODUCT_IMAGE_FALLBACKS[productFamily] || IMAGE_FALLBACKS[industry],
     featured_image_prompt: featuredImagePrompt,
     category,
     seo_title: `${country} ${industryLabel} export update for buyers`.slice(0, 70),
@@ -986,29 +1233,30 @@ function buildArticle(industry: Industry, items: NewsItem[], variant = 1): Gener
     internal_linking_suggestions: internalLinkingSuggestions,
     source_country: country,
     industry_type: industry,
-  }, industry);
+    product_family: productFamily,
+  }, productFamily);
 }
 
-async function generateArticle(industry: Industry, items: NewsItem[]): Promise<{ article: GeneratedArticle; model: string }> {
+async function generateArticle(productFamily: ProductFamily, items: NewsItem[]): Promise<{ article: GeneratedArticle; model: string }> {
   return {
-    article: buildArticle(industry, items),
+    article: buildArticle(productFamily, items),
     model: "local-template-v1",
   };
 }
 
 async function buildPublishingAssets(
   article: GeneratedArticle,
-  industry: Industry,
+  productFamily: ProductFamily,
   items: NewsItem[],
   relatedArticles: RelatedArticleSuggestion[],
   sourceUrl: string,
   sourceTitle: string,
   duplicateSimilarity: number,
 ): Promise<PublishingAssets> {
-  const profile = CONTENT_PROFILE_CONFIG[industry];
-  const suggestedTags = buildSuggestedTags(industry, article.source_country || pickFocusCountry(items), extractThemes(items), summarizeSignals(items));
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const suggestedTags = buildSuggestedTags(productFamily, article.source_country || pickFocusCountry(items), extractThemes(items), summarizeSignals(items));
   const ctaText = profile.cta;
-  const faqItems = buildFaqItems(industry, article.source_country || pickFocusCountry(items), extractThemes(items), ctaText);
+  const faqItems = buildFaqItems(productFamily, article.source_country || pickFocusCountry(items), extractThemes(items), ctaText);
   const social = buildSocialCopy(article.title, article.excerpt, ctaText, suggestedTags);
   const estimatedReadingTime = formatReadingTimeMinutes(countWords(article.content));
   const qualityCheck = buildQualityCheck({
@@ -1059,7 +1307,7 @@ async function buildPublishingAssets(
 async function ensureUniqueDraft(admin: ReturnType<typeof createServiceClient>, article: GeneratedArticle) {
   const { data, error } = await admin
     .from("blog_posts")
-    .select("id, title, slug, content")
+    .select("id, title, slug, content, product_family")
     .order("created_at", { ascending: false })
     .limit(120);
 
@@ -1074,6 +1322,10 @@ async function ensureUniqueDraft(admin: ReturnType<typeof createServiceClient>, 
     }
     if (String(existing.slug || "").toLowerCase() === article.slug.toLowerCase()) {
       return { duplicate: true, reason: "slug", maxSimilarity: 1 };
+    }
+    const existingProductFamily = String(existing.product_family || "").trim();
+    if (existingProductFamily && existingProductFamily !== article.product_family) {
+      continue;
     }
     maxSimilarity = Math.max(maxSimilarity, jaccard(article.content, String(existing.content || "")));
   }
@@ -1105,21 +1357,35 @@ async function logRun(
   });
 }
 
-async function createDraft(admin: ReturnType<typeof createServiceClient>, industry: Industry) {
-  const news = await fetchNews(industry);
-  if (news.length === 0) {
-    throw new Error(`No ${industry} news items were available from configured RSS sources`);
-  }
+function isIndustry(value: unknown): value is Industry {
+  return value === "cocoa" || value === "coffee" || value === "agriculture";
+}
+
+function isProductFamily(value: unknown): value is ProductFamily {
+  return typeof value === "string" && Object.prototype.hasOwnProperty.call(CONTENT_PROFILE_CONFIG, value);
+}
+
+function productFamiliesForIndustries(industries: Industry[]): ProductFamily[] {
+  const selectedIndustries = new Set(industries);
+  return DEFAULT_PRODUCT_FAMILIES.filter((productFamily) => selectedIndustries.has(CONTENT_PROFILE_CONFIG[productFamily].industry));
+}
+
+async function createDraft(admin: ReturnType<typeof createServiceClient>, productFamily: ProductFamily) {
+  const profile = CONTENT_PROFILE_CONFIG[productFamily];
+  const industry = profile.industry;
+  const fetchedNews = await fetchNews(industry);
+  const news = fetchedNews.length ? fetchedNews : buildFallbackNewsItems(productFamily);
   const primarySource = news[0];
   const resolvedSource = await resolveSourceArticle(primarySource.url);
   const resolvedSourceUrl = resolvedSource.resolvedUrl || primarySource.url;
-  const resolvedSourceImage = resolvedSource.imageUrl || IMAGE_FALLBACKS[industry];
+  const productImage = PRODUCT_IMAGE_FALLBACKS[productFamily] || IMAGE_FALLBACKS[industry];
+  const resolvedSourceImage = resolvedSource.imageUrl || productImage;
   const resolvedSourceTitle = resolvedSource.sourceTitle || primarySource.source || primarySource.title;
   const buildSavePayload = async (article: GeneratedArticle, aiAssets?: Partial<PublishingAssets>, model = "local-template-v1") => {
     const duplicate = await ensureUniqueDraft(admin, article);
     if (duplicate.duplicate) {
       await logRun(admin, {
-        source: industry,
+        source: productFamily,
         articleTitle: article.title,
         success: false,
         errorMessage: `Duplicate prevented by ${duplicate.reason}`,
@@ -1128,8 +1394,8 @@ async function createDraft(admin: ReturnType<typeof createServiceClient>, indust
       return { skipped: true as const, reason: duplicate.reason, title: article.title };
     }
 
-    const relatedArticles = await findRelatedArticles(admin, article, industry);
-    const localAssets = await buildPublishingAssets(article, industry, news, relatedArticles, resolvedSourceUrl, resolvedSourceTitle, duplicate.maxSimilarity);
+    const relatedArticles = await findRelatedArticles(admin, article, productFamily);
+    const localAssets = await buildPublishingAssets(article, productFamily, news, relatedArticles, resolvedSourceUrl, resolvedSourceTitle, duplicate.maxSimilarity);
     const mergedAssets: PublishingAssets = {
       ...localAssets,
       ...(aiAssets || {}),
@@ -1163,7 +1429,10 @@ async function createDraft(admin: ReturnType<typeof createServiceClient>, indust
       sourceCount: news.length,
     }) as PublishingAssets["quality_check"];
 
-    if (Number(mergedAssets.confidence_score || 0) < 85) {
+    const isFallbackRun = news.some((item) => item.source === "CocoaBridge market monitor");
+    const isLocalTemplateRun = model === "local-template-v1";
+    const minimumConfidence = isFallbackRun || isLocalTemplateRun ? 70 : 85;
+    if (Number(mergedAssets.confidence_score || 0) < minimumConfidence) {
       throw new Error(`Generated article confidence below threshold: ${mergedAssets.confidence_score}`);
     }
 
@@ -1186,7 +1455,8 @@ async function createDraft(admin: ReturnType<typeof createServiceClient>, indust
         seo_description: article.seo_description,
         keywords: article.keywords,
         source_country: article.source_country || primarySource.country || null,
-        industry_type: industry,
+        industry_type: article.industry_type || industry,
+        product_family: article.product_family || productFamily,
         source_url: resolvedSourceUrl,
         source_title: resolvedSourceTitle,
         featured_image_prompt: article.featured_image_prompt,
@@ -1224,6 +1494,7 @@ async function createDraft(admin: ReturnType<typeof createServiceClient>, indust
         draftId: data.id,
         slug: data.slug,
         category: data.category,
+        productFamily,
         sourceCount: news.length,
         similarity: duplicate.maxSimilarity,
         confidenceScore: mergedAssets.confidence_score,
@@ -1236,14 +1507,14 @@ async function createDraft(admin: ReturnType<typeof createServiceClient>, indust
   };
 
   try {
-    const openAiDraft = await generateOpenAIArticle(industry, news, resolvedSourceUrl, resolvedSourceTitle);
+    const openAiDraft = await generateOpenAIArticle(productFamily, news, resolvedSourceUrl, resolvedSourceTitle);
     const article = {
       ...openAiDraft.article,
-      featured_image: resolvedSourceImage || openAiDraft.article.featured_image,
+      featured_image: resolvedSourceImage || productImage || openAiDraft.article.featured_image,
     };
     return await buildSavePayload(article, openAiDraft.assets, getEnv("OPENAI_MODEL") || OPENAI_DEFAULT_MODEL);
   } catch (_openAiError) {
-    const localArticle = buildArticle(industry, news);
+    const localArticle = buildArticle(productFamily, news);
     return await buildSavePayload(localArticle, undefined, "local-template-v1");
   }
 }
@@ -1274,25 +1545,34 @@ serveHttp(async (req: Request) => {
     assertAllowedOrigin(req);
     await authorize(req);
     const body = await readJsonObject(req, 8192).catch((): Record<string, unknown> => ({}));
+    const rawProductFamilies = body.productFamilies;
     const rawIndustries = body.industries;
+    const requestedProductFamilies = Array.isArray(rawProductFamilies)
+      ? rawProductFamilies.filter(isProductFamily)
+      : [] as ProductFamily[];
     const requestedIndustries = Array.isArray(rawIndustries)
-      ? rawIndustries.filter((item): item is Industry => item === "cocoa" || item === "coffee")
+      ? rawIndustries.filter(isIndustry)
       : [] as Industry[];
-    const industries: Industry[] = requestedIndustries.length ? requestedIndustries : ["cocoa", "coffee"];
+    const productFamilies = requestedProductFamilies.length
+      ? requestedProductFamilies
+      : requestedIndustries.length
+        ? productFamiliesForIndustries(requestedIndustries)
+        : DEFAULT_PRODUCT_FAMILIES;
     const admin = createServiceClient();
     const results = [];
 
-    for (const industry of industries) {
+    for (const productFamily of productFamilies) {
+      const industry = CONTENT_PROFILE_CONFIG[productFamily].industry;
       try {
-        results.push({ industry, ...(await createDraft(admin, industry)) });
+        results.push({ industry, productFamily, ...(await createDraft(admin, productFamily)) });
       } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown generation error";
         await logRun(admin, {
-          source: industry,
+          source: productFamily,
           success: false,
           errorMessage: message,
         });
-        results.push({ industry, skipped: true, error: message });
+        results.push({ industry, productFamily, skipped: true, error: message });
       }
     }
 
