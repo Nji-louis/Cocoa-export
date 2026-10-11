@@ -574,10 +574,11 @@ async function loadUsers() {
           <td>
             ${
               active && Number(user.id) !== Number(currentAdminId)
-                ? `<button class="btn btn-sm btn-danger"
-                    onclick="deactivateUser(${Number(user.id)}, ${JSON.stringify(user.name)})">
-                    Deactivate
-                  </button>`
+                ? `<button class="btn btn-sm btn-danger deactivate-user-btn"
+    data-user-id="${Number(user.id)}"
+    data-user-name="${encodeURIComponent(user.name)}">
+    Deactivate
+  </button>`
                 : Number(user.id) === Number(currentAdminId)
                   ? '<span class="text-muted">Your account</span>'
                   : '<span class="text-muted">Deactivated</span>'
@@ -586,6 +587,19 @@ async function loadUsers() {
         </tr>
       `;
     }).join('');
+
+
+table.onclick = async (event) => {
+  const button = event.target.closest('.deactivate-user-btn');
+
+  if (!button) return;
+
+  const userId = Number(button.dataset.userId);
+  const userName = decodeURIComponent(button.dataset.userName);
+
+  await deactivateUser(userId, userName);
+};
+
 
   } catch (error) {
     console.error(error);
