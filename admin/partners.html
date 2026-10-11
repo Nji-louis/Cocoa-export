@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Partners | COCOABRIDGE Admin</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6f9;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #212529;
+    }
+
+    /* =====================================================
+       SIDEBAR
+    ===================================================== */
+
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 250px;
+      height: 100vh;
+      background: #111827;
+      color: white;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: #374151;
+      border-radius: 10px;
+    }
+
+    .sidebar-brand {
+      height: 70px;
+      display: flex;
+      align-items: center;
+      padding: 0 22px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: .4px;
+    }
+
+    .sidebar-brand i {
+      margin-right: 10px;
+    }
+
+    .sidebar-menu {
+      padding: 18px 12px 30px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #9ca3af;
+      padding: 12px 12px 7px;
+      letter-spacing: .8px;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #d1d5db;
+      text-decoration: none;
+      padding: 11px 13px;
+      margin-bottom: 4px;
+      border-radius: 7px;
+      transition: .2s;
+      font-size: 14px;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #1f2937;
+      color: white;
+    }
+
+    .sidebar a.active {
+      border-left: 3px solid #198754;
+      padding-left: 10px;
+    }
+
+    .sidebar a i {
+      width: 18px;
+      text-align: center;
+    }
+
+    /* =====================================================
+       MAIN
+    ===================================================== */
+
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+    }
+
+    .page-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .admin-user {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #198754;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    /* =====================================================
+       STAT CARDS
+    ===================================================== */
+
+    .stat-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      border: 1px solid #e5e7eb;
+      height: 100%;
+    }
+
+    .stat-icon {
+      width: 45px;
+      height: 45px;
+      border-radius: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #ecfdf5;
+      color: #198754;
+      font-size: 19px;
+      margin-bottom: 13px;
+    }
+
+    .stat-number {
+      font-size: 25px;
+      font-weight: 700;
+      margin-bottom: 2px;
+    }
+
+    .stat-label {
+      color: #6b7280;
+      font-size: 13px;
+    }
+
+    /* =====================================================
+       CONTENT CARD
+    ===================================================== */
+
+    .content-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .content-card-header {
+      padding: 18px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    .content-card-header h5 {
+      margin: 0;
+      font-weight: 700;
+    }
+
+    .search-box {
+      position: relative;
+      width: 280px;
+    }
+
+    .search-box i {
+      position: absolute;
+      left: 12px;
+      top: 11px;
+      color: #9ca3af;
+    }
+
+    .search-box input {
+      padding-left: 36px;
+    }
+
+    /* =====================================================
+       TABLE
+    ===================================================== */
+
+    .table {
+      margin: 0;
+    }
+
+    .table thead th {
+      background: #f9fafb;
+      color: #6b7280;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      white-space: nowrap;
+      padding: 14px 16px;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+      padding: 15px 16px;
+      font-size: 14px;
+    }
+
+    .partner-logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: #f8f9fa;
+      border: 1px solid #e5e7eb;
+      padding: 5px;
+    }
+
+    .partner-name {
+      font-weight: 600;
+    }
+
+    .website-link {
+      color: #198754;
+      text-decoration: none;
+    }
+
+    .website-link:hover {
+      text-decoration: underline;
+    }
+
+    .badge-active {
+      background: #dcfce7;
+      color: #166534;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .badge-inactive {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* =====================================================
+       IMAGE UPLOAD
+    ===================================================== */
+
+    .upload-area {
+      border: 2px dashed #d1d5db;
+      border-radius: 9px;
+      padding: 22px;
+      text-align: center;
+      background: #fafafa;
+      transition: .2s;
+    }
+
+    .upload-area:hover {
+      border-color: #198754;
+      background: #f0fdf4;
+    }
+
+    .upload-area i {
+      font-size: 28px;
+      color: #198754;
+      margin-bottom: 8px;
+    }
+
+    #logoPreview {
+      display: none;
+      max-width: 140px;
+      max-height: 100px;
+      object-fit: contain;
+      margin: 15px auto 0;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 5px;
+      background: white;
+    }
+
+    /* =====================================================
+       MOBILE
+    ===================================================== */
+
+    @media (max-width: 992px) {
+
+      .sidebar {
+        width: 220px;
+      }
+
+      .main {
+        margin-left: 220px;
+      }
+
+      .search-box {
+        width: 220px;
+      }
+
+    }
+
+    @media (max-width: 768px) {
+
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        max-height: 300px;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 15px;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .content-card-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+  <div class="sidebar-brand">
+    <i class="fas fa-seedling"></i>
+    COCOABRIDGE
+  </div>
+
+  <div class="sidebar-menu">
+
+    <div class="menu-title">Main</div>
+
+    <a href="dashboard.html">
+      <i class="fas fa-chart-line"></i>
+      Dashboard
+    </a>
+
+    <div class="menu-title">Content Management</div>
+
+    <a href="product.html">
+      <i class="fas fa-box"></i>
+      Products
+    </a>
+
+    <a href="blog.html">
+      <i class="fas fa-newspaper"></i>
+      Blog
+    </a>
+
+    <a href="gallery.html">
+    <a href="team.html"><i class="fa fa-users"></i> Team</a>
+      <i class="fas fa-images"></i>
+      Gallery
+    </a>
+
+    <a href="faq.html">
+      <i class="fas fa-circle-question"></i>
+      FAQs
+    </a>
+
+    <a href="testimonials.html">
+      <i class="fas fa-comments"></i>
+      Testimonials
+    </a>
+
+    <a href="partners.html" class="active">
+      <i class="fas fa-handshake"></i>
+      Partners
+    </a>
+
+    <div class="menu-title">Communication</div>
+
+    <a href="messages.html">
+      <i class="fas fa-envelope"></i>
+      Messages
+    </a>
+
+    <a href="quotes.html">
+      <i class="fas fa-file-invoice"></i>
+      Quote Requests
+    </a>
+
+    <div class="menu-title">System</div>
+
+    <a href="settings.html">
+      <i class="fas fa-gear"></i>
+      Settings
+    </a>
+
+    <a href="#" onclick="logout()">
+      <i class="fas fa-right-from-bracket"></i>
+      Logout
+    </a>
+
+  </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+  <header class="topbar">
+
+    <h1 class="page-title">
+      Partners
+    </h1>
+
+    <div class="admin-user">
+
+      <div>
+        <div class="fw-semibold" id="adminName">Administrator</div>
+        <small class="text-muted">Admin</small>
+      </div>
+
+      <div class="admin-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <section class="content">
+
+    <!-- =================================================
+         STATISTICS
+    ================================================== -->
+
+    <div class="row g-3 mb-4">
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fas fa-handshake"></i>
+          </div>
+
+          <div class="stat-number" id="totalCount">
+            0
+          </div>
+
+          <div class="stat-label">
+            Total Partners
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fas fa-circle-check"></i>
+          </div>
+
+          <div class="stat-number" id="activeCount">
+            0
+          </div>
+
+          <div class="stat-label">
+            Active Partners
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-4">
+
+        <div class="stat-card">
+
+          <div class="stat-icon">
+            <i class="fas fa-circle-xmark"></i>
+          </div>
+
+          <div class="stat-number" id="inactiveCount">
+            0
+          </div>
+
+          <div class="stat-label">
+            Inactive Partners
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================
+         PARTNERS TABLE
+    ================================================== -->
+
+    <div class="content-card">
+
+      <div class="content-card-header">
+
+        <div>
+          <h5>Partner Management</h5>
+          <small class="text-muted">
+            Manage your business partners and their logos.
+          </small>
+        </div>
+
+        <div class="d-flex gap-2">
+
+          <div class="search-box">
+
+            <i class="fas fa-search"></i>
+
+            <input
+              type="text"
+              id="searchInput"
+              class="form-control"
+              placeholder="Search partners..."
+            >
+
+          </div>
+
+          <button
+            class="btn btn-success"
+            onclick="openAddModal()"
+          >
+            <i class="fas fa-plus me-1"></i>
+            Add Partner
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <div class="table-responsive">
+
+        <table class="table table-hover">
+
+          <thead>
+
+            <tr>
+
+              <th>Logo</th>
+
+              <th>Partner</th>
+
+              <th>Website</th>
+
+              <th>Order</th>
+
+              <th>Status</th>
+
+              <th class="text-end">Actions</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="partnersTable">
+
+            <tr>
+
+              <td colspan="6" class="text-center py-5">
+
+                <div class="spinner-border text-success"></div>
+
+                <div class="mt-2 text-muted">
+                  Loading partners...
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </section>
+
+</main>
+
+
+<!-- =====================================================
+     ADD / EDIT MODAL
+===================================================== -->
+
+<div
+  class="modal fade"
+  id="partnerModal"
+  tabindex="-1"
+  aria-hidden="true"
+>
+
+  <div class="modal-dialog modal-dialog-centered">
+
+    <div class="modal-content">
+
+      <div class="modal-header bg-dark text-white">
+
+        <h5 class="modal-title" id="modalTitle">
+          Add Partner
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close btn-close-white"
+          data-bs-dismiss="modal"
+        ></button>
+
+      </div>
+
+
+      <form id="partnerForm">
+
+        <div class="modal-body">
+
+          <input
+            type="hidden"
+            id="partnerId"
+          >
+
+
+          <div class="row g-3">
+
+
+            <!-- NAME -->
+
+            <div class="col-md-8">
+
+              <label class="form-label">
+                Partner Name
+              </label>
+
+              <input
+                type="text"
+                id="partnerName"
+                class="form-control"
+                placeholder="Enter partner name"
+                required
+              >
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Status
+              </label>
+
+              <select
+                id="partnerStatus"
+                class="form-select"
+              >
+
+                <option value="active">
+                  Active
+                </option>
+
+                <option value="inactive">
+                  Inactive
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <!-- LOGO -->
+
+            <div class="col-12">
+
+              <label class="form-label">
+                Partner Logo
+              </label>
+
+              <div class="upload-area">
+
+                <i class="fas fa-cloud-arrow-up d-block"></i>
+
+                <div class="fw-semibold mb-1">
+                  Upload Partner Logo
+                </div>
+
+                <small class="text-muted d-block mb-3">
+                  Select an image from your computer.
+                </small>
+
+                <input
+                  type="file"
+                  id="logoFile"
+                  class="form-control"
+                  accept="image/*"
+                >
+
+                <img
+                  id="logoPreview"
+                  alt="Logo Preview"
+                >
+
+              </div>
+
+            </div>
+
+
+            <!-- WEBSITE -->
+
+            <div class="col-md-8">
+
+              <label class="form-label">
+                Website URL
+              </label>
+
+              <input
+                type="text"
+                id="websiteUrl"
+                class="form-control"
+                placeholder="https://example.com"
+              >
+
+            </div>
+
+
+            <!-- SORT ORDER -->
+
+            <div class="col-md-4">
+
+              <label class="form-label">
+                Sort Order
+              </label>
+
+              <input
+                type="number"
+                id="sortOrder"
+                class="form-control"
+                value="1"
+                min="0"
+              >
+
+            </div>
+
+
+          </div>
+
+        </div>
+
+
+        <div class="modal-footer">
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn btn-success"
+            id="saveBtn"
+          >
+            <i class="fas fa-save me-1"></i>
+            Save Partner
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+  /* =====================================================
+     CONFIGURATION
+  ===================================================== */
+
+  const API_BASE = 'http://localhost:5000/api';
+
+  const token = localStorage.getItem('adminToken');
+
+  let partners = [];
+
+  let editingId = null;
+
+  if (!token) {
+    window.location.href = 'login.html';
+  }
+
+
+  /* =====================================================
+     MODAL
+  ===================================================== */
+
+  const partnerModal =
+    new bootstrap.Modal(
+      document.getElementById('partnerModal')
+    );
+
+
+  /* =====================================================
+     LOAD PARTNERS
+  ===================================================== */
+
+  async function loadPartners() {
+
+    try {
+
+      const response = await fetch(
+        `${API_BASE}/partners/admin/all`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+
+        throw new Error(
+          data.message || 'Failed to load partners'
+        );
+
+      }
+
+      if (data.success) {
+
+        partners = data.partners || [];
+
+        renderPartners(partners);
+
+        updateStats();
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      document.getElementById('partnersTable').innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center text-danger py-5">
+            <i class="fas fa-triangle-exclamation fa-2x mb-2"></i>
+            <div>Failed to load partners.</div>
+            <small>${error.message}</small>
+          </td>
+        </tr>
+      `;
+
+    }
+
+  }
+
+
+  /* =====================================================
+     STATISTICS
+  ===================================================== */
+
+  function updateStats() {
+
+    const total = partners.length;
+
+    const active =
+      partners.filter(
+        p => p.status === 'active'
+      ).length;
+
+    const inactive =
+      partners.filter(
+        p => p.status === 'inactive'
+      ).length;
+
+    document.getElementById('totalCount').textContent = total;
+
+    document.getElementById('activeCount').textContent = active;
+
+    document.getElementById('inactiveCount').textContent = inactive;
+
+  }
+
+
+  /* =====================================================
+     RENDER PARTNERS
+  ===================================================== */
+
+  function renderPartners(list) {
+
+    const tbody =
+      document.getElementById('partnersTable');
+
+    if (!list.length) {
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="text-center py-5 text-muted">
+            <i class="fas fa-handshake fa-2x mb-3"></i>
+            <div>No partners found.</div>
+          </td>
+        </tr>
+      `;
+
+      return;
+
+    }
+
+
+    tbody.innerHTML = list.map(partner => {
+
+      const logo = partner.logo_url
+  ? `http://localhost:5000${partner.logo_url}`
+  : 'img/default-partner.png';
+
+
+      const website =
+        partner.website_url &&
+        partner.website_url !== '#'
+          ? `
+            <a
+              href="${escapeAttribute(partner.website_url)}"
+              target="_blank"
+              class="website-link"
+            >
+              Visit Website
+              <i class="fas fa-external-link-alt ms-1"></i>
+            </a>
+          `
+          : `
+            <span class="text-muted">
+              No website
+            </span>
+          `;
+
+
+      const status =
+        partner.status === 'active'
+          ? `
+            <span class="badge-active">
+              Active
+            </span>
+          `
+          : `
+            <span class="badge-inactive">
+              Inactive
+            </span>
+          `;
+
+
+      return `
+        <tr>
+
+          <td>
+            <img
+              src="${escapeAttribute(logo)}"
+              class="partner-logo"
+              alt="${escapeAttribute(partner.name)}"
+              onerror="this.src='https://via.placeholder.com/100x70?text=Logo'"
+            >
+          </td>
+
+          <td>
+            <div class="partner-name">
+              ${escapeHtml(partner.name || '-')}
+            </div>
+          </td>
+
+          <td>
+            ${website}
+          </td>
+
+          <td>
+            ${partner.sort_order ?? 0}
+          </td>
+
+          <td>
+            ${status}
+          </td>
+
+          <td class="text-end">
+
+            <button
+              class="btn btn-sm btn-outline-primary me-1"
+              onclick="openEditModal(${partner.id})"
+              title="Edit"
+            >
+              <i class="fas fa-pen"></i>
+            </button>
+
+            <button
+              class="btn btn-sm btn-outline-danger"
+              onclick="deletePartner(${partner.id})"
+              title="Delete"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+
+          </td>
+
+        </tr>
+      `;
+
+    }).join('');
+
+  }
+
+
+  /* =====================================================
+     SEARCH
+  ===================================================== */
+
+  document
+    .getElementById('searchInput')
+    .addEventListener('input', function () {
+
+      const query =
+        this.value
+          .toLowerCase()
+          .trim();
+
+      const filtered =
+        partners.filter(partner => {
+
+          return (
+            (partner.name || '')
+              .toLowerCase()
+              .includes(query)
+            ||
+            (partner.website_url || '')
+              .toLowerCase()
+              .includes(query)
+            ||
+            (partner.status || '')
+              .toLowerCase()
+              .includes(query)
+          );
+
+        });
+
+      renderPartners(filtered);
+
+    });
+
+
+  /* =====================================================
+     OPEN ADD MODAL
+  ===================================================== */
+
+  function openAddModal() {
+
+    editingId = null;
+
+    document.getElementById('modalTitle').textContent =
+      'Add Partner';
+
+    document.getElementById('partnerForm').reset();
+
+    document.getElementById('partnerId').value = '';
+
+    document.getElementById('sortOrder').value = 1;
+
+    document.getElementById('partnerStatus').value =
+      'active';
+
+    clearLogoPreview();
+
+    partnerModal.show();
+
+  }
+
+
+  /* =====================================================
+     OPEN EDIT MODAL
+  ===================================================== */
+
+  function openEditModal(id) {
+
+    const partner =
+      partners.find(
+        p => Number(p.id) === Number(id)
+      );
+
+    if (!partner) return;
+
+    editingId = id;
+
+    document.getElementById('modalTitle').textContent =
+      'Edit Partner';
+
+    document.getElementById('partnerId').value =
+      partner.id;
+
+    document.getElementById('partnerName').value =
+      partner.name || '';
+
+    document.getElementById('websiteUrl').value =
+      partner.website_url || '';
+
+    document.getElementById('sortOrder').value =
+      partner.sort_order ?? 0;
+
+    document.getElementById('partnerStatus').value =
+      partner.status || 'active';
+
+    document.getElementById('logoFile').value = '';
+
+    if (partner.logo_url) {
+
+      showLogoPreview(partner.logo_url);
+
+    } else {
+
+      clearLogoPreview();
+
+    }
+
+    partnerModal.show();
+
+  }
+
+
+  /* =====================================================
+     IMAGE PREVIEW
+  ===================================================== */
+
+  document
+    .getElementById('logoFile')
+    .addEventListener('change', function () {
+
+      const file = this.files[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith('image/')) {
+
+        alert('Please select an image file.');
+
+        this.value = '';
+
+        return;
+
+      }
+
+      const reader =
+        new FileReader();
+
+      reader.onload = function (event) {
+
+        showLogoPreview(event.target.result);
+
+      };
+
+      reader.readAsDataURL(file);
+
+    });
+
+
+  function showLogoPreview(src) {
+
+    const preview =
+      document.getElementById('logoPreview');
+
+    preview.src = src;
+
+    preview.style.display = 'block';
+
+  }
+
+
+  function clearLogoPreview() {
+
+    const preview =
+      document.getElementById('logoPreview');
+
+    preview.src = '';
+
+    preview.style.display = 'none';
+
+  }
+
+
+  /* =====================================================
+     UPLOAD IMAGE
+  ===================================================== */
+
+  async function uploadLogo() {
+
+    const fileInput =
+      document.getElementById('logoFile');
+
+    const file =
+      fileInput.files[0];
+
+    if (!file) return null;
+
+
+    const formData =
+      new FormData();
+
+    formData.append('image', file);
+
+
+    const response =
+      await fetch(
+        `${API_BASE}/uploads`,
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+          body: formData
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.message ||
+        'Image upload failed'
+      );
+
+    }
+
+
+    return (
+      data.imageUrl ||
+      data.url ||
+      data.path ||
+      data.filePath
+    );
+
+  }
+
+
+  /* =====================================================
+     SAVE PARTNER
+  ===================================================== */
+
+  document
+    .getElementById('partnerForm')
+    .addEventListener('submit', async function (event) {
+
+      event.preventDefault();
+
+      const saveBtn =
+        document.getElementById('saveBtn');
+
+      saveBtn.disabled = true;
+
+      saveBtn.innerHTML =
+        '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+
+      try {
+
+        let logoUrl = '';
+
+
+        /*
+          If editing and no new image was selected,
+          keep the existing logo.
+        */
+
+        if (editingId) {
+
+          const existing =
+            partners.find(
+              p => Number(p.id) === Number(editingId)
+            );
+
+          logoUrl =
+            existing?.logo_url || '';
+
+        }
+
+
+        /*
+          Upload a new image if selected.
+        */
+
+        if (
+          document
+            .getElementById('logoFile')
+            .files.length > 0
+        ) {
+
+          logoUrl =
+            await uploadLogo();
+
+        }
+
+
+        const payload = {
+
+          name:
+            document
+              .getElementById('partnerName')
+              .value
+              .trim(),
+
+          logo_url:
+            logoUrl,
+
+          website_url:
+            document
+              .getElementById('websiteUrl')
+              .value
+              .trim() || '#',
+
+          sort_order:
+            Number(
+              document
+                .getElementById('sortOrder')
+                .value
+            ) || 0,
+
+          status:
+            document
+              .getElementById('partnerStatus')
+              .value
+
+        };
+
+
+        if (!payload.name) {
+
+          throw new Error(
+            'Partner name is required.'
+          );
+
+        }
+
+
+        let url;
+
+        let method;
+
+
+        if (editingId) {
+
+          url =
+            `${API_BASE}/partners/admin/${editingId}`;
+
+          method = 'PUT';
+
+        } else {
+
+          url =
+            `${API_BASE}/partners/admin`;
+
+          method = 'POST';
+
+        }
+
+
+        const response =
+          await fetch(
+            url,
+            {
+              method,
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`
+              },
+              body: JSON.stringify(payload)
+            }
+          );
+
+
+        const data =
+          await response.json();
+
+
+        if (!response.ok || !data.success) {
+
+          throw new Error(
+            data.message ||
+            'Failed to save partner'
+          );
+
+        }
+
+
+        partnerModal.hide();
+
+        await loadPartners();
+
+        alert(
+          editingId
+            ? 'Partner updated successfully.'
+            : 'Partner created successfully.'
+        );
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          error.message ||
+          'Something went wrong.'
+        );
+
+      } finally {
+
+        saveBtn.disabled = false;
+
+        saveBtn.innerHTML =
+          '<i class="fas fa-save me-1"></i> Save Partner';
+
+      }
+
+    });
+
+
+  /* =====================================================
+     DELETE PARTNER
+  ===================================================== */
+
+  async function deletePartner(id) {
+
+    const partner =
+      partners.find(
+        p => Number(p.id) === Number(id)
+      );
+
+    if (!partner) return;
+
+
+    const confirmed =
+      confirm(
+        `Are you sure you want to delete "${partner.name}"?`
+      );
+
+
+    if (!confirmed) return;
+
+
+    try {
+
+      const response =
+        await fetch(
+          `${API_BASE}/partners/admin/${id}`,
+          {
+            method: 'DELETE',
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok || !data.success) {
+
+        throw new Error(
+          data.message ||
+          'Failed to delete partner'
+        );
+
+      }
+
+
+      await loadPartners();
+
+      alert(
+        'Partner deleted successfully.'
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        error.message ||
+        'Failed to delete partner.'
+      );
+
+    }
+
+  }
+
+
+  /* =====================================================
+     LOGOUT
+  ===================================================== */
+
+  function logout() {
+
+    localStorage.removeItem('adminToken');
+
+    window.location.href =
+      'login.html';
+
+  }
+
+
+  /* =====================================================
+     SECURITY HELPERS
+  ===================================================== */
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+
+  }
+
+
+  function escapeAttribute(value) {
+
+    return escapeHtml(value);
+
+  }
+
+
+  /* =====================================================
+     LOAD ADMIN NAME
+  ===================================================== */
+
+  try {
+
+    const admin =
+      JSON.parse(
+        localStorage.getItem('admin')
+      );
+
+    if (admin && admin.name) {
+
+      document.getElementById('adminName')
+        .textContent = admin.name;
+
+    }
+
+  } catch (error) {
+
+    console.log('Admin information unavailable.');
+
+  }
+
+
+  /* =====================================================
+     INITIAL LOAD
+  ===================================================== */
+
+  loadPartners();
+
+</script>
+
+</body>
+</html>

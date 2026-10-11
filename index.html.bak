@@ -11,9 +11,6 @@
     <link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
     <link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
     <meta name="theme-color" content="#4E342E">
-    <!-- Supabase runtime config: replace these values during deployment -->
-    <meta name="supabase-url" content="https://zsyawtkrkjvulrjhgbyn.supabase.co">
-    <meta name="supabase-anon-key" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpzeWF3dGtya2p2dWxyamhnYnluIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNjQ3NzEsImV4cCI6MjA5MzY0MDc3MX0.Mns1-UZMIaZwR99KrvZXwKpo7TmjijPWFQYL3DaAcSs">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="COCOABRIDGE Ltd">
     <meta property="og:locale" content="en_CM">
@@ -1678,28 +1675,16 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase/config.min.js"></script>
-<script src="js/supabase/client.min.js"></script>
-<script src="js/supabase/errors.min.js"></script>
-<script src="js/supabase/auth.min.js"></script>
-<script src="js/supabase/catalog.min.js"></script>
-<script src="js/supabase/inquiries.min.js"></script>
-<script src="js/supabase/subscriptions.min.js"></script>
 <script src="js/backend-config.js"></script>
 <script src="js/backend-api.js"></script>
-<script src="js/supabase/blog.min.js?v=20260301c"></script>
-<script src="js/supabase/blog-pages.min.js?v=20260301c"></script>
-<script src="js/supabase/init.min.js"></script>
 <script type="module" src="js/blog-forms.js"></script>
-<script src="js/supabase/content.js"></script>
 <script>
 (function () {
   async function initHomeNewsComments() {
     var backend = window.AppBackend || {};
     var root = document.querySelector("#news_home .blog_d_page_li3[data-post-slug]");
     if (!root) return;
-    // Check if backend API is available instead of Supabase
+    // Check if backend API is available
     if (!backend.authApi || !backend.blogApi) return;
     if (!backend.blogApi.getPosts) return;
 

@@ -663,18 +663,7 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="js/supabase/config.min.js"></script>
-<script src="js/supabase/client.min.js"></script>
-<script src="js/supabase/errors.min.js"></script>
-<script src="js/supabase/auth.min.js"></script>
-<script src="js/supabase/catalog.min.js"></script>
-<script src="js/supabase/inquiries.min.js"></script>
-<script src="js/supabase/subscriptions.min.js"></script>
-<script src="js/supabase/blog.min.js"></script>
-<script src="js/supabase/content.js"></script>
 <script type="module" src="js/blog-forms.js"></script>
-<script src="js/supabase/init.min.js"></script>
 </body>
  
 </html>

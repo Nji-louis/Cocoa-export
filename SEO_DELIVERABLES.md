@@ -115,9 +115,7 @@ Current `robots.txt` is suitable:
 ```txt
 User-agent: *
 Allow: /
-Disallow: /admin/
 Disallow: /auth/
-Disallow: /buyer-portal/
 Disallow: /test-connection.html
 
 Sitemap: https://cocoabridge.com/sitemap.xml

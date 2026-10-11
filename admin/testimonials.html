@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Testimonials | COCOABRIDGE Admin</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        :root {
+            --sidebar-width: 260px;
+            --primary: #5b3a29;
+            --primary-dark: #3f281d;
+            --gold: #c89b3c;
+            --bg: #f5f6f8;
+            --card: #ffffff;
+            --text: #263238;
+            --muted: #6c757d;
+            --border: #e7e9ed;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--primary-dark);
+            color: #fff;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            height: 80px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: #fff;
+            font-size: 20px;
+        }
+
+        .brand-text h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .brand-text small {
+            color: rgba(255,255,255,0.65);
+            font-size: 11px;
+        }
+
+        .sidebar-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 12px 25px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar-menu::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.04);
+        }
+
+        .sidebar-menu::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.25);
+            border-radius: 10px;
+        }
+
+        .menu-title {
+            color: rgba(255,255,255,0.4);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 10px 12px 7px;
+        }
+
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.78);
+            text-decoration: none;
+            padding: 11px 13px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .sidebar-menu a i {
+            width: 22px;
+            margin-right: 10px;
+            text-align: center;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .sidebar-menu a.active {
+            border-left: 3px solid var(--gold);
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            flex-shrink: 0;
+        }
+
+        .logout-btn {
+            width: 100%;
+            border: 0;
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.16);
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        .topbar {
+            height: 80px;
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .page-title h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .page-title p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            height: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .stat-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            background: rgba(200,155,60,0.14);
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+        }
+
+        .stat-label {
+            margin-top: 14px;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .stat-number {
+            font-size: 26px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* =====================================================
+           CONTENT CARD
+        ===================================================== */
+
+        .content-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .card-header-custom {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 13px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .search-box input {
+            padding-left: 38px;
+            border-radius: 8px;
+        }
+
+        .btn-primary-custom {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: #fff;
+            border-radius: 8px;
+            padding: 9px 15px;
+        }
+
+        .btn-primary-custom:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: #fff;
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        .table {
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            background: #fafafa;
+            color: #68717a;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+
+        .table tbody td {
+            padding: 15px 16px;
+            vertical-align: middle;
+            border-color: var(--border);
+        }
+
+        .client-name {
+            font-weight: 600;
+        }
+
+        .testimonial-preview {
+            max-width: 350px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: #555;
+        }
+
+        .badge-active {
+            background: #dff5e7;
+            color: #16743a;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .badge-inactive {
+            background: #f1f1f1;
+            color: #666;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .badge-featured {
+            background: #fff1cc;
+            color: #8a6400;
+            padding: 6px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+        }
+
+        .stars {
+            color: #d49c25;
+            white-space: nowrap;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-content {
+            border: 0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: var(--primary);
+            color: #fff;
+            padding: 18px 22px;
+        }
+
+        .modal-body {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .modal-body::-webkit-scrollbar {
+            width: 7px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: #bbb;
+            border-radius: 10px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            min-height: 42px;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+        }
+
+        .rating-select {
+            font-size: 16px;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 991px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 767px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .sidebar-menu {
+                max-height: 320px;
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .topbar {
+                height: auto;
+                padding: 18px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+
+            .admin-user {
+                display: none;
+            }
+
+            .card-header-custom {
+                align-items: stretch;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            <i class="fa-solid fa-seedling"></i>
+        </div>
+
+        <div class="brand-text">
+            <h5>COCOABRIDGE</h5>
+            <small>Administration</small>
+        </div>
+
+    </div>
+
+    <div class="sidebar-menu">
+
+        <div class="menu-title">Main</div>
+
+        <a href="dashboard.html">
+            <i class="fa-solid fa-gauge"></i>
+            Dashboard
+        </a>
+
+        <div class="menu-title">Content</div>
+
+        <a href="products.html">
+            <i class="fa-solid fa-box"></i>
+            Products
+        </a>
+
+        <a href="blog.html">
+            <i class="fa-solid fa-newspaper"></i>
+            Blog
+        </a>
+
+        <a href="gallery.html">
+        <a href="team.html"><i class="fa fa-users"></i> Team</a>
+            <i class="fa-solid fa-images"></i>
+            Gallery
+        </a>
+
+        <a href="testimonials.html" class="active">
+            <i class="fa-solid fa-comments"></i>
+            Testimonials
+        </a>
+
+        <a href="faq.html">
+            <i class="fa-solid fa-circle-question"></i>
+            FAQs
+        </a>
+
+        <a href="partners.html">
+            <i class="fa-solid fa-handshake"></i>
+            Partners
+        </a>
+
+        <div class="menu-title">Communication</div>
+
+        <a href="messages.html">
+            <i class="fa-solid fa-envelope"></i>
+            Messages
+        </a>
+
+        <a href="quotes.html">
+            <i class="fa-solid fa-file-signature"></i>
+            Quote Requests
+        </a>
+
+        <div class="menu-title">System</div>
+
+        <a href="settings.html">
+            <i class="fa-solid fa-gear"></i>
+            Settings
+        </a>
+
+    </div>
+
+    <div class="sidebar-footer">
+
+        <button class="logout-btn" onclick="logout()">
+            <i class="fa-solid fa-right-from-bracket me-2"></i>
+            Logout
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div class="page-title">
+            <h3>Testimonials</h3>
+            <p>Manage customer testimonials and reviews</p>
+        </div>
+
+        <div class="admin-user">
+
+            <div>
+                <div class="fw-semibold" id="adminName">
+                    Administrator
+                </div>
+
+                <small class="text-muted">
+                    Admin
+                </small>
+            </div>
+
+            <div class="admin-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- =====================================================
+             STATISTICS
+        ===================================================== -->
+
+        <div class="row g-4 mb-4">
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-comments"></i>
+                    </div>
+
+                    <div class="stat-label">
+                        Total Testimonials
+                    </div>
+
+                    <div class="stat-number" id="totalCount">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+
+                    <div class="stat-label">
+                        Active
+                    </div>
+
+                    <div class="stat-number" id="activeCount">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+
+                    <div class="stat-label">
+                        Featured
+                    </div>
+
+                    <div class="stat-number" id="featuredCount">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                    </div>
+
+                    <div class="stat-label">
+                        Average Rating
+                    </div>
+
+                    <div class="stat-number" id="averageRating">
+                        0.0
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TESTIMONIAL TABLE
+        ===================================================== -->
+
+        <div class="content-card">
+
+            <div class="card-header-custom">
+
+                <div>
+
+                    <h5 class="mb-1">
+                        Customer Testimonials
+                    </h5>
+
+                    <small class="text-muted">
+                        Manage testimonials displayed on your website
+                    </small>
+
+                </div>
+
+                <div class="d-flex gap-2 flex-wrap">
+
+                    <div class="search-box">
+
+                        <i class="fa-solid fa-search"></i>
+
+                        <input
+                            type="text"
+                            id="searchInput"
+                            class="form-control"
+                            placeholder="Search testimonials..."
+                        >
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary-custom"
+                        onclick="openAddModal()"
+                    >
+                        <i class="fa-solid fa-plus me-1"></i>
+                        Add Testimonial
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-responsive">
+
+                <table class="table align-middle">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Client</th>
+
+                            <th>Company</th>
+
+                            <th>Country</th>
+
+                            <th>Testimonial</th>
+
+                            <th>Rating</th>
+
+                            <th>Featured</th>
+
+                            <th>Status</th>
+
+                            <th>Date</th>
+
+                            <th class="text-end">
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="testimonialsTable">
+
+                        <tr>
+
+                            <td
+                                colspan="9"
+                                class="text-center py-5"
+                            >
+                                <div class="spinner-border spinner-border-sm me-2"></div>
+                                Loading testimonials...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================================
+     ADD / EDIT MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="testimonialModal"
+    tabindex="-1"
+    aria-hidden="true"
+>
+
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5
+                    class="modal-title"
+                    id="modalTitle"
+                >
+                    Add Testimonial
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+
+            <form id="testimonialForm">
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        id="testimonialId"
+                    >
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Client Name *
+                            </label>
+
+                            <input
+                                type="text"
+                                id="client_name"
+                                class="form-control"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Company Name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="company_name"
+                                class="form-control"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Country
+                            </label>
+
+                            <input
+                                type="text"
+                                id="country"
+                                class="form-control"
+                                placeholder="e.g. United Kingdom"
+                            >
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <label class="form-label">
+                                Rating
+                            </label>
+
+                            <select
+                                id="rating"
+                                class="form-select rating-select"
+                            >
+
+                                <option value="5">★★★★★ 5</option>
+                                <option value="4">★★★★☆ 4</option>
+                                <option value="3">★★★☆☆ 3</option>
+                                <option value="2">★★☆☆☆ 2</option>
+                                <option value="1">★☆☆☆☆ 1</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                            <label class="form-label d-block">
+                                Status
+                            </label>
+
+                            <select
+                                id="status"
+                                class="form-select"
+                            >
+
+                                <option value="active">
+                                    Active
+                                </option>
+
+                                <option value="inactive">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <div class="form-check">
+
+                                <input
+                                    type="checkbox"
+                                    class="form-check-input"
+                                    id="featured"
+                                >
+
+                                <label
+                                    class="form-check-label"
+                                    for="featured"
+                                >
+                                    Featured testimonial
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <label class="form-label">
+                                Testimonial *
+                            </label>
+
+                            <textarea
+                                id="testimonial"
+                                class="form-control"
+                                rows="6"
+                                required
+                                placeholder="Enter the customer's testimonial..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary-custom"
+                        id="saveBtn"
+                    >
+                        <i class="fa-solid fa-save me-1"></i>
+                        Save Testimonial
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     DELETE MODAL
+========================================================= -->
+
+<div
+    class="modal fade"
+    id="deleteModal"
+    tabindex="-1"
+>
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Delete Testimonial
+                </h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                ></button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p class="mb-0">
+                    Are you sure you want to permanently delete this testimonial?
+                </p>
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    type="button"
+                    class="btn btn-danger"
+                    onclick="confirmDelete()"
+                >
+                    <i class="fa-solid fa-trash me-1"></i>
+                    Delete
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+    /* =========================================================
+       CONFIGURATION
+    ========================================================= */
+
+    const API_BASE = 'http://localhost:5000/api';
+
+    const token = localStorage.getItem('adminToken');
+
+    let testimonials = [];
+    let deleteId = null;
+
+
+    /* =========================================================
+       AUTHENTICATION
+    ========================================================= */
+
+    if (!token) {
+
+        window.location.href = 'login.html';
+
+    }
+
+
+    /* =========================================================
+       MODALS
+    ========================================================= */
+
+    const testimonialModal =
+        new bootstrap.Modal(
+            document.getElementById('testimonialModal')
+        );
+
+    const deleteModal =
+        new bootstrap.Modal(
+            document.getElementById('deleteModal')
+        );
+
+
+    /* =========================================================
+       LOAD TESTIMONIALS
+    ========================================================= */
+
+    async function loadTestimonials() {
+
+        try {
+
+            const response = await fetch(
+                `${API_BASE}/testimonials/admin/all`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+
+            if (response.status === 401 ||
+                response.status === 403) {
+
+                localStorage.removeItem('adminToken');
+
+                window.location.href = 'login.html';
+
+                return;
+
+            }
+
+
+            const data = await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message || 'Failed to load testimonials'
+                );
+
+            }
+
+
+            testimonials = data.testimonials || [];
+
+            renderTestimonials(testimonials);
+
+            updateStats();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            document.getElementById(
+                'testimonialsTable'
+            ).innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="text-center text-danger py-5"
+                    >
+
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+
+                        Failed to load testimonials.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       STATISTICS
+    ========================================================= */
+
+    function updateStats() {
+
+        const total = testimonials.length;
+
+        const active =
+            testimonials.filter(
+                item => item.status === 'active'
+            ).length;
+
+        const featured =
+            testimonials.filter(
+                item => Number(item.featured) === 1
+            ).length;
+
+
+        let average = 0;
+
+        if (total > 0) {
+
+            const sum =
+                testimonials.reduce(
+                    (total, item) =>
+                        total + Number(item.rating || 0),
+                    0
+                );
+
+            average = sum / total;
+
+        }
+
+
+        document.getElementById('totalCount')
+            .textContent = total;
+
+        document.getElementById('activeCount')
+            .textContent = active;
+
+        document.getElementById('featuredCount')
+            .textContent = featured;
+
+        document.getElementById('averageRating')
+            .textContent = average.toFixed(1);
+
+    }
+
+
+    /* =========================================================
+       RENDER TABLE
+    ========================================================= */
+
+    function renderTestimonials(list) {
+
+        const tbody =
+            document.getElementById(
+                'testimonialsTable'
+            );
+
+
+        if (!list.length) {
+
+            tbody.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="9"
+                        class="text-center text-muted py-5"
+                    >
+
+                        <i class="fa-solid fa-comments fa-2x mb-3 d-block"></i>
+
+                        No testimonials found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+            return;
+
+        }
+
+
+        tbody.innerHTML = list.map(item => {
+
+            const rating =
+                Number(item.rating || 0);
+
+            const stars =
+                '★'.repeat(rating) +
+                '☆'.repeat(5 - rating);
+
+
+            const statusBadge =
+                item.status === 'active'
+
+                    ? `<span class="badge-active">
+                        Active
+                       </span>`
+
+                    : `<span class="badge-inactive">
+                        Inactive
+                       </span>`;
+
+
+            const featuredBadge =
+                Number(item.featured) === 1
+
+                    ? `<span class="badge-featured">
+                        Featured
+                       </span>`
+
+                    : `<span class="text-muted">
+                        —
+                       </span>`;
+
+
+            const date =
+                item.created_at
+
+                    ? new Date(
+                        item.created_at
+                      ).toLocaleDateString()
+
+                    : '-';
+
+
+            return `
+
+                <tr>
+
+                    <td>
+
+                        <div class="client-name">
+                            ${escapeHtml(item.client_name || '-')}
+                        </div>
+
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(item.company_name || '-')}
+                    </td>
+
+
+                    <td>
+                        ${escapeHtml(item.country || '-')}
+                    </td>
+
+
+                    <td>
+
+                        <div class="testimonial-preview"
+                             title="${escapeHtml(item.testimonial || '')}">
+
+                            ${escapeHtml(
+                                item.testimonial || '-'
+                            )}
+
+                        </div>
+
+                    </td>
+
+
+                    <td>
+
+                        <span class="stars">
+                            ${stars}
+                        </span>
+
+                    </td>
+
+
+                    <td>
+                        ${featuredBadge}
+                    </td>
+
+
+                    <td>
+                        ${statusBadge}
+                    </td>
+
+
+                    <td>
+                        ${date}
+                    </td>
+
+
+                    <td class="text-end">
+
+                        <button
+                            class="btn btn-sm btn-outline-primary me-1"
+                            onclick="editTestimonial(${item.id})"
+                            title="Edit"
+                        >
+
+                            <i class="fa-solid fa-pen"></i>
+
+                        </button>
+
+
+                        <button
+                            class="btn btn-sm btn-outline-danger"
+                            onclick="openDeleteModal(${item.id})"
+                            title="Delete"
+                        >
+
+                            <i class="fa-solid fa-trash"></i>
+
+                        </button>
+
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join('');
+
+    }
+
+
+    /* =========================================================
+       SEARCH
+    ========================================================= */
+
+    document
+        .getElementById('searchInput')
+        .addEventListener('input', function () {
+
+            const query =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            const filtered =
+                testimonials.filter(item =>
+
+                    (item.client_name || '')
+                        .toLowerCase()
+                        .includes(query)
+
+                    ||
+
+                    (item.company_name || '')
+                        .toLowerCase()
+                        .includes(query)
+
+                    ||
+
+                    (item.country || '')
+                        .toLowerCase()
+                        .includes(query)
+
+                    ||
+
+                    (item.testimonial || '')
+                        .toLowerCase()
+                        .includes(query)
+
+                );
+
+
+            renderTestimonials(filtered);
+
+        });
+
+
+    /* =========================================================
+       OPEN ADD MODAL
+    ========================================================= */
+
+    function openAddModal() {
+
+        document.getElementById(
+            'modalTitle'
+        ).textContent = 'Add Testimonial';
+
+
+        document.getElementById(
+            'testimonialForm'
+        ).reset();
+
+
+        document.getElementById(
+            'testimonialId'
+        ).value = '';
+
+
+        document.getElementById(
+            'rating'
+        ).value = '5';
+
+
+        document.getElementById(
+            'status'
+        ).value = 'active';
+
+
+        document.getElementById(
+            'saveBtn'
+        ).innerHTML =
+            '<i class="fa-solid fa-save me-1"></i> Save Testimonial';
+
+
+        testimonialModal.show();
+
+    }
+
+
+    /* =========================================================
+       EDIT TESTIMONIAL
+    ========================================================= */
+
+    function editTestimonial(id) {
+
+        const item =
+            testimonials.find(
+                testimonial => testimonial.id == id
+            );
+
+
+        if (!item) return;
+
+
+        document.getElementById(
+            'modalTitle'
+        ).textContent = 'Edit Testimonial';
+
+
+        document.getElementById(
+            'testimonialId'
+        ).value = item.id;
+
+
+        document.getElementById(
+            'client_name'
+        ).value = item.client_name || '';
+
+
+        document.getElementById(
+            'company_name'
+        ).value = item.company_name || '';
+
+
+        document.getElementById(
+            'country'
+        ).value = item.country || '';
+
+
+        document.getElementById(
+            'testimonial'
+        ).value = item.testimonial || '';
+
+
+        document.getElementById(
+            'rating'
+        ).value = item.rating || 5;
+
+
+        document.getElementById(
+            'featured'
+        ).checked =
+            Number(item.featured) === 1;
+
+
+        document.getElementById(
+            'status'
+        ).value =
+            item.status || 'active';
+
+
+        document.getElementById(
+            'saveBtn'
+        ).innerHTML =
+            '<i class="fa-solid fa-save me-1"></i> Update Testimonial';
+
+
+        testimonialModal.show();
+
+    }
+
+
+    /* =========================================================
+       SAVE / UPDATE
+    ========================================================= */
+
+    document
+        .getElementById('testimonialForm')
+        .addEventListener('submit', async function (event) {
+
+            event.preventDefault();
+
+
+            const id =
+                document.getElementById(
+                    'testimonialId'
+                ).value;
+
+
+            const payload = {
+
+                client_name:
+                    document.getElementById(
+                        'client_name'
+                    ).value.trim(),
+
+                company_name:
+                    document.getElementById(
+                        'company_name'
+                    ).value.trim(),
+
+                country:
+                    document.getElementById(
+                        'country'
+                    ).value.trim(),
+
+                testimonial:
+                    document.getElementById(
+                        'testimonial'
+                    ).value.trim(),
+
+                rating:
+                    Number(
+                        document.getElementById(
+                            'rating'
+                        ).value
+                    ),
+
+                featured:
+                    document.getElementById(
+                        'featured'
+                    ).checked,
+
+                status:
+                    document.getElementById(
+                        'status'
+                    ).value
+
+            };
+
+
+            if (!payload.client_name ||
+                !payload.testimonial) {
+
+                alert(
+                    'Client name and testimonial are required.'
+                );
+
+                return;
+
+            }
+
+
+            const saveBtn =
+                document.getElementById(
+                    'saveBtn'
+                );
+
+
+            saveBtn.disabled = true;
+
+            saveBtn.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+
+            try {
+
+                const url = id
+
+                    ? `${API_BASE}/testimonials/admin/${id}`
+
+                    : `${API_BASE}/testimonials/admin`;
+
+
+                const method =
+                    id ? 'PUT' : 'POST';
+
+
+                const response =
+                    await fetch(url, {
+
+                        method: method,
+
+                        headers: {
+
+                            'Content-Type':
+                                'application/json',
+
+                            Authorization:
+                                `Bearer ${token}`
+
+                        },
+
+                        body:
+                            JSON.stringify(payload)
+
+                    });
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    throw new Error(
+                        data.message ||
+                        'Operation failed'
+                    );
+
+                }
+
+
+                testimonialModal.hide();
+
+                await loadTestimonials();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                alert(
+                    error.message ||
+                    'Failed to save testimonial'
+                );
+
+            } finally {
+
+                saveBtn.disabled = false;
+
+                saveBtn.innerHTML =
+                    '<i class="fa-solid fa-save me-1"></i> Save Testimonial';
+
+            }
+
+        });
+
+
+    /* =========================================================
+       DELETE
+    ========================================================= */
+
+    function openDeleteModal(id) {
+
+        deleteId = id;
+
+        deleteModal.show();
+
+    }
+
+
+    async function confirmDelete() {
+
+        if (!deleteId) return;
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `${API_BASE}/testimonials/admin/${deleteId}`,
+                    {
+
+                        method: 'DELETE',
+
+                        headers: {
+
+                            Authorization:
+                                `Bearer ${token}`
+
+                        }
+
+                    }
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                throw new Error(
+                    data.message ||
+                    'Delete failed'
+                );
+
+            }
+
+
+            deleteModal.hide();
+
+            deleteId = null;
+
+            await loadTestimonials();
+
+
+        } catch (error) {
+
+            console.error(error);
+
+            alert(
+                error.message ||
+                'Failed to delete testimonial'
+            );
+
+        }
+
+    }
+
+
+    /* =========================================================
+       HTML ESCAPE
+    ========================================================= */
+
+    function escapeHtml(value) {
+
+        return String(value)
+
+            .replace(/&/g, '&amp;')
+
+            .replace(/</g, '&lt;')
+
+            .replace(/>/g, '&gt;')
+
+            .replace(/"/g, '&quot;')
+
+            .replace(/'/g, '&#039;');
+
+    }
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    function logout() {
+
+        localStorage.removeItem('adminToken');
+
+        window.location.href =
+            'login.html';
+
+    }
+
+
+    /* =========================================================
+       LOAD ADMIN INFORMATION
+    ========================================================= */
+
+    try {
+
+        const admin =
+            JSON.parse(
+                localStorage.getItem('admin')
+            );
+
+        if (admin && admin.name) {
+
+            document.getElementById(
+                'adminName'
+            ).textContent = admin.name;
+
+        }
+
+    } catch (error) {
+
+        console.log(
+            'Admin information unavailable'
+        );
+
+    }
+
+
+    /* =========================================================
+       INITIAL LOAD
+    ========================================================= */
+
+    loadTestimonials();
+
+</script>
+
+</body>
+</html>

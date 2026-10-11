@@ -66,12 +66,7 @@ function canonicalForRedirect(relativePath, content) {
 }
 
 function isPrivatePage(relativePath) {
-  return (
-    relativePath === 'auth/login.html' ||
-    relativePath === 'admin/login.html' ||
-    relativePath.startsWith('admin/') ||
-    relativePath.startsWith('buyer-portal/')
-  );
+  return false;
 }
 
 function trimTitleSuffix(title, suffixPattern, fallbackValue) {
@@ -80,24 +75,6 @@ function trimTitleSuffix(title, suffixPattern, fallbackValue) {
 }
 
 function inferDescription(relativePath, title) {
-  if (relativePath === 'auth/login.html') {
-    return 'Secure account access page for CHOCOCAM buyers, staff, and administrators.';
-  }
-
-  if (relativePath === 'admin/login.html') {
-    return 'Administrative access page for CHOCOCAM platform management.';
-  }
-
-  if (relativePath.startsWith('admin/')) {
-    const section = trimTitleSuffix(title, /\s*\|\s*CHOCOCAM(?:\s+Admin)?\s*$/i, 'CHOCOCAM operations');
-    return `Administrative interface for ${section}.`;
-  }
-
-  if (relativePath.startsWith('buyer-portal/')) {
-    const section = trimTitleSuffix(title, /\s*\|\s*CHOCOCAM\s*$/i, 'CHOCOCAM accounts');
-    return `Buyer portal page for ${section}.`;
-  }
-
   return '';
 }
 

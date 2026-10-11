@@ -1,5 +1,3 @@
-import { supabase } from './supabaseClient.js'
-
 function getValue(source, ...keys) {
   for (const key of keys) {
     if (!key) continue
@@ -103,16 +101,16 @@ function buildMessage(payload) {
   return parts.join('\n\n')
 }
 
-async function invokeInquiry(payload) {
-  const { data, error } = await supabase.functions.invoke('submit-inquiry', {
-    body: payload,
-  })
-  if (error) throw error
-  if (data && data.error) throw new Error(data.error)
-  return data
-}
-
 export async function submitInquiry(input) {
+  const backend = typeof window !== 'undefined' ? window.AppBackend || {} : {}
+  const submitter =
+    (backend.formsApi && backend.formsApi.submitInquiry) ||
+    (backend.inquiryApi && backend.inquiryApi.submitInquiry)
+
+  if (typeof submitter !== 'function') {
+    throw new Error('Inquiry service is not available')
+  }
+
   const payload = normalizeInput(input)
 
   const request = {
@@ -131,7 +129,7 @@ export async function submitInquiry(input) {
     productSlug: payload.productSlug || null,
   }
 
-  return invokeInquiry(request)
+  return submitter(request)
 }
 
 if (typeof window !== 'undefined') {

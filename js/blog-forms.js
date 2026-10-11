@@ -50,19 +50,6 @@ function setCommentFeedback(root, message, isError) {
   return true
 }
 
-function getSupabaseConfig() {
-  const fromWindow = typeof window !== 'undefined' ? (window.__SUPABASE_CONFIG__ || {}) : {}
-  const urlFromWindow = typeof window !== 'undefined' ? (window.SUPABASE_URL || window.__SUPABASE_URL || fromWindow.url || '') : ''
-  const keyFromWindow = typeof window !== 'undefined' ? (window.SUPABASE_ANON_KEY || window.__SUPABASE_ANON_KEY || fromWindow.anonKey || '') : ''
-  const urlFromMeta = document.querySelector('meta[name="supabase-url"]')?.content || ''
-  const keyFromMeta = document.querySelector('meta[name="supabase-anon-key"]')?.content || ''
-
-  return {
-    url: (urlFromWindow || urlFromMeta || '').trim(),
-    anonKey: (keyFromWindow || keyFromMeta || '').trim(),
-  }
-}
-
 function getNewsletterSourceChannel() {
   const page = (location.pathname.split('/').pop() || 'unknown').replace('.html', '').toLowerCase()
   return 'newsletter_' + (page || 'unknown')
@@ -192,12 +179,9 @@ async function submitBlogComment(root, trigger) {
       }
     }
   } catch (error) {
-    const config = getSupabaseConfig()
     const message = error && error.message
       ? error.message
-      : (config.url && config.anonKey)
-        ? 'Failed to submit comment'
-        : 'Supabase is not configured on this page.'
+      : 'Failed to submit comment'
     if (!setCommentFeedback(root, message, true)) {
       notify(message, true)
     }
@@ -216,36 +200,9 @@ function bindNewsletterForms() {
 }
 
 function bindBlogCommentForm() {
-  const root = document.querySelector('.blog_d_page_li3')
-  if (!root) return
-
-  const form = root.querySelector('form')
-  if (form) {
-    form.addEventListener('submit', (event) => {
-      event.preventDefault()
-      const submitTrigger = root.querySelector('button.button_1, a.button_1')
-      void submitBlogComment(root, submitTrigger)
-    })
-  } else {
-    const submitTrigger = root.querySelector('a.button_1, button.button_1')
-    if (submitTrigger) {
-      submitTrigger.addEventListener('click', (event) => {
-        event.preventDefault()
-        void submitBlogComment(root, submitTrigger)
-      })
-    }
-  }
-
-  const messageField = root.querySelector('textarea[placeholder="Message"]')
-  if (messageField) {
-    messageField.addEventListener('keydown', (event) => {
-      if (event.key !== 'Enter') return
-      if (!(event.ctrlKey || event.metaKey)) return
-      event.preventDefault()
-      const submitTrigger = root.querySelector('button.button_1, a.button_1')
-      void submitBlogComment(root, submitTrigger)
-    })
-  }
+  // Blog comments are handled by js/comments.js.
+  // Keep this legacy handler disabled to prevent duplicate/conflicting submissions.
+  return
 }
 
 function init() {

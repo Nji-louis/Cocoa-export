@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Team Management - COCOABRIDGE</title>
+
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
+
+  <style>
+    body {
+      background: #f5f5f5;
+    }
+
+    .sidebar {
+      width: 250px;
+      min-height: 100vh;
+      background: #2c1810;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 25px 15px;
+    }
+
+    .sidebar h4 {
+      color: #f4c542;
+      margin-bottom: 30px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 5px;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active {
+      background: #8a5a00;
+    }
+
+    .main {
+      margin-left: 250px;
+      padding: 30px;
+    }
+
+    .team-image {
+      width: 65px;
+      height: 65px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .preview-image {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+  <h4>
+    <i class="fa fa-leaf"></i>
+    COCOABRIDGE
+  </h4>
+
+  <a href="dashboard.html">
+    <i class="fa fa-dashboard me-2"></i>
+    Dashboard
+  </a>
+
+  <a href="products.html">
+    <i class="fa fa-box me-2"></i>
+    Products
+  </a>
+
+  <a href="blogs.html">
+    <i class="fa fa-newspaper me-2"></i>
+    Blog Posts
+  </a>
+
+  <a href="gallery.html">
+    <i class="fa fa-images me-2"></i>
+    Gallery
+  </a>
+
+  <a href="team.html" class="active">
+    <i class="fa fa-users me-2"></i>
+    Team
+  </a>
+
+  <a href="messages.html">
+    <i class="fa fa-envelope me-2"></i>
+    Messages
+  </a>
+
+  <a href="quote-requests.html">
+    <i class="fa fa-file-signature me-2"></i>
+    Quote Requests
+  </a>
+
+  <a href="settings.html">
+    <i class="fa fa-cog me-2"></i>
+    Settings
+  </a>
+
+  <a href="#" onclick="logout()">
+    <i class="fa fa-sign-out-alt me-2"></i>
+    Logout
+  </a>
+
+</div>
+
+
+<!-- MAIN -->
+<div class="main">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+      <h2>Team Management</h2>
+      <p class="text-muted mb-0">
+        Manage COCOABRIDGE team members.
+      </p>
+    </div>
+
+    <button
+      class="btn btn-warning"
+      onclick="openAddModal()"
+    >
+      <i class="fa fa-plus"></i>
+      Add Team Member
+    </button>
+
+  </div>
+
+
+  <!-- FEEDBACK -->
+  <div id="feedback"></div>
+
+
+  <!-- TEAM TABLE -->
+  <div class="card shadow-sm">
+
+    <div class="card-body">
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle">
+
+          <thead>
+
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Email</th>
+              <th>Order</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+
+          </thead>
+
+          <tbody id="teamTableBody">
+
+            <tr>
+              <td colspan="7" class="text-center">
+                Loading team members...
+              </td>
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- ADD / EDIT MODAL -->
+<div
+  class="modal fade"
+  id="teamModal"
+  tabindex="-1"
+>
+
+  <div class="modal-dialog modal-lg">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+
+        <h5 class="modal-title" id="modalTitle">
+          Add Team Member
+        </h5>
+
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+
+      </div>
+
+
+      <div class="modal-body">
+
+        <form id="teamForm">
+
+          <input
+            type="hidden"
+            id="memberId"
+          >
+
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+
+              <label class="form-label">
+                Name
+              </label>
+
+              <input
+                type="text"
+                id="name"
+                class="form-control"
+                required
+              >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <label class="form-label">
+                Role
+              </label>
+
+              <input
+                type="text"
+                id="role"
+                class="form-control"
+                required
+              >
+
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="form-label">
+                Description
+              </label>
+
+              <textarea
+                id="description"
+                class="form-control"
+                rows="4"
+              ></textarea>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <label class="form-label">
+                Image URL
+              </label>
+
+              <div class="mb-3">
+  <label class="form-label">Team Image</label>
+
+  <input
+    type="file"
+    id="imageFile"
+    class="form-control"
+    accept="image/*"
+  >
+
+  <input
+    type="hidden"
+    id="image_url"
+  >
+
+  <small class="text-muted">
+    Upload a team member photo. Maximum size: 5MB.
+  </small>
+</div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <label class="form-label">
+                LinkedIn URL
+              </label>
+
+              <input
+                type="url"
+                id="linkedin_url"
+                class="form-control"
+                placeholder="https://www.linkedin.com/..."
+              >
+
+            </div>
+
+
+            <div class="col-md-6">
+
+              <label class="form-label">
+                Email
+              </label>
+
+              <input
+                type="email"
+                id="email"
+                class="form-control"
+                placeholder="name@cocoabridge.com"
+              >
+
+            </div>
+
+
+            <div class="col-md-3">
+
+              <label class="form-label">
+                Sort Order
+              </label>
+
+              <input
+                type="number"
+                id="sort_order"
+                class="form-control"
+                value="0"
+              >
+
+            </div>
+
+
+            <div class="col-md-3">
+
+              <label class="form-label">
+                Status
+              </label>
+
+              <select
+                id="status"
+                class="form-select"
+              >
+
+                <option value="active">
+                  Active
+                </option>
+
+                <option value="inactive">
+                  Inactive
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <div class="col-12">
+
+              <label class="form-label">
+                Image Preview
+              </label>
+
+              <br>
+
+              <img
+                id="imagePreview"
+                class="preview-image"
+                src="../img/team-placeholder.jpg"
+                alt="Team preview"
+                onerror="this.style.display='none'"
+              >
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div class="modal-footer">
+
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-bs-dismiss="modal"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          form="teamForm"
+          class="btn btn-warning"
+        >
+          Save Team Member
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+
+const API_BASE = 'http://localhost:5000/api';
+
+const imageFile = document.getElementById('imageFile');
+const imageUrlInput = document.getElementById('image_url');
+
+imageFile.addEventListener('change', async function () {
+  const file = this.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('image', file);
+
+  try {
+    imageUrlInput.value = '';
+
+    const response = await fetch(
+      `${API_BASE}/team-upload`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || 'Team image upload failed'
+      );
+    }
+
+    imageUrlInput.value = data.imageUrl;
+
+    updateImagePreview();
+
+    console.log(
+      'Team image uploaded:',
+      data.imageUrl
+    );
+
+  } catch (error) {
+    console.error(
+      'TEAM IMAGE UPLOAD ERROR:',
+      error
+    );
+
+    alert(
+      error.message || 'Team image upload failed'
+    );
+  }
+});
+
+const token = localStorage.getItem('adminToken');
+
+let teamMembers = [];
+
+let teamModal;
+
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+
+// =====================================================
+// LOAD TEAM
+// =====================================================
+
+async function loadTeam() {
+
+  try {
+
+    const response = await fetch(
+      `${API_BASE}/team/admin/all`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.message || 'Failed to load team'
+      );
+
+    }
+
+    teamMembers = data.members || [];
+
+    renderTeam();
+
+  } catch (error) {
+
+    console.error(error);
+
+    showFeedback(
+      error.message || 'Failed to load team members',
+      'danger'
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// RENDER TEAM
+// =====================================================
+
+function renderTeam() {
+
+  const tbody =
+    document.getElementById('teamTableBody');
+
+  if (!teamMembers.length) {
+
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center text-muted">
+          No team members found.
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
+
+
+  tbody.innerHTML = teamMembers.map(member => {
+
+    const image = member.image_url
+      ? (
+          member.image_url.startsWith('http')
+            ? member.image_url
+            : `http://localhost:5000${member.image_url}`
+        )
+      : '../img/team-placeholder.jpg';
+
+
+    return `
+      <tr>
+
+        <td>
+          <img
+            src="${image}"
+            class="team-image"
+            alt="${escapeHtml(member.name)}"
+          >
+        </td>
+
+        <td>
+          <strong>
+            ${escapeHtml(member.name)}
+          </strong>
+        </td>
+
+        <td>
+          ${escapeHtml(member.role)}
+        </td>
+
+        <td>
+          ${member.email
+            ? escapeHtml(member.email)
+            : '-'}
+        </td>
+
+        <td>
+          ${member.sort_order ?? 0}
+        </td>
+
+        <td>
+
+          <span class="badge ${
+            member.status === 'active'
+              ? 'bg-success'
+              : 'bg-secondary'
+          }">
+
+            ${escapeHtml(member.status)}
+
+          </span>
+
+        </td>
+
+        <td>
+
+          <button
+            class="btn btn-sm btn-primary me-1"
+            onclick="editMember(${member.id})"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+
+          <button
+            class="btn btn-sm btn-danger"
+            onclick="deleteMember(${member.id})"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+
+        </td>
+
+      </tr>
+    `;
+
+  }).join('');
+
+}
+
+
+// =====================================================
+// ADD MEMBER
+// =====================================================
+
+function openAddModal() {
+
+  document.getElementById('modalTitle').textContent =
+    'Add Team Member';
+
+  document.getElementById('teamForm').reset();
+
+  document.getElementById('memberId').value = '';
+
+  document.getElementById('sort_order').value = 0;
+
+  document.getElementById('status').value = 'active';
+
+  document.getElementById('imagePreview').style.display =
+    'none';
+
+  teamModal.show();
+
+}
+
+
+// =====================================================
+// EDIT MEMBER
+// =====================================================
+
+function editMember(id) {
+
+  const member =
+    teamMembers.find(item => item.id == id);
+
+  if (!member) return;
+
+
+  document.getElementById('modalTitle').textContent =
+    'Edit Team Member';
+
+  document.getElementById('memberId').value =
+    member.id;
+
+  document.getElementById('name').value =
+    member.name || '';
+
+  document.getElementById('role').value =
+    member.role || '';
+
+  document.getElementById('description').value =
+    member.description || '';
+
+  document.getElementById('image_url').value =
+    member.image_url || '';
+
+  document.getElementById('linkedin_url').value =
+    member.linkedin_url || '';
+
+  document.getElementById('email').value =
+    member.email || '';
+
+  document.getElementById('sort_order').value =
+    member.sort_order ?? 0;
+
+  document.getElementById('status').value =
+    member.status || 'active';
+
+
+  updateImagePreview();
+
+  teamModal.show();
+
+}
+
+
+// =====================================================
+// SAVE MEMBER
+// =====================================================
+
+document
+  .getElementById('teamForm')
+  .addEventListener('submit', async function (e) {
+
+    e.preventDefault();
+
+
+    const id =
+      document.getElementById('memberId').value;
+
+
+    const payload = {
+
+      name:
+        document.getElementById('name').value.trim(),
+
+      role:
+        document.getElementById('role').value.trim(),
+
+      description:
+        document.getElementById('description').value.trim(),
+
+      image_url:
+        document.getElementById('image_url').value.trim(),
+
+      linkedin_url:
+        document.getElementById('linkedin_url').value.trim(),
+
+      email:
+        document.getElementById('email').value.trim(),
+
+      sort_order:
+        Number(
+          document.getElementById('sort_order').value
+        ) || 0,
+
+      status:
+        document.getElementById('status').value
+
+    };
+
+
+    try {
+
+      const response = await fetch(
+
+        id
+          ? `${API_BASE}/team/admin/${id}`
+          : `${API_BASE}/team/admin`,
+
+        {
+
+          method: id ? 'PUT' : 'POST',
+
+          headers: {
+
+            'Content-Type': 'application/json',
+
+            Authorization:
+              `Bearer ${token}`
+
+          },
+
+          body:
+            JSON.stringify(payload)
+
+        }
+
+      );
+
+
+      const data =
+        await response.json();
+
+
+      if (!response.ok || !data.success) {
+
+        throw new Error(
+          data.message || 'Failed to save team member'
+        );
+
+      }
+
+
+      showFeedback(
+        data.message || 'Team member saved successfully',
+        'success'
+      );
+
+
+      teamModal.hide();
+
+      loadTeam();
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      showFeedback(
+        error.message || 'Failed to save team member',
+        'danger'
+      );
+
+    }
+
+  });
+
+
+// =====================================================
+// DELETE MEMBER
+// =====================================================
+
+async function deleteMember(id) {
+
+  const member =
+    teamMembers.find(item => item.id == id);
+
+  if (!member) return;
+
+
+  if (
+    !confirm(
+      `Delete ${member.name}?`
+    )
+  ) {
+    return;
+  }
+
+
+  try {
+
+    const response = await fetch(
+      `${API_BASE}/team/admin/${id}`,
+      {
+        method: 'DELETE',
+
+        headers: {
+          Authorization:
+            `Bearer ${token}`
+        }
+      }
+    );
+
+
+    const data =
+      await response.json();
+
+
+    if (!response.ok || !data.success) {
+
+      throw new Error(
+        data.message || 'Failed to delete team member'
+      );
+
+    }
+
+
+    showFeedback(
+      'Team member deleted successfully',
+      'success'
+    );
+
+
+    loadTeam();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    showFeedback(
+      error.message || 'Failed to delete team member',
+      'danger'
+    );
+
+  }
+
+}
+
+
+// =====================================================
+// IMAGE PREVIEW
+// =====================================================
+
+document
+  .getElementById('image_url')
+  .addEventListener(
+    'input',
+    updateImagePreview
+  );
+
+
+function updateImagePreview() {
+
+  const url =
+    document.getElementById('image_url').value.trim();
+
+  const preview =
+    document.getElementById('imagePreview');
+
+
+  if (!url) {
+
+    preview.style.display = 'none';
+
+    return;
+
+  }
+
+
+  preview.src =
+    url.startsWith('http')
+      ? url
+      : `http://localhost:5000${url}`;
+
+  preview.style.display = 'inline-block';
+
+}
+
+
+// =====================================================
+// FEEDBACK
+// =====================================================
+
+function showFeedback(message, type = 'success') {
+
+  const feedback =
+    document.getElementById('feedback');
+
+  feedback.className =
+    `alert alert-${type}`;
+
+  feedback.textContent =
+    message;
+
+}
+
+
+// =====================================================
+// ESCAPE HTML
+// =====================================================
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logout() {
+
+  localStorage.clear();
+
+  window.location.href =
+    'login.html';
+
+}
+
+
+// =====================================================
+// INITIALIZE
+// =====================================================
+
+document.addEventListener(
+  'DOMContentLoaded',
+  function () {
+
+    teamModal =
+      new bootstrap.Modal(
+        document.getElementById('teamModal')
+      );
+
+    loadTeam();
+
+  }
+);
+
+</script>
+
+</body>
+</html>

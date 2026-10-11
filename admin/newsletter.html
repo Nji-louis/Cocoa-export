@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newsletter | COCOABRIDGE Admin</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    body{margin:0;background:#f4f6f9;font-family:Segoe UI,Tahoma,sans-serif}
+
+    .sidebar{
+      width:260px;height:100vh;position:fixed;left:0;top:0;
+      background:#2c1810;color:#fff;padding:24px 18px;overflow-y:auto
+    }
+
+    .sidebar h3{color:#f4c542;font-weight:700;margin-bottom:30px}
+
+    .sidebar a{
+      display:block;color:#ddd;text-decoration:none;padding:12px 14px;
+      border-radius:12px;margin-bottom:6px
+    }
+
+    .sidebar a:hover,.sidebar a.active{
+      background:rgba(244,197,66,.15);color:#fff
+    }
+
+    .main{margin-left:260px;min-height:100vh}
+
+    .topbar{
+      background:#fff;padding:18px 28px;border-bottom:1px solid #e5e7eb;
+      display:flex;justify-content:space-between;align-items:center;
+      position:sticky;top:0;z-index:10
+    }
+
+    .content{padding:28px}
+
+    .stat-card{
+      background:#fff;border-radius:18px;padding:22px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05);
+      border-left:5px solid #8a5a00
+    }
+
+    .stat-card h3{margin:0;font-weight:700;color:#2c1810}
+    .stat-card p{margin:6px 0 0;color:#6b7280}
+
+    .panel{
+      background:#fff;border-radius:18px;padding:22px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05)
+    }
+
+    .table td,.table th{vertical-align:middle}
+
+    .badge-active{background:#198754}
+    .badge-unsubscribed{background:#6c757d}
+
+    @media(max-width:992px){
+      .sidebar{position:relative;width:100%;height:auto}
+      .main{margin-left:0}
+    }
+  </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <h3><i class="fa fa-seedling me-2"></i>COCOABRIDGE</h3>
+
+  <a href="dashboard.html">
+    <i class="fa fa-chart-line me-2"></i>Dashboard
+  </a>
+
+  <a href="products.html">
+    <i class="fa fa-box me-2"></i>Products
+  </a>
+
+  <a href="blogs.html">
+    <i class="fa fa-newspaper me-2"></i>Blog Posts
+  </a>
+
+  <a href="gallery.html">
+    <i class="fa fa-image me-2"></i>Gallery
+  </a>
+
+  <a href="team.html">
+    <i class="fa fa-users me-2"></i>Team
+  </a>
+
+  <a href="messages.html">
+    <i class="fa fa-envelope me-2"></i>Messages
+  </a>
+
+  <a href="quotes.html">
+    <i class="fa fa-file-invoice-dollar me-2"></i>Quote Requests
+  </a>
+
+  <a href="newsletter.html" class="active">
+    <i class="fa fa-paper-plane me-2"></i>Newsletter
+  </a>
+
+  <hr class="border-secondary my-4">
+
+  <a href="#" onclick="logout()">
+    <i class="fa fa-sign-out-alt me-2"></i>Logout
+  </a>
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+    <h4 class="mb-0">Newsletter Subscribers</h4>
+
+    <button class="btn btn-outline-danger" onclick="logout()">
+      <i class="fa fa-sign-out-alt me-1"></i>Logout
+    </button>
+  </div>
+
+  <div class="content">
+
+    <div class="row g-4 mb-4">
+
+      <div class="col-md-4">
+        <div class="stat-card">
+          <h3 id="totalCount">0</h3>
+          <p>Total Subscribers</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stat-card">
+          <h3 id="activeCount">0</h3>
+          <p>Active Subscribers</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="stat-card">
+          <h3 id="unsubscribedCount">0</h3>
+          <p>Unsubscribed</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div>
+          <h5 class="mb-1">Send Newsletter</h5>
+          <p class="text-muted mb-0">
+            Send an email to approved subscribers only.
+          </p>
+        </div>
+
+        <span class="badge text-bg-success">
+          <span id="sendRecipientCount">0</span> active subscribers
+        </span>
+      </div>
+
+      <div id="newsletterAlert"></div>
+
+      <div class="mb-3">
+        <label for="newsletterSubject" class="form-label fw-semibold">
+          Subject
+        </label>
+        <input
+          type="text"
+          id="newsletterSubject"
+          class="form-control"
+          placeholder="Enter newsletter subject"
+          maxlength="200"
+        >
+      </div>
+
+      <div class="mb-3">
+        <label for="newsletterMessage" class="form-label fw-semibold">
+          Message
+        </label>
+        <textarea
+          id="newsletterMessage"
+          class="form-control"
+          rows="8"
+          placeholder="Write your newsletter message here..."
+        ></textarea>
+      </div>
+
+      <button
+        type="button"
+        id="sendNewsletterButton"
+        class="btn btn-success"
+        onclick="sendNewsletter()"
+      >
+        <i class="fa fa-paper-plane me-1"></i>
+        Send Newsletter
+      </button>
+    </div>
+
+    <div class="panel">
+
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+
+        <div class="input-group" style="max-width:340px">
+          <span class="input-group-text">
+            <i class="fa fa-search"></i>
+          </span>
+
+          <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Search subscribers..."
+          >
+        </div>
+
+        <select id="statusFilter" class="form-select" style="max-width:180px">
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="unsubscribed">Unsubscribed</option>
+        </select>
+
+      </div>
+
+      <div class="table-responsive">
+
+        <table class="table table-hover align-middle">
+
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Status</th>
+              <th>Source</th>
+              <th>Subscribed</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody id="subscribersTable">
+            <tr>
+              <td colspan="7" class="text-center py-4">
+                Loading subscribers...
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+const API_BASE = 'http://localhost:5000/api';
+const token = localStorage.getItem('adminToken');
+
+let subscribers = [];
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+async function loadSubscribers(){
+
+  try {
+
+    const res = await fetch(`${API_BASE}/forms/admin/subscribers`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Failed to load subscribers');
+    }
+
+    subscribers = Array.isArray(data.subscribers)
+      ? data.subscribers
+      : [];
+
+    updateStats();
+    renderSubscribers();
+
+  } catch(error) {
+
+    console.error(error);
+
+    document.getElementById('subscribersTable').innerHTML = `
+      <tr>
+        <td colspan="6" class="text-center text-danger py-4">
+          ${escapeHtml(error.message || 'Failed to load subscribers')}
+        </td>
+      </tr>
+    `;
+  }
+}
+
+function updateStats(){
+
+  const total = subscribers.length;
+
+  const active = subscribers.filter(
+    subscriber => subscriber.status === 'active'
+  ).length;
+
+  const unsubscribed = subscribers.filter(
+    subscriber => subscriber.status === 'unsubscribed'
+  ).length;
+
+  document.getElementById('totalCount').textContent = total;
+  document.getElementById('activeCount').textContent = active;
+  document.getElementById('unsubscribedCount').textContent = unsubscribed;
+
+  const recipientCount = document.getElementById('sendRecipientCount');
+  if (recipientCount) {
+    recipientCount.textContent = active;
+  }
+}
+
+function renderSubscribers(){
+
+  const search =
+    document.getElementById('searchInput').value
+      .trim()
+      .toLowerCase();
+
+  const status =
+    document.getElementById('statusFilter').value;
+
+  const filtered = subscribers.filter(subscriber => {
+
+    const matchesSearch =
+      !search ||
+      String(subscriber.full_name || '').toLowerCase().includes(search) ||
+      String(subscriber.email || '').toLowerCase().includes(search) ||
+      String(subscriber.source || '').toLowerCase().includes(search);
+
+    const matchesStatus =
+      status === 'all' ||
+      subscriber.status === status;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  const table = document.getElementById('subscribersTable');
+
+  if (!filtered.length) {
+    table.innerHTML = `
+      <tr>
+        <td colspan="7" class="text-center py-4 text-muted">
+          No subscribers found.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  table.innerHTML = filtered.map(subscriber => {
+
+    const statusBadge =
+      subscriber.status === 'active'
+        ? '<span class="badge badge-active">Active</span>'
+        : '<span class="badge badge-unsubscribed">Unsubscribed</span>';
+
+    return `
+      <tr>
+        <td>${escapeHtml(subscriber.full_name || '—')}</td>
+        <td>${escapeHtml(subscriber.email || '—')}</td>
+        <td>${statusBadge}</td>
+        <td>${escapeHtml(subscriber.source || '—')}</td>
+        <td>${formatDate(subscriber.subscribed_at)}</td>
+        <td>${formatDate(subscriber.updated_at)}</td>
+        <td>
+          ${
+            subscriber.status === 'active'
+              ? `
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-secondary"
+                  onclick="updateSubscriberStatus(${subscriber.id}, 'unsubscribed')"
+                >
+                  <i class="fa fa-ban me-1"></i>
+                  Disapprove
+                </button>
+              `
+              : `
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-success"
+                  onclick="updateSubscriberStatus(${subscriber.id}, 'active')"
+                >
+                  <i class="fa fa-check me-1"></i>
+                  Approve
+                </button>
+              `
+          }
+        </td>
+      </tr>
+    `;
+
+  }).join('');
+}
+
+async function updateSubscriberStatus(id, status){
+
+  const action = status === 'active'
+    ? 'approve'
+    : 'disapprove';
+
+  const confirmed = confirm(
+    `Are you sure you want to ${action} this subscriber?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+
+    const res = await fetch(
+      `${API_BASE}/forms/admin/subscribers/${id}/status`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ status })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Failed to update subscriber status');
+    }
+
+    await loadSubscribers();
+
+  } catch(error) {
+
+    console.error(error);
+
+    alert(error.message || 'Failed to update subscriber status');
+  }
+}
+
+async function sendNewsletter(){
+
+  const subject =
+    document.getElementById('newsletterSubject').value.trim();
+
+  const message =
+    document.getElementById('newsletterMessage').value.trim();
+
+  const button =
+    document.getElementById('sendNewsletterButton');
+
+  const alertBox =
+    document.getElementById('newsletterAlert');
+
+  if (!subject) {
+    alertBox.innerHTML = `
+      <div class="alert alert-warning">
+        Please enter a newsletter subject.
+      </div>
+    `;
+    return;
+  }
+
+  if (!message) {
+    alertBox.innerHTML = `
+      <div class="alert alert-warning">
+        Please enter a newsletter message.
+      </div>
+    `;
+    return;
+  }
+
+  if (!subscribers.some(subscriber => subscriber.status === 'active')) {
+    alertBox.innerHTML = `
+      <div class="alert alert-warning">
+        There are no active subscribers to email.
+      </div>
+    `;
+    return;
+  }
+
+  const confirmed = confirm(
+    `Send this newsletter to ${subscribers.filter(subscriber => subscriber.status === 'active').length} active subscribers?`
+  );
+
+  if (!confirmed) {
+    return;
+  }
+
+  try {
+
+    button.disabled = true;
+
+    button.innerHTML = `
+      <span class="spinner-border spinner-border-sm me-1"></span>
+      Sending...
+    `;
+
+    alertBox.innerHTML = '';
+
+    const res = await fetch(
+      `${API_BASE}/forms/admin/newsletter/send`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          subject,
+          message
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || 'Failed to send newsletter');
+    }
+
+    alertBox.innerHTML = `
+      <div class="alert alert-success">
+        Newsletter sent successfully.
+        ${data.sentCount} email(s) sent.
+        ${data.failedCount ? `${data.failedCount} failed.` : ''}
+      </div>
+    `;
+
+    document.getElementById('newsletterSubject').value = '';
+    document.getElementById('newsletterMessage').value = '';
+
+  } catch(error) {
+
+    console.error(error);
+
+    alertBox.innerHTML = `
+      <div class="alert alert-danger">
+        ${escapeHtml(error.message || 'Failed to send newsletter')}
+      </div>
+    `;
+
+  } finally {
+
+    button.disabled = false;
+
+    button.innerHTML = `
+      <i class="fa fa-paper-plane me-1"></i>
+      Send Newsletter
+    `;
+  }
+}
+
+function formatDate(value){
+
+  if (!value) return '—';
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return '—';
+  }
+
+  return date.toLocaleString();
+}
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function logout(){
+
+  localStorage.clear();
+  window.location.href = 'login.html';
+}
+
+document
+  .getElementById('searchInput')
+  .addEventListener('input', renderSubscribers);
+
+document
+  .getElementById('statusFilter')
+  .addEventListener('change', renderSubscribers);
+
+loadSubscribers();
+</script>
+
+</body>
+</html>

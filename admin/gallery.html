@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery Manager | COCOABRIDGE Admin</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    body{margin:0;background:#f4f6f9;font-family:Segoe UI,Tahoma,sans-serif}
+
+    .sidebar{
+      width:260px;height:100vh;position:fixed;left:0;top:0;
+      background:#2c1810;color:#fff;padding:24px 18px;overflow-y:auto
+    }
+
+    .sidebar h3{color:#f4c542;font-weight:700;margin-bottom:30px}
+
+    .sidebar a{
+      display:block;color:#ddd;text-decoration:none;padding:12px 14px;
+      border-radius:12px;margin-bottom:6px
+    }
+
+    .sidebar a:hover,.sidebar a.active{
+      background:rgba(244,197,66,.15);color:#fff
+    }
+
+    .main{margin-left:260px;min-height:100vh}
+
+    .topbar{
+      background:#fff;padding:18px 28px;border-bottom:1px solid #e5e7eb;
+      display:flex;justify-content:space-between;align-items:center;
+      position:sticky;top:0;z-index:10
+    }
+
+    .content{padding:28px}
+
+    .panel{
+      background:#fff;border-radius:18px;padding:22px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05)
+    }
+
+    .gallery-card{
+      background:#fff;border-radius:16px;overflow:hidden;
+      box-shadow:0 4px 12px rgba(0,0,0,.06);
+      border:1px solid #eef0f3;height:100%
+    }
+
+    .gallery-card img{
+      width:100%;height:220px;object-fit:cover
+    }
+
+    .gallery-body{padding:16px}
+
+    .btn-brand{
+      background:#8a5a00;border:none;color:#fff;font-weight:600
+    }
+
+    .btn-brand:hover{background:#6f4800;color:#fff}
+
+    .modal-header{background:#2c1810;color:#fff}
+
+    #imagePreview{
+      width:220px;height:160px;object-fit:cover;border-radius:12px;
+      border:1px solid #ddd;display:none
+    }
+
+    .modal-dialog-scrollable .modal-body{
+      max-height:70vh;overflow-y:auto;overflow-x:hidden
+    }
+
+    @media(max-width:992px){
+      .sidebar{position:relative;width:100%;height:auto}
+      .main{margin-left:0}
+    }
+  </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <h3><i class="fa fa-seedling me-2"></i>COCOABRIDGE</h3>
+
+  <a href="dashboard.html"><i class="fa fa-chart-line me-2"></i>Dashboard</a>
+  <a href="products.html"><i class="fa fa-box me-2"></i>Products</a>
+  <a href="blogs.html"><i class="fa fa-newspaper me-2"></i>Blog Posts</a>
+  <a href="gallery.html" class="active"><i class="fa fa-image me-2"></i>Gallery</a>
+  <a href="team.html"><i class="fa fa-users me-2"></i>Team</a>
+  <a href="messages.html"><i class="fa fa-envelope me-2"></i>Messages</a>
+  <a href="quotes.html"><i class="fa fa-file-invoice-dollar me-2"></i>Quote Requests</a>
+
+  <hr class="border-secondary my-4">
+
+  <a href="#" onclick="logout()"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+    <h4 class="mb-0">Gallery Manager</h4>
+
+    <button class="btn btn-brand"
+            data-bs-toggle="modal"
+            data-bs-target="#galleryModal"
+            onclick="openCreateModal()">
+      <i class="fa fa-plus me-1"></i>Add Image
+    </button>
+  </div>
+
+  <div class="content">
+
+    <div class="panel">
+
+      <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+
+        <div class="input-group" style="max-width:320px">
+          <span class="input-group-text"><i class="fa fa-search"></i></span>
+          <input type="text" id="searchInput" class="form-control" placeholder="Search gallery...">
+        </div>
+
+      </div>
+
+      <div class="row g-4" id="galleryGrid">
+
+        <div class="col-12 text-center py-5">Loading gallery...</div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+<!-- Gallery Modal -->
+<div class="modal fade" id="galleryModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle">Add Gallery Image</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form id="galleryForm">
+
+        <div class="modal-body">
+
+          <input type="hidden" id="galleryId">
+
+          <div class="row g-3">
+
+            <div class="col-md-6">
+              <label class="form-label">Title</label>
+              <input type="text" id="title" class="form-control" required>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Category</label>
+              <select id="category" class="form-select">
+                <option value="Farm">Farm</option>
+                <option value="Export">Export</option>
+                <option value="Warehouse">Warehouse</option>
+                <option value="Team">Team</option>
+                <option value="Logistics">Logistics</option>
+                <option value="coffee">Coffee</option>
+                <option value="Traceability">Traceability</option>
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Status</label>
+              <select id="status" class="form-select">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="form-check">
+                <input type="checkbox" id="featured" class="form-check-input">
+                <label class="form-check-label">Featured Image</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Gallery Image</label>
+              <input type="file" id="imageFile" class="form-control" accept="image/*" required>
+              <small class="text-muted">Select an image from your computer.</small>
+            </div>
+
+            <div class="col-12 text-center">
+              <img id="imagePreview" alt="Preview">
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Caption</label>
+              <textarea id="caption" class="form-control" rows="3"></textarea>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-brand">
+            <i class="fa fa-save me-1"></i>Save Image
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const API_BASE = 'http://localhost:5000/api';
+const token = localStorage.getItem('adminToken');
+
+let gallery = [];
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+const modal = new bootstrap.Modal(
+  document.getElementById('galleryModal')
+);
+
+// =====================================================
+// IMAGE URL HELPER
+// =====================================================
+
+function getImageUrl(imagePath) {
+  if (!imagePath) {
+    return 'https://via.placeholder.com/400x300';
+  }
+
+  // Already a complete URL
+  if (
+    imagePath.startsWith('http://') ||
+    imagePath.startsWith('https://')
+  ) {
+    return imagePath;
+  }
+
+  // Backend uploaded image
+  if (imagePath.startsWith('/uploads/')) {
+    return `http://localhost:5000${imagePath}`;
+  }
+
+  // Existing database image paths
+  if (imagePath.startsWith('/')) {
+    return `http://localhost:5000${imagePath}`;
+  }
+
+  // Existing relative frontend images
+  return imagePath;
+}
+
+// =====================================================
+// LOAD GALLERY
+// =====================================================
+
+async function loadGallery() {
+  try {
+    const res = await fetch(
+      `${API_BASE}/admin/gallery`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.message || 'Failed to load gallery.'
+      );
+    }
+
+    gallery = data.gallery || [];
+    renderGallery(gallery);
+
+  } catch (err) {
+    console.error('LOAD GALLERY ERROR:', err);
+
+    document.getElementById('galleryGrid').innerHTML = `
+      <div class="col-12">
+        <div class="alert alert-danger">
+          Failed to load gallery: ${err.message}
+        </div>
+      </div>
+    `;
+  }
+}
+
+// =====================================================
+// RENDER GALLERY
+// =====================================================
+
+function renderGallery(list) {
+  const grid = document.getElementById('galleryGrid');
+
+  if (!list.length) {
+    grid.innerHTML = `
+      <div class="col-12 text-center py-5">
+        No gallery images found
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = list.map(g => `
+    <div class="col-md-6 col-lg-4">
+      <div class="gallery-card">
+
+        <img
+          src="${getImageUrl(g.image_url)}"
+          alt="${g.title || 'Gallery Image'}"
+          onerror="this.src='https://via.placeholder.com/400x300'"
+        >
+
+        <div class="gallery-body">
+
+          <div class="d-flex justify-content-between align-items-start mb-2">
+
+            <h6 class="mb-0">
+              ${g.title || 'Gallery Image'}
+            </h6>
+
+            ${
+              Number(g.featured) === 1
+                ? '<span class="badge bg-warning text-dark">Featured</span>'
+                : ''
+            }
+
+          </div>
+
+          <p class="text-muted small mb-2">
+            ${g.category || '-'}
+          </p>
+
+          <p class="small mb-3">
+            ${g.description || ''}
+          </p>
+
+          <div class="d-flex justify-content-between align-items-center">
+
+            <span class="badge ${
+              g.status === 'active'
+                ? 'bg-success'
+                : 'bg-secondary'
+            }">
+              ${g.status || 'active'}
+            </span>
+
+            <div>
+
+              <button
+                class="btn btn-sm btn-outline-primary me-1"
+                onclick="openEditModal(${g.id})"
+              >
+                <i class="fa fa-edit"></i>
+              </button>
+
+              <button
+                class="btn btn-sm btn-outline-danger"
+                onclick="deleteImage(${g.id})"
+              >
+                <i class="fa fa-trash"></i>
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// =====================================================
+// SEARCH
+// =====================================================
+
+document
+  .getElementById('searchInput')
+  .addEventListener('input', e => {
+
+    const q = e.target.value.toLowerCase();
+
+    renderGallery(
+      gallery.filter(g =>
+        (g.title || '')
+          .toLowerCase()
+          .includes(q) ||
+
+        (g.category || '')
+          .toLowerCase()
+          .includes(q) ||
+
+        (g.description || '')
+          .toLowerCase()
+          .includes(q)
+      )
+    );
+  });
+
+// =====================================================
+// IMAGE PREVIEW
+// =====================================================
+
+document
+  .getElementById('imageFile')
+  .addEventListener('change', function () {
+
+    const file = this.files[0];
+
+    const preview =
+      document.getElementById('imagePreview');
+
+    if (!file) {
+      preview.style.display = 'none';
+      preview.src = '';
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.style.display = 'inline-block';
+    };
+
+    reader.readAsDataURL(file);
+  });
+
+// =====================================================
+// CREATE MODAL
+// =====================================================
+
+function openCreateModal() {
+
+  document.getElementById('modalTitle')
+    .textContent = 'Add Gallery Image';
+
+  document.getElementById('galleryForm')
+    .reset();
+
+  document.getElementById('galleryId')
+    .value = '';
+
+  document.getElementById('imagePreview')
+    .style.display = 'none';
+
+  document.getElementById('imagePreview')
+    .src = '';
+
+  // Image is required when creating
+  document.getElementById('imageFile')
+    .required = true;
+}
+
+// =====================================================
+// EDIT MODAL
+// =====================================================
+
+function openEditModal(id) {
+
+  const g = gallery.find(
+    x => Number(x.id) === Number(id)
+  );
+
+  if (!g) {
+    alert('Gallery image not found.');
+    return;
+  }
+
+  document.getElementById('modalTitle')
+    .textContent = 'Edit Gallery Image';
+
+  document.getElementById('galleryId')
+    .value = g.id;
+
+  document.getElementById('title')
+    .value = g.title || '';
+
+  document.getElementById('category')
+    .value = g.category || 'Farm';
+
+  document.getElementById('status')
+    .value = g.status || 'active';
+
+  document.getElementById('featured')
+    .checked = Number(g.featured) === 1;
+
+  document.getElementById('caption')
+    .value = g.description || '';
+
+  const preview =
+    document.getElementById('imagePreview');
+
+  const img = getImageUrl(g.image_url);
+
+  if (g.image_url) {
+    preview.src = img;
+    preview.style.display = 'inline-block';
+  } else {
+    preview.src = '';
+    preview.style.display = 'none';
+  }
+
+  // Image is NOT required when editing.
+  // Existing image can remain unchanged.
+  document.getElementById('imageFile')
+    .required = false;
+
+  modal.show();
+}
+
+// =====================================================
+// SAVE GALLERY IMAGE
+// =====================================================
+
+document
+  .getElementById('galleryForm')
+  .addEventListener('submit', async e => {
+
+    e.preventDefault();
+
+    const submitButton =
+      e.target.querySelector(
+        'button[type="submit"]'
+      );
+
+    try {
+
+      const id =
+        document.getElementById('galleryId').value;
+
+      const title =
+        document.getElementById('title').value.trim();
+
+      const category =
+        document.getElementById('category').value;
+
+      const description =
+        document.getElementById('caption').value.trim();
+
+      const status =
+        document.getElementById('status').value;
+
+      const featured =
+        document.getElementById('featured').checked;
+
+      const fileInput =
+        document.getElementById('imageFile');
+
+      if (!title) {
+        alert('Please enter a title.');
+        return;
+      }
+
+      // =================================================
+      // BUILD MULTIPART FORM DATA
+      // =================================================
+
+      const formData = new FormData();
+
+      formData.append('title', title);
+      formData.append('category', category);
+      formData.append('description', description);
+      formData.append(
+        'featured',
+        featured ? '1' : '0'
+      );
+      formData.append('status', status);
+
+      // Add image only if user selected one
+      if (fileInput.files.length > 0) {
+        formData.append(
+          'image',
+          fileInput.files[0]
+        );
+      }
+
+      // =================================================
+      // DETERMINE CREATE OR UPDATE
+      // =================================================
+
+      const url = id
+        ? `${API_BASE}/admin/gallery/${id}`
+        : `${API_BASE}/admin/gallery`;
+
+      const method = id
+        ? 'PUT'
+        : 'POST';
+
+      // =================================================
+      // DISABLE BUTTON WHILE SAVING
+      // =================================================
+
+      submitButton.disabled = true;
+
+      submitButton.innerHTML = `
+        <span
+          class="spinner-border spinner-border-sm me-1"
+          role="status"
+        ></span>
+        Saving...
+      `;
+
+      // =================================================
+      // SEND TO BACKEND
+      // =================================================
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(
+          data.message || 'Gallery operation failed.'
+        );
+      }
+
+      // =================================================
+      // SUCCESS
+      // =================================================
+
+      modal.hide();
+
+      document.getElementById('galleryForm')
+        .reset();
+
+      document.getElementById('imagePreview')
+        .style.display = 'none';
+
+      document.getElementById('imagePreview')
+        .src = '';
+
+      await loadGallery();
+
+      alert(
+        id
+          ? 'Image updated successfully.'
+          : 'Image added successfully.'
+      );
+
+    } catch (err) {
+
+      console.error(
+        'SAVE GALLERY ERROR:',
+        err
+      );
+
+      alert(
+        err.message ||
+        'Failed to save gallery image.'
+      );
+
+    } finally {
+
+      submitButton.disabled = false;
+
+      submitButton.innerHTML = `
+        <i class="fa fa-save me-1"></i>
+        Save Image
+      `;
+    }
+  });
+
+// =====================================================
+// DELETE IMAGE
+// =====================================================
+
+async function deleteImage(id) {
+
+  if (!confirm('Delete this image?')) {
+    return;
+  }
+
+  try {
+
+    const res = await fetch(
+      `${API_BASE}/admin/gallery/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.message || 'Delete failed.'
+      );
+    }
+
+    await loadGallery();
+
+    alert('Image deleted successfully.');
+
+  } catch (err) {
+
+    console.error(
+      'DELETE GALLERY ERROR:',
+      err
+    );
+
+    alert(
+      err.message ||
+      'Failed to delete image.'
+    );
+  }
+}
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logout() {
+
+  localStorage.clear();
+
+  window.location.href =
+    'login.html';
+}
+
+// =====================================================
+// INITIAL LOAD
+// =====================================================
+
+loadGallery();
+</script>
+
+</body>
+</html>
+

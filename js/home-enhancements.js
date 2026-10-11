@@ -33,9 +33,6 @@
 
   async function submitQuote(payload, form) {
     var backend = global.AppBackend || {};
-    if (!backend.hasSupabaseConfig || !backend.hasSupabaseConfig()) {
-      throw new Error('Inquiry service is not configured.');
-    }
     if (!backend.inquiryApi || typeof backend.inquiryApi.submitInquiry !== 'function') {
       throw new Error('Inquiry service is not available.');
     }

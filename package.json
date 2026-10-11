@@ -3,15 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "backend:start": "node backend/server.js",
     "seo:sync": "node scripts/seo-head-upgrade.js",
-    "create:bucket": "node scripts/create_bucket.js",
     "minify": "node scripts/minify-assets.js",
     "build:prod": "npm run seo:sync && npm run minify"
   },
-  "devDependencies": {
-    "supabase": "^2.99.0-beta.8"
-  },
   "dependencies": {
-    "@supabase/supabase-js": "^2.105.3"
+    "cloudinary": "^2.10.0",
+    "streamifier": "^0.1.1"
   }
 }

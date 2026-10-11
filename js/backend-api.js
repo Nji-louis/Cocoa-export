@@ -1,14 +1,18 @@
 // Backend API client for local Node.js server
-// Replaces Supabase client calls with local API calls
 
 (function (global) {
   const ns = (global.AppBackend = global.AppBackend || {});
 
   // Configuration for local backend
   const BACKEND_CONFIG = {
-    baseUrl: 'http://localhost:4000',
-    apiPrefix: '/api'
-  };
+  baseUrl:
+    (ns.config && ns.config.baseUrl) ||
+    'http://localhost:5000',
+
+  apiPrefix:
+    (ns.config && ns.config.apiPrefix) ||
+    '/api'
+};
 
   // Helper function to make API requests
   async function apiRequest(endpoint, options = {}) {
@@ -166,9 +170,38 @@
   // Forms API methods (inquiries, subscriptions)
   ns.formsApi = {
     async submitInquiry(inquiryData) {
-      return await apiRequest('/forms/inquiry', {
+      const data = inquiryData || {};
+      const source = String(data.sourceChannel || '').toLowerCase();
+
+      // Buyer quote form -> /api/quotes
+      if (source === 'buyer_quote_form') {
+        return await apiRequest('/quotes', {
+          method: 'POST',
+          body: {
+            company_name: data.companyName || '',
+            contact_name: data.contactName || '',
+            email: data.workEmail || '',
+            phone: data.phoneWhatsApp || '',
+            country: data.countryRegion || '',
+            product: data.productSlug || data.product || data.inquiryTopic || '',
+            quantity: data.requiredVolumeMt || data.quantity || '',
+            packaging: data.packaging || '',
+            destination_port: data.destinationPort || '',
+            message: data.message || ''
+          }
+        });
+      }
+
+      // Contact, export and product inquiries -> /api
+      return await apiRequest('/', {
         method: 'POST',
-        body: inquiryData
+        body: {
+          name: data.contactName || '',
+          email: data.workEmail || '',
+          phone: data.phoneWhatsApp || '',
+          subject: data.inquiryTopic || data.productSlug || 'Website Inquiry',
+          message: data.message || ''
+        }
       });
     },
 
@@ -177,6 +210,16 @@
         method: 'POST',
         body: { email, preferences }
       });
+    }
+  };
+
+  ns.inquiryApi = {
+    submitInquiry: ns.formsApi.submitInquiry
+  };
+
+  ns.subscriptionApi = {
+    subscribe(payload) {
+      return ns.formsApi.subscribeToUpdates(payload.email, payload);
     }
   };
 
@@ -198,125 +241,6 @@
   // Initialize the API client
   ns.initializeApi = function() {
     console.log('Backend API client initialized for local server at', BACKEND_CONFIG.baseUrl);
-  };
-  // Initialize Supabase client when environment variables are provided on `window`.
-  // This supports adding `window.SUPABASE_URL` and `window.SUPABASE_ANON_KEY` in your HTML
-  // or server template to enable direct Supabase usage in the frontend.
-  ns.initSupabase = function() {
-    const url = window.SUPABASE_URL || window.__SUPABASE_URL;
-    const key = window.SUPABASE_ANON_KEY || window.__SUPABASE_ANON_KEY;
-
-    if (!url || !key) return null;
-
-    // If supabase is already available globally (UMD), use it. Otherwise inject the UMD bundle.
-    function createClientFromGlobal() {
-      try {
-        if (window.supabase && typeof window.supabase.createClient === 'function') {
-          ns.supabase = window.supabase.createClient(url, key);
-          return ns.supabase;
-        }
-      } catch (e) {
-        console.warn('Supabase global client not ready yet');
-      }
-      return null;
-    }
-
-    const existing = createClientFromGlobal();
-    if (existing) return existing;
-
-    // Inject UMD bundle
-    return new Promise((resolve, reject) => {
-      const scriptId = 'supabase-umd';
-      if (document.getElementById(scriptId)) {
-        // wait for it to initialize
-        const check = () => {
-          const c = createClientFromGlobal();
-          if (c) resolve(c);
-          else setTimeout(check, 50);
-        };
-        check();
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.id = scriptId;
-      script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.min.js';
-      script.onload = () => {
-        const client = createClientFromGlobal();
-        if (client) resolve(client);
-        else reject(new Error('Failed to create Supabase client after script load'));
-      };
-      script.onerror = (e) => reject(e || new Error('Failed to load Supabase UMD bundle'));
-      document.head.appendChild(script);
-    });
-  };
-
-  // Provide a helper to get a Supabase client; falls back to a mock that proxies to local API.
-  ns.getSupabaseClient = function() {
-    if (ns.__supabaseClient) return ns.__supabaseClient;
-    if (ns.supabase) return ns.supabase;
-    // If running in browser and SUPABASE_* config is present, attempt to initialize
-    if (typeof window !== 'undefined' && (window.SUPABASE_URL || window.__SUPABASE_URL)) {
-      // initSupabase may return a Promise
-      const res = ns.initSupabase();
-      if (res && typeof res.then === 'function') {
-        // async init - return a thin proxy that throws if called before ready
-        return {
-          _ready: res,
-          _errorIfNotReady() {
-            throw new Error('Supabase client initializing; await ns.getSupabaseClient()._ready before use');
-          }
-        };
-      }
-    }
-
-    if (typeof ns.initSupabase === 'function') {
-      const initialized = ns.initSupabase();
-      if (initialized && typeof initialized.then === 'function') {
-        return {
-          _ready: initialized,
-          _errorIfNotReady() {
-            throw new Error('Supabase client initializing; await ns.getSupabaseClient()._ready before use');
-          }
-        };
-      }
-      if (initialized) return initialized;
-    }
-
-    // Fallback mock client that delegates operations to the existing local API endpoints
-    return {
-      auth: {
-        signUp: ns.authApi.signUp,
-        signInWithPassword: ns.authApi.signIn,
-        signOut: ns.authApi.signOut,
-        getUser: ns.authApi.getCurrentUser
-      },
-      from: function(table) {
-        return {
-          select: function(columns) {
-            return {
-              eq: function(column, value) {
-                return {
-                  single: async function() {
-                    console.warn('Mock Supabase query (delegating to local API):', table, columns, column, value);
-                    const resp = await ns.apiRequest(`/products/${value}`);
-                    return { data: resp.data || null, error: null };
-                  }
-                };
-              }
-            };
-          }
-        };
-      },
-      rpc: async function(functionName, params) {
-        console.warn('Mock Supabase RPC (delegating to local API):', functionName, params);
-        const resp = await ns.apiRequest(`/rpc/${functionName}`, {
-          method: 'POST',
-          body: params
-        });
-        return { data: resp.data || [], error: null };
-      }
-    };
   };
 
 })(window);
