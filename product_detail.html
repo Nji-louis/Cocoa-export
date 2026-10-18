@@ -810,6 +810,11 @@ async function loadProductDetail() {
     const productSlug =
       product.slug || slug;
 
+
+          const canonicalUrl =
+      'https://cocoabridge.com/product_detail.html?slug=' +
+      encodeURIComponent(productSlug);
+
 // =====================================================
 // DYNAMIC PRODUCT STRUCTURED DATA
 // =====================================================
@@ -862,12 +867,6 @@ if (productSchemaElement) {
     JSON.stringify(productSchema, null, 2);
 
 }
-
-
-    const canonicalUrl =
-      'https://cocoabridge.com/product_detail.html?slug=' +
-      encodeURIComponent(productSlug);
-
 
       
 

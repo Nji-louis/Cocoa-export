@@ -72,6 +72,16 @@
       font-size:20px;
     }
 
+    .mobile-menu-btn {
+  display: none;
+  border: 0;
+  background: #2c1810;
+  color: #f4c542;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
     .topbar .admin{
       display:flex;
       align-items:center;
@@ -191,27 +201,56 @@
       font-size:14px;
     }
 
-    @media(max-width:992px){
-      .sidebar{
-        position:relative;
-        width:100%;
-        height:auto;
-      }
+    @media (max-width: 992px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    z-index: 1000;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+  }
 
-      .main{
-        margin-left:0;
-      }
+  .sidebar.open {
+    transform: translateX(0);
+  }
 
-      .topbar{
-        position:relative;
-      }
-    }
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .content {
+    padding: 18px;
+  }
+
+  .welcome-card {
+    padding: 22px;
+  }
+}
   </style>
+  <link rel="stylesheet" href="admin-responsive.css">
 </head>
 
 <body>
 
-<aside class="sidebar">
+<aside class="sidebar" id="adminSidebar">
 
   <h3><i class="fa fa-seedling me-2"></i>COCOABRIDGE</h3>
 
@@ -290,20 +329,23 @@
 
 <main class="main">
 
-  <div class="topbar">
+
+<div class="topbar">
+
+  <div class="d-flex align-items-center gap-3">
+    <button
+      type="button"
+      class="mobile-menu-btn"
+      id="mobileMenuBtn"
+      aria-label="Open navigation menu"
+      aria-controls="adminSidebar"
+      aria-expanded="false"
+    >
+      <i class="fa fa-bars"></i>
+    </button>
 
     <div class="brand">Executive Dashboard</div>
-
-    <div class="admin">
-
-      <div class="text-end">
-        <div class="fw-semibold" id="adminName">Administrator</div>
-        <small class="text-muted" id="adminEmail">info@cocoabridge.com</small>
-      </div>
-
-      <div class="avatar" id="adminAvatar">A</div>
-
-    </div>
+  </div>
 
   </div>
 
@@ -589,8 +631,6 @@ if (!token) {
 const adminName = localStorage.getItem('adminName') || 'Administrator';
 const adminEmail = localStorage.getItem('adminEmail') || 'info@cocoabridge.com';
 
-document.getElementById('adminName').textContent = adminName;
-document.getElementById('adminEmail').textContent = adminEmail;
 document.getElementById('welcomeName').textContent = adminName;
 
 const initials = adminName
@@ -600,7 +640,6 @@ const initials = adminName
   .substring(0,2)
   .toUpperCase();
 
-document.getElementById('adminAvatar').textContent = initials;
 
 async function loadDashboard() {
 
@@ -703,6 +742,38 @@ function logout() {
   localStorage.removeItem('adminEmail');
   window.location.href = 'login.html';
 }
+
+
+const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+const adminSidebar = document.getElementById('adminSidebar');
+
+if (mobileMenuBtn && adminSidebar) {
+  mobileMenuBtn.addEventListener('click', () => {
+    const isOpen = adminSidebar.classList.toggle('open');
+
+    mobileMenuBtn.setAttribute('aria-expanded', String(isOpen));
+    mobileMenuBtn.setAttribute(
+      'aria-label',
+      isOpen ? 'Close navigation menu' : 'Open navigation menu'
+    );
+
+    mobileMenuBtn.innerHTML = isOpen
+      ? '<i class="fa fa-times"></i>'
+      : '<i class="fa fa-bars"></i>';
+  });
+
+  adminSidebar.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 992) {
+        adminSidebar.classList.remove('open');
+        mobileMenuBtn.setAttribute('aria-expanded', 'false');
+        mobileMenuBtn.setAttribute('aria-label', 'Open navigation menu');
+        mobileMenuBtn.innerHTML = '<i class="fa fa-bars"></i>';
+      }
+    });
+  });
+}
+
 
 loadDashboard();
 </script>

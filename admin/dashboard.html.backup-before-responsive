@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COCOABRIDGE Admin Dashboard</title>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    body{
+      background:#f4f6f9;
+      font-family:Segoe UI,Tahoma,sans-serif;
+      margin:0;
+    }
+
+    .sidebar{
+      width:260px;
+      height:100vh;
+      background:#2c1810;
+      position:fixed;
+      left:0;
+      top:0;
+      color:#fff;
+      padding:24px 18px;
+      overflow-y:auto;
+    }
+
+    .sidebar h3{
+      color:#f4c542;
+      font-weight:700;
+      margin-bottom:32px;
+    }
+
+    .sidebar a{
+      display:block;
+      color:#ddd;
+      text-decoration:none;
+      padding:12px 14px;
+      border-radius:10px;
+      margin-bottom:6px;
+      transition:.2s;
+    }
+
+    .sidebar a:hover,
+    .sidebar a.active{
+      background:rgba(244,197,66,.15);
+      color:#fff;
+    }
+
+    .main{
+      margin-left:260px;
+      min-height:100vh;
+    }
+
+    .topbar{
+      background:#fff;
+      padding:16px 28px;
+      border-bottom:1px solid #e5e7eb;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      position:sticky;
+      top:0;
+      z-index:100;
+    }
+
+    .topbar .brand{
+      font-weight:700;
+      color:#2c1810;
+      font-size:20px;
+    }
+
+    .topbar .admin{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .topbar .avatar{
+      width:44px;
+      height:44px;
+      border-radius:50%;
+      background:#2c1810;
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+    }
+
+    .content{
+      padding:28px;
+    }
+
+    .welcome-card{
+      background:linear-gradient(135deg,#2c1810,#8a5a00);
+      color:#fff;
+      border-radius:22px;
+      padding:28px;
+      margin-bottom:28px;
+      box-shadow:0 10px 30px rgba(0,0,0,.12);
+    }
+
+    .welcome-card h2{
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .stat-card{
+      background:#fff;
+      border-radius:18px;
+      padding:22px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05);
+      border:1px solid #eef0f3;
+      height:100%;
+    }
+
+    .stat-card h6{
+      color:#6b7280;
+      margin-bottom:10px;
+      font-size:14px;
+      font-weight:600;
+    }
+
+    .stat-card h2{
+      margin:0;
+      color:#111827;
+      font-weight:700;
+    }
+
+    .stat-icon{
+      width:56px;
+      height:56px;
+      border-radius:14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:rgba(244,197,66,.15);
+      color:#8a5a00;
+      font-size:22px;
+    }
+
+    .panel{
+      background:#fff;
+      border-radius:18px;
+      padding:24px;
+      box-shadow:0 6px 18px rgba(0,0,0,.05);
+      border:1px solid #eef0f3;
+      margin-top:28px;
+    }
+
+    .panel h5{
+      margin-bottom:18px;
+      color:#111827;
+      font-weight:700;
+    }
+
+    .quick-actions .btn{
+      border-radius:12px;
+      padding:12px;
+      font-weight:600;
+    }
+
+    .activity-item{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      padding:12px 0;
+      border-bottom:1px solid #f1f3f5;
+    }
+
+    .activity-item:last-child{
+      border-bottom:none;
+    }
+
+    .activity-icon{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#f4f6f9;
+      color:#8a5a00;
+    }
+
+    .footer-note{
+      color:#6b7280;
+      font-size:14px;
+    }
+
+    @media(max-width:992px){
+      .sidebar{
+        position:relative;
+        width:100%;
+        height:auto;
+      }
+
+      .main{
+        margin-left:0;
+      }
+
+      .topbar{
+        position:relative;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+
+  <h3><i class="fa fa-seedling me-2"></i>COCOABRIDGE</h3>
+
+  <a href="dashboard.html" class="active">
+    <i class="fa fa-chart-line me-2"></i>Dashboard
+  </a>
+
+  <a href="products.html">
+    <i class="fa fa-box me-2"></i>Products
+  </a>
+
+  <a href="showcase-video.html">
+    <i class="fa fa-film me-2"></i>Showcase Video
+  </a>
+
+  <a href="blogs.html">
+    <i class="fa fa-newspaper me-2"></i>Blog Posts
+  </a>
+
+  <a href="gallery.html">
+    <i class="fa fa-image me-2"></i>Gallery
+  </a>
+
+  <a href="team.html">
+  <i class="fa fa-users me-2"></i>Team
+</a>
+
+  <a href="faq.html">
+    <i class="fa fa-circle-question me-2"></i>FAQ
+  </a>
+
+  <a href="testimonials.html">
+    <i class="fa fa-comments me-2"></i>Testimonials
+  </a>
+
+  <a href="partners.html">
+    <i class="fa fa-handshake me-2"></i>Partners
+  </a>
+
+  <a href="newsletter.html">
+    <i class="fa fa-paper-plane me-2"></i>Newsletter
+  </a>
+
+  <a href="messages.html">
+    <i class="fa fa-envelope me-2"></i>Messages
+  </a>
+
+  <a href="comments.html">
+  <i class="fa fa-comment-dots me-2"></i>Comments
+</a>
+
+  <a href="quotes.html">
+    <i class="fa fa-file-invoice-dollar me-2"></i>Quote Requests
+  </a>
+
+  <a href="settings.html">
+    <i class="fa fa-cog me-2"></i>Settings
+  </a>
+
+  <a href="users.html">
+  <i class="fa fa-users me-2"></i>Users
+</a>
+
+  <a href="counters.html">
+  <i class="fa fa-chart-bar"></i>
+  Homepage Counters
+</a>
+
+  <hr class="border-secondary my-4">
+
+  <a href="#" onclick="logout()">
+    <i class="fa fa-sign-out-alt me-2"></i>Logout
+  </a>
+
+</aside>
+
+<main class="main">
+
+  <div class="topbar">
+
+    <div class="brand">Executive Dashboard</div>
+
+    <div class="admin">
+
+      <div class="text-end">
+        <div class="fw-semibold" id="adminName">Administrator</div>
+        <small class="text-muted" id="adminEmail">info@cocoabridge.com</small>
+      </div>
+
+      <div class="avatar" id="adminAvatar">A</div>
+
+    </div>
+
+  </div>
+
+  <div class="content">
+
+    <div class="welcome-card">
+      <h2>Welcome back, <span id="welcomeName">Administrator</span> 👋</h2>
+      <p class="mb-0">
+        Monitor products, buyer inquiries, export requests, and website content from one central dashboard.
+      </p>
+    </div>
+
+    <div class="row g-4">
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Products</h6>
+            <h2 id="productsCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-box"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Blog Posts</h6>
+            <h2 id="blogsCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-newspaper"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Gallery Images</h6>
+            <h2 id="galleryCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-image"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Testimonials</h6>
+            <h2 id="testimonialsCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-comments"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Partners</h6>
+            <h2 id="partnersCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-handshake"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Contact Messages</h6>
+            <h2 id="messagesCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-envelope"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Website Comments</h6>
+            <h2 id="commentsCount">0</h2>
+            <small class="text-warning" id="pendingCommentsCount">0 pending review</small>
+          </div>
+          <div class="stat-icon"><i class="fa fa-comment-dots"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>Quote Requests</h6>
+            <h2 id="quotesCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-xl-3">
+        <div class="stat-card d-flex justify-content-between align-items-center">
+          <div>
+            <h6>FAQs</h6>
+            <h2 id="faqsCount">0</h2>
+          </div>
+          <div class="stat-icon"><i class="fa fa-circle-question"></i></div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h5 class="mb-1">Recent Website Comments</h5>
+          <p class="footer-note mb-0">New comments are held for your review before appearing publicly.</p>
+        </div>
+      </div>
+
+      <div class="table-responsive mt-3">
+        <table class="table table-hover align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Author</th>
+              <th>Page</th>
+              <th>Comment</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th class="text-end">Review</th>
+            </tr>
+          </thead>
+          <tbody id="recentCommentsTable">
+            <tr><td colspan="6" class="text-center text-muted py-4">Loading comments...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="row">
+
+      <div class="col-lg-7">
+
+        <div class="panel">
+
+          <h5>Quick Actions</h5>
+
+          <div class="row g-3 quick-actions">
+
+            <div class="col-md-6">
+              <a href="products.html" class="btn btn-outline-dark w-100">
+                <i class="fa fa-plus me-2"></i>Add Product
+              </a>
+            </div>
+
+            <div class="col-md-6">
+              <a href="blogs.html" class="btn btn-outline-dark w-100">
+                <i class="fa fa-pen me-2"></i>New Blog Post
+              </a>
+            </div>
+
+            <div class="col-md-6">
+              <a href="gallery.html" class="btn btn-outline-dark w-100">
+                <i class="fa fa-upload me-2"></i>Upload Image
+              </a>
+            </div>
+
+            <div class="col-md-6">
+              <a href="quotes.html" class="btn btn-outline-dark w-100">
+                <i class="fa fa-file-invoice me-2"></i>View Quotes
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="col-lg-5">
+
+        <div class="panel">
+
+          <h5>Recent Activity</h5>
+
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fa fa-box"></i></div>
+            <div>
+              <div class="fw-semibold">Products synchronized</div>
+              <small class="text-muted">Live database connection active</small>
+            </div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fa fa-envelope"></i></div>
+            <div>
+              <div class="fw-semibold">Contact inbox available</div>
+              <small class="text-muted">Messages can be reviewed from the admin panel</small>
+            </div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+            <div>
+              <div class="fw-semibold">Quote requests active</div>
+              <small class="text-muted">Buyer inquiries are stored in MySQL</small>
+            </div>
+          </div>
+
+          <div class="activity-item">
+            <div class="activity-icon"><i class="fa fa-shield-halved"></i></div>
+            <div>
+              <div class="fw-semibold">Secure admin session</div>
+              <small class="text-muted">JWT authentication verified</small>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel">
+
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h5 class="mb-1">System Status</h5>
+          <p class="footer-note mb-0">Backend connection and CMS modules overview.</p>
+        </div>
+
+        <span class="badge bg-success px-3 py-2">
+          <i class="fa fa-circle me-1"></i>Online
+        </span>
+      </div>
+
+      <hr>
+
+      <div class="row text-center g-4">
+
+        <div class="col-md-3">
+          <h4 class="text-success mb-1">API</h4>
+          <small class="text-muted">Connected</small>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="text-success mb-1">MySQL</h4>
+          <small class="text-muted">Connected</small>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="text-success mb-1">Auth</h4>
+          <small class="text-muted">Active</small>
+        </div>
+
+        <div class="col-md-3">
+          <h4 class="text-success mb-1">CMS</h4>
+          <small class="text-muted">Operational</small>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</main>
+
+
+<script src="../js/backend-config.js"></script>
+
+<script>
+const backendConfig = window.__BACKEND_CONFIG__ || {};
+
+const API_BASE =
+  `${backendConfig.baseUrl || 'http://localhost:5000'}${backendConfig.apiPrefix || '/api'}`;
+
+const token = localStorage.getItem('adminToken');
+
+
+
+
+
+if (!token) {
+  window.location.href = 'login.html';
+}
+
+const adminName = localStorage.getItem('adminName') || 'Administrator';
+const adminEmail = localStorage.getItem('adminEmail') || 'info@cocoabridge.com';
+
+document.getElementById('adminName').textContent = adminName;
+document.getElementById('adminEmail').textContent = adminEmail;
+document.getElementById('welcomeName').textContent = adminName;
+
+const initials = adminName
+  .split(' ')
+  .map(n => n[0])
+  .join('')
+  .substring(0,2)
+  .toUpperCase();
+
+document.getElementById('adminAvatar').textContent = initials;
+
+async function loadDashboard() {
+
+  try {
+
+    const response = await fetch(`${API_BASE}/dashboard/overview`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error('Failed to load dashboard');
+    }
+
+    const s = data.stats;
+
+    document.getElementById('productsCount').textContent = s.products;
+    document.getElementById('blogsCount').textContent = s.blogs;
+    document.getElementById('galleryCount').textContent = s.gallery;
+    document.getElementById('faqsCount').textContent = s.faqs;
+    document.getElementById('testimonialsCount').textContent = s.testimonials;
+    document.getElementById('partnersCount').textContent = s.partners;
+    document.getElementById('messagesCount').textContent = s.contactMessages;
+    document.getElementById('quotesCount').textContent = s.quoteRequests;
+    document.getElementById('commentsCount').textContent = s.comments || 0;
+    document.getElementById('pendingCommentsCount').textContent = `${s.pendingComments || 0} pending review`;
+    renderRecentComments(data.recentComments || []);
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert('Unable to load dashboard statistics');
+  }
+}
+
+function escapeHtml(value) {
+  const element = document.createElement('div');
+  element.textContent = value == null ? '' : String(value);
+  return element.innerHTML;
+}
+
+function renderRecentComments(comments) {
+  const table = document.getElementById('recentCommentsTable');
+
+  if (!comments.length) {
+    table.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">No website comments yet.</td></tr>';
+    return;
+  }
+
+  table.innerHTML = comments.map((comment) => {
+    const createdAt = comment.created_at ? new Date(comment.created_at).toLocaleString() : '';
+    const preview = String(comment.comment || '').slice(0, 160);
+    const statusClass = comment.status === 'approved' ? 'bg-success' : comment.status === 'rejected' ? 'bg-secondary' : 'bg-warning text-dark';
+    const reviewActions = comment.status === 'pending'
+      ? `<button class="btn btn-sm btn-success" onclick="updateCommentStatus(${Number(comment.id)}, 'approved')">Approve</button>
+         <button class="btn btn-sm btn-outline-secondary ms-1" onclick="updateCommentStatus(${Number(comment.id)}, 'rejected')">Reject</button>`
+      : '<span class="text-muted">Reviewed</span>';
+
+    return `<tr>
+      <td>${escapeHtml(comment.name)}</td>
+      <td><small>${escapeHtml(comment.page)}</small></td>
+      <td>${escapeHtml(preview)}${preview.length < String(comment.comment || '').length ? '…' : ''}</td>
+      <td><span class="badge ${statusClass}">${escapeHtml(comment.status)}</span></td>
+      <td><small>${escapeHtml(createdAt)}</small></td>
+      <td class="text-end">${reviewActions}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function updateCommentStatus(id, status) {
+  try {
+    const response = await fetch(`${API_BASE}/comments/admin/comments/${id}/status`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ status })
+    });
+
+    const data = await response.json();
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || 'Unable to review comment.');
+    }
+
+    loadDashboard();
+  } catch (error) {
+    console.error(error);
+    alert(error.message || 'Unable to review comment.');
+  }
+}
+
+function logout() {
+  localStorage.removeItem('adminToken');
+  localStorage.removeItem('adminName');
+  localStorage.removeItem('adminEmail');
+  window.location.href = 'login.html';
+}
+
+loadDashboard();
+</script>
+
+</body>
+</html>
