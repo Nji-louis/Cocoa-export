@@ -814,7 +814,7 @@ async function loadBlogDetail() {
 
   try {
 
-    const response = await fetch(`http://localhost:5000/api/blogs/${slug}`);
+    const response = await fetch(`https://api.cocoabridge.com/api/blogs/${slug}`);
     const data = await response.json();
 
     if (!data.success) {
@@ -833,7 +833,7 @@ async function loadBlogDetail() {
     // Cover image
     document.getElementById('blog-detail-cover').src =
       blog.featured_image
-        ? `http://localhost:5000${blog.featured_image}`
+        ? `https://api.cocoabridge.com${blog.featured_image}`
         : 'img/blog-D.jpg';
 
     document.getElementById('blog-detail-cover').alt = blog.title;

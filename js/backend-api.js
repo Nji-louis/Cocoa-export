@@ -7,7 +7,7 @@
   const BACKEND_CONFIG = {
   baseUrl:
     (ns.config && ns.config.baseUrl) ||
-    'http://localhost:5000',
+    'https://api.cocoabridge.com',
 
   apiPrefix:
     (ns.config && ns.config.apiPrefix) ||

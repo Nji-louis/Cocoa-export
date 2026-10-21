@@ -678,7 +678,7 @@ async function loadPartners() {
   try {
 
     const response =
-      await fetch('http://localhost:5000/api/partners');
+      await fetch('https://api.cocoabridge.com/api/partners');
 
     const data = await response.json();
 
@@ -732,7 +732,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   try {
 
     const response =
-      await fetch('http://localhost:5000/api/team');
+      await fetch('https://api.cocoabridge.com/api/team');
 
     const data = await response.json();
 
@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         ? (
             member.image_url.startsWith('http')
               ? member.image_url
-              : `http://localhost:5000${member.image_url}`
+              : `https://api.cocoabridge.com${member.image_url}`
           )
         : 'img/tearm.png';
 

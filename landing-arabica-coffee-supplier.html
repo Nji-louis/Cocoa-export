@@ -16,7 +16,7 @@
         <script>
 async function loadArabica() {
   try {
-    const response = await fetch('http://localhost:5000/api/products/arabica-coffee-beans');
+    const response = await fetch('https://api.cocoabridge.com/api/products/arabica-coffee-beans');
     const data = await response.json();
 
     if (!data.success) return;

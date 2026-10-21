@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const API_BASE = 'http://localhost:5000/api';
+  const API_BASE = 'https://api.cocoabridge.com/api';
 
   async function loadSiteSettings() {
     try {

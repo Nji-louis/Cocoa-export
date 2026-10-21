@@ -523,7 +523,7 @@ async function loadBlogs() {
 
   try {
 
-    const response = await fetch('http://localhost:5000/api/blogs');
+    const response = await fetch('https://api.cocoabridge.com/api/blogs');
     const data = await response.json();
 
     if (!data.success) {
@@ -544,7 +544,7 @@ async function loadBlogs() {
     <a class="blog-hub-card-image"
      href="blog_detail.html?slug=${encodeURIComponent(blog.slug)}">
 
-    <img src="${blog.featured_image ? `http://localhost:5000${blog.featured_image}` : 'img/blog-placeholder.jpg'}"
+    <img src="${blog.featured_image ? `https://api.cocoabridge.com${blog.featured_image}` : 'img/blog-placeholder.jpg'}"
          alt="${blog.title}"
          loading="lazy">
 

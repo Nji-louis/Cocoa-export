@@ -11,7 +11,7 @@ const backend = window.AppBackend || {};
 const backendConfig = backend.config || {};
 
 const API_BASE =
-    `${backendConfig.baseUrl || 'http://localhost:5000'}${backendConfig.apiPrefix || '/api'}/comments`;
+    `${backendConfig.baseUrl || 'https://api.cocoabridge.com'}${backendConfig.apiPrefix || '/api'}/comments`;
 
 
 
