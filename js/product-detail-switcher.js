@@ -9,7 +9,7 @@
       imageAlt: "Forastero cocoa beans from Cameroon",
       title: "Premium Forastero Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM S.A.R.L supplies Forastero cocoa from trusted Cameroonian cooperatives, known for strong cocoa body and reliable industrial use.",
+        "COCOABRIDGE Ltd supplies Forastero cocoa from trusted Cameroonian cooperatives, known for strong cocoa body and reliable industrial use.",
       spec1:
         "Export lots are fermented, dried, and sorted to consistent standards for blends and bulk programs.",
       spec2:
@@ -29,7 +29,7 @@
       imageAlt: "Amelonado cocoa beans from Cameroon",
       title: "Premium Amelonado Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM exports selected Amelonado cocoa with a classic West African profile and dependable quality.",
+        "COCOABRIDGE exports selected Amelonado cocoa with a classic West African profile and dependable quality.",
       spec1:
         "Lots offer medium cocoa intensity and gentle nutty notes, prepared and packed to export standards.",
       spec2:
@@ -49,7 +49,7 @@
       imageAlt: "Cundeamor cocoa beans from Cameroon",
       title: "Specialty Cundeamor Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM provides specialty Cundeamor cocoa from selected farms for premium chocolate applications.",
+        "COCOABRIDGE provides specialty Cundeamor cocoa from selected farms for premium chocolate applications.",
       spec1:
         "The profile combines strong cocoa aroma, subtle fruit notes, and a refined finish.",
       spec2:
@@ -69,7 +69,7 @@
       imageAlt: "Criollo cocoa beans from Cameroon",
       title: "Premium Criollo Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM offers rare Criollo cocoa with fine aroma and refined flavor for gourmet buyers.",
+        "COCOABRIDGE offers rare Criollo cocoa with fine aroma and refined flavor for gourmet buyers.",
       spec1:
         "Selected lots deliver smooth body, delicate fruit notes, and low bitterness.",
       spec2:
@@ -89,7 +89,7 @@
       imageAlt: "Trinitario cocoa beans from Cameroon",
       title: "Premium Trinitario Cocoa Beans from Cameroon",
       intro:
-        "CHOCOCAM supplies Trinitario cocoa combining strong body with aromatic complexity.",
+        "COCOABRIDGE supplies Trinitario cocoa combining strong body with aromatic complexity.",
       spec1:
         "Lots are fermented, dried, and graded for balanced cocoa character and export consistency.",
       spec2:
@@ -109,7 +109,7 @@
       imageAlt: "Bresilien cocoa beans for export",
       title: "Premium Bresilien Cocoa Beans for International Buyers",
       intro:
-        "CHOCOCAM supplies export-ready Bresilien cocoa for buyers requiring consistent processing performance.",
+        "COCOABRIDGE supplies export-ready Bresilien cocoa for buyers requiring consistent processing performance.",
       spec1:
         "Lots deliver rich cocoa character with balanced acidity and are prepared to commercial export standards.",
       spec2:
@@ -129,7 +129,7 @@
       imageAlt: "Cocoa butter blocks prepared for export",
       title: "Premium Cocoa Butter for Food and Cosmetic Applications",
       intro:
-        "CHOCOCAM supplies deodorized and natural cocoa butter pressed from high-quality beans for chocolate, confectionery, and cosmetic formulations.",
+        "COCOABRIDGE supplies deodorized and natural cocoa butter pressed from high-quality beans for chocolate, confectionery, and cosmetic formulations.",
       spec1:
         "Produced from fermented cocoa beans with controlled pressing for consistent fat composition and low moisture.",
       spec2:
@@ -158,7 +158,7 @@
       imageAlt: "Cleaned cocoa shells ready for bulk export",
       title: "Cleaned Cocoa Shells for Extraction, Feed, and Biomass",
       intro:
-        "CHOCOCAM offers cleaned and dried cocoa shells suitable for cocoa extract, dietary fiber blends, animal feed enrichment, and sustainable biomass fuel.",
+        "COCOABRIDGE offers cleaned and dried cocoa shells suitable for cocoa extract, dietary fiber blends, animal feed enrichment, and sustainable biomass fuel.",
       spec1:
         "Shells collected post-winnowing and screened to minimize nib residues and foreign matter.",
       spec2:
@@ -258,7 +258,7 @@
   setText("product-detail-export-packaging", product.exportPackaging);
   setText("product-detail-shipping-info", product.shippingInfo);
 
-  document.title = product.pageTitle + " | CHOCOCAM S.A.R.L";
+  document.title = product.pageTitle + " | COCOABRIDGE Ltd";
 
   var marketLabel = String(product.varietySpec || product.title || "Cocoa").split(" (")[0];
   setLink("market-view-current-link", marketLabel + " Market View", "product_detail.html?variety=" + encodeURIComponent(key));

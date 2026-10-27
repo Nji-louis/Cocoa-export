@@ -5,28 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <meta name="keywords" content="Cameroon cocoa exporter, cocoa beans supplier, Cameroon cocoa beans, bulk cocoa beans, cocoa export, cocoa specifications, Cameroon coffee exporter">
-<meta name="description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
-<meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <link rel="canonical" href="https://cocoabridge.com/product_detail.html">
+    <link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
+    <link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
+    <meta name="theme-color" content="#4E342E">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="COCOABRIDGE Ltd">
+    <meta property="og:locale" content="en_CM">
+    <meta property="og:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
+    <meta property="og:description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
+    <meta property="og:url" content="https://cocoabridge.com/product_detail.html">
+    <meta property="og:image" content="https://cocoabridge.com/img/cacao.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
+    <meta name="twitter:description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
+    <meta name="twitter:image" content="https://cocoabridge.com/img/cacao.jpg">
+    <script type="application/ld+json" data-static-schema="true">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "COCOABRIDGE Ltd",
+        "url": "https://cocoabridge.com/",
+        "logo": "https://cocoabridge.com/img/cacao.jpg",
+        "image": "https://cocoabridge.com/img/cacao.jpg",
+        "email": "info@cocoabridge.com",
+        "telephone": "+237699745546",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Bonaberi Industrial Zone",
+          "addressLocality": "Douala",
+          "addressRegion": "Littoral Region",
+          "addressCountry": "CM"
+        },
+        "sameAs": [
+          "https://www.facebook.com/profile.php?id=61582469037982",
+          "https://www.linkedin.com/company/cocoabridge"
+        ]
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Cocoa Product Detail | COCOABRIDGE Ltd",
+        "description": "Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.",
+        "url": "https://cocoabridge.com/product_detail.html",
+        "inLanguage": "en",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "COCOABRIDGE Ltd",
+          "url": "https://cocoabridge.com/"
+        }
+      }
+    ]
+    </script>
 
-<link rel="canonical" href="https://cocoabridge.com/product_detail.html">
-
-<link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
-<link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
-
-<meta name="theme-color" content="#4E342E">
-
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="COCOABRIDGE Ltd">
-<meta property="og:locale" content="en_CM">
-<meta property="og:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
-<meta property="og:description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
-<meta property="og:url" content="https://cocoabridge.com/product_detail.html">
-<meta property="og:image" content="https://cocoabridge.com/img/cacao.jpg">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Cocoa Product Detail | COCOABRIDGE Ltd">
-<meta name="twitter:description" content="Explore cocoa and coffee product specifications from COCOABRIDGE Ltd, including origin, quality, moisture, bean count, packaging, and export information.">
-<meta name="twitter:image" content="https://cocoabridge.com/img/cacao.jpg">
     <script type="application/ld+json" id="product-detail-schema">
 {
   "@context": "https://schema.org",
@@ -434,8 +468,6 @@
   </div>
  </div>
 
-
-
 </section>
 
 <section id="footer">
@@ -696,7 +728,6 @@ s0.parentNode.insertBefore(s1,s0);
 </script>
 <!--End of Tawk.to Script-->
 
-
 <script>
 const BACKEND_BASE = 'https://api.cocoabridge.com';
 
@@ -723,16 +754,13 @@ function getImageUrl(imagePath) {
   return BACKEND_BASE + '/' + imagePath;
 }
 
-
 async function loadProductDetail() {
 
   const params =
     new URLSearchParams(window.location.search);
 
-
   // Support both ?slug= and old ?variety=
   let slug = params.get('slug');
-
 
   if (!slug) {
 
@@ -746,7 +774,6 @@ async function loadProductDetail() {
     }
   }
 
-
   if (!slug) {
 
     console.error(
@@ -756,14 +783,12 @@ async function loadProductDetail() {
     return;
   }
 
-
   try {
 
     const response =
       await fetch(
         `${BACKEND_BASE}/api/products/${encodeURIComponent(slug)}`
       );
-
 
     if (!response.ok) {
 
@@ -772,10 +797,8 @@ async function loadProductDetail() {
       );
     }
 
-
     const data =
       await response.json();
-
 
     if (!data.success || !data.product) {
 
@@ -786,10 +809,8 @@ async function loadProductDetail() {
       return;
     }
 
-
     const product =
       data.product;
-
 
           // =====================================================
     // DYNAMIC SEO
@@ -809,7 +830,6 @@ async function loadProductDetail() {
 
     const productSlug =
       product.slug || slug;
-
 
           const canonicalUrl =
       'https://cocoabridge.com/product_detail.html?slug=' +
@@ -870,13 +890,11 @@ if (productSchemaElement) {
 
       
 
-
     // Browser title
 
     document.title =
       productName +
       ' | Cameroon Cocoa Export | COCOABRIDGE Ltd';
-
 
     // Meta description
 
@@ -892,7 +910,6 @@ if (productSchemaElement) {
       );
     }
 
-
     // Canonical URL
 
     const canonical =
@@ -906,7 +923,6 @@ if (productSchemaElement) {
         canonicalUrl
       );
     }
-
 
     // Open Graph title
 
@@ -923,7 +939,6 @@ if (productSchemaElement) {
       );
     }
 
-
     // Open Graph description
 
     const ogDescription =
@@ -937,7 +952,6 @@ if (productSchemaElement) {
         productDescription
       );
     }
-
 
     // Open Graph URL
 
@@ -953,7 +967,6 @@ if (productSchemaElement) {
       );
     }
 
-
     // Open Graph image
 
     const ogImage =
@@ -967,7 +980,6 @@ if (productSchemaElement) {
         productImageUrl
       );
     }
-
 
     // Twitter title
 
@@ -984,7 +996,6 @@ if (productSchemaElement) {
       );
     }
 
-
     // Twitter description
 
     const twitterDescription =
@@ -998,7 +1009,6 @@ if (productSchemaElement) {
         productDescription
       );
     }
-
 
     // Twitter image
 
@@ -1014,7 +1024,6 @@ if (productSchemaElement) {
       );
     }
 
-
     // =====================================================
     // PRODUCT IMAGE
     // =====================================================
@@ -1024,10 +1033,8 @@ if (productSchemaElement) {
         'product-detail-image'
       );
 
-
     const imageUrl =
       getImageUrl(product.image_url);
-
 
     if (imageUrl) {
 
@@ -1041,10 +1048,8 @@ if (productSchemaElement) {
 
     }
 
-
     productImage.alt =
       product.name || 'Product';
-
 
     // If backend image cannot be loaded,
     // use the existing fallback image.
@@ -1059,7 +1064,6 @@ if (productSchemaElement) {
 
       };
 
-
     // =====================================================
     // MAIN TITLE
     // =====================================================
@@ -1070,7 +1074,6 @@ if (productSchemaElement) {
       )
       .innerText =
         product.name || '';
-
 
     // =====================================================
     // INTRO
@@ -1083,7 +1086,6 @@ if (productSchemaElement) {
       .innerText =
         product.short_description || '';
 
-
     // =====================================================
     // MAIN DESCRIPTION
     // =====================================================
@@ -1095,7 +1097,6 @@ if (productSchemaElement) {
       .innerText =
         product.description || '';
 
-
     document
       .getElementById(
         'product-detail-spec-2'
@@ -1103,14 +1104,12 @@ if (productSchemaElement) {
       .innerText =
         'Quality checks cover moisture, sorting, and export readiness for international buyers.';
 
-
     document
       .getElementById(
         'product-detail-spec-3'
       )
       .innerText =
         'COCOABRIDGE Ltd supports traceable sourcing and dependable export supply programs from Cameroon.';
-
 
     // =====================================================
     // SPECIFICATION SECTION TITLE
@@ -1124,7 +1123,6 @@ if (productSchemaElement) {
         product.name +
         ' - Export Specifications';
 
-
     // =====================================================
     // SPECIFICATION TABLE
     // =====================================================
@@ -1136,7 +1134,6 @@ if (productSchemaElement) {
       .innerText =
         product.name || 'N/A';
 
-
     document
       .getElementById(
         'product-detail-origin'
@@ -1144,7 +1141,6 @@ if (productSchemaElement) {
       .innerText =
         product.origin ||
         'Cameroon';
-
 
     document
       .getElementById(
@@ -1154,7 +1150,6 @@ if (productSchemaElement) {
         product.moisture_content ||
         'N/A';
 
-
     document
       .getElementById(
         'product-detail-bean-count'
@@ -1163,7 +1158,6 @@ if (productSchemaElement) {
         product.bean_count ||
         'N/A';
 
-
     document
       .getElementById(
         'product-detail-packaging'
@@ -1171,7 +1165,6 @@ if (productSchemaElement) {
       .innerText =
         product.packaging ||
         'N/A';
-
 
     // =====================================================
     // EXTRA INFORMATION
@@ -1184,7 +1177,6 @@ if (productSchemaElement) {
       .innerText =
         product.description || '';
 
-
     // =====================================================
     // MARKET VIEW LINK
     // =====================================================
@@ -1193,7 +1185,6 @@ if (productSchemaElement) {
       document.getElementById(
         'market-view-current-link'
       );
-
 
     if (currentLink) {
 
@@ -1207,7 +1198,6 @@ if (productSchemaElement) {
 
     }
 
-
   } catch (error) {
 
     console.error(
@@ -1218,7 +1208,6 @@ if (productSchemaElement) {
   }
 
 }
-
 
 loadProductDetail();
 </script>

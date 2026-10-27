@@ -16,7 +16,7 @@
     'it'
   ];
   var DEFAULT_LANGUAGE = 'en';
-  var STORAGE_KEY = 'chococam_selected_language';
+  var STORAGE_KEY = 'cocoabridge_selected_language';
 
   function setCookie(name, value, days, domain) {
     var date = new Date();

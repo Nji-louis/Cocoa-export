@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.cwd();
-const BASE_URL = 'https://nji-louis.github.io/Cocoa-export/';
+const BASE_URL = 'https://cocoabridge.com/';
+const SITE_NAME = 'COCOABRIDGE Ltd';
 const DEFAULT_OG_IMAGE = `${BASE_URL}img/cacao.jpg`;
 const APPLE_TOUCH_ICON = `${BASE_URL}img/cacao.jpg`;
 const FAVICON = `${BASE_URL}favicon.svg`;
@@ -27,10 +28,12 @@ function toPosix(filePath) {
 }
 
 function canonicalFor(relativePath) {
-  if (relativePath === 'index.html') {
+  const normalized = relativePath.replace(/\\/g, '/');
+  if (normalized === 'index.html') {
     return BASE_URL;
   }
-  return `${BASE_URL}${relativePath}`;
+  const withoutIndex = normalized.replace(/\/index\.html$/i, '/');
+  return `${BASE_URL}${withoutIndex}`;
 }
 
 function relativeDir(relativePath) {
@@ -66,7 +69,9 @@ function canonicalForRedirect(relativePath, content) {
 }
 
 function isPrivatePage(relativePath) {
-  return false;
+  if (!relativePath) return false;
+  const normalized = relativePath.replace(/\\/g, '/').toLowerCase();
+  return normalized.startsWith('admin/') || normalized.startsWith('mcp/') || normalized === 'test-connection.html';
 }
 
 function trimTitleSuffix(title, suffixPattern, fallbackValue) {
@@ -85,11 +90,11 @@ function schemaFor({ title, description, canonical, noIndex }) {
     {
       '@context': 'https://schema.org',
       '@type': 'Organization',
-      name: 'CHOCOCAM S.A.R.L',
+      name: SITE_NAME,
       url: BASE_URL,
       logo: DEFAULT_OG_IMAGE,
       image: DEFAULT_OG_IMAGE,
-      email: 'export@chococam-sarl.com',
+      email: 'info@cocoabridge.com',
       telephone: '+237699745546',
       address: {
         '@type': 'PostalAddress',
@@ -100,7 +105,7 @@ function schemaFor({ title, description, canonical, noIndex }) {
       },
       sameAs: [
         'https://www.facebook.com/profile.php?id=61582469037982',
-        'https://www.linkedin.com/in/chococam-sarl-702208254',
+        'https://www.linkedin.com/company/cocoabridge',
       ],
     },
     {
@@ -112,7 +117,7 @@ function schemaFor({ title, description, canonical, noIndex }) {
       inLanguage: 'en',
       isPartOf: {
         '@type': 'WebSite',
-        name: 'CHOCOCAM S.A.R.L',
+        name: SITE_NAME,
         url: BASE_URL,
       },
     },
@@ -155,7 +160,7 @@ function updateFile(filePath) {
     `    <link rel="apple-touch-icon" href="${APPLE_TOUCH_ICON}">`,
     '    <meta name="theme-color" content="#4E342E">',
     '    <meta property="og:type" content="website">',
-    '    <meta property="og:site_name" content="CHOCOCAM S.A.R.L">',
+    `    <meta property="og:site_name" content="${SITE_NAME}">`,
     '    <meta property="og:locale" content="en_CM">',
     `    <meta property="og:title" content="${escapeAttr(title)}">`,
     `    <meta property="og:description" content="${escapeAttr(description)}">`,

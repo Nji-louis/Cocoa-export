@@ -82,8 +82,8 @@
 
   function wireInstagramSections() {
     var headings = document.querySelectorAll('h3, h4, h5');
-    var configuredPosts = Array.isArray(window.CHOCOCAM_INSTAGRAM_POSTS) ? window.CHOCOCAM_INSTAGRAM_POSTS : [];
-    var fallbackProfile = window.CHOCOCAM_INSTAGRAM_PROFILE || 'https://www.instagram.com/';
+    var configuredPosts = Array.isArray(window.COCOABRIDGE_INSTAGRAM_POSTS) ? window.COCOABRIDGE_INSTAGRAM_POSTS : [];
+    var fallbackProfile = window.COCOABRIDGE_INSTAGRAM_PROFILE || 'https://www.instagram.com/';
 
     for (var i = 0; i < headings.length; i += 1) {
       var headingText = (headings[i].textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();

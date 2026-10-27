@@ -7,10 +7,10 @@
     {
       url: 'index.html',
       title: 'Home',
-      summary: 'CHOCOCAM homepage with cocoa sourcing highlights, supplier information, and market updates.',
+      summary: 'COCOABRIDGE homepage with cocoa sourcing highlights, supplier information, and market updates.',
       keywords: [
         'home',
-        'chococam',
+        'cocoabridge',
         'cameroon cocoa exporter',
         'cocoa beans',
         'traceable supply',
@@ -26,7 +26,7 @@
     {
       url: 'about.html',
       title: 'About Us',
-      summary: 'Company profile, mission, and operating approach for CHOCOCAM S.A.R.L.',
+      summary: 'Company profile, mission, and operating approach for COCOABRIDGE Ltd.',
       keywords: [
         'about',
         'company profile',
@@ -266,7 +266,7 @@
     {
       url: 'privacy_policy.html',
       title: 'Privacy Policy',
-      summary: 'How CHOCOCAM S.A.R.L collects, uses, stores, and protects personal data.',
+      summary: 'How COCOABRIDGE Ltd collects, uses, stores, and protects personal data.',
       keywords: [
         'privacy',
         'privacy policy',
@@ -659,7 +659,7 @@
     init();
   }
 
-  window.CHOCOCAM_SITE_SEARCH = {
+  window.COCOABRIDGE_SITE_SEARCH = {
     searchPages: searchPages
   };
 }());

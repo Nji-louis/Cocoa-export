@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var STORAGE_KEY = 'chococam_theme';
+  var STORAGE_KEY = 'cocoabridge_theme';
   var mobileToggle = null;
 
   function saveTheme(theme) {

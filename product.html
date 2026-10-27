@@ -6,31 +6,31 @@
 	<meta name="keywords" content="premium cocoa beans supplier, Cameroon cocoa varieties, Arabica coffee beans, Robusta coffee beans, bulk cocoa supplier, bulk coffee supplier, Forastero, Criollo, Trinitario">
     <meta name="description" content="Explore premium cocoa and coffee products from Cameroon including Forastero, Criollo, Trinitario cocoa varieties and Arabica/Robusta coffee beans for international bulk buyers.">
     <meta name="robots" content="index,follow,max-image-preview:large">
-    <link rel="canonical" href="https://nji-louis.github.io/Cocoa-export/product.html">
-    <link rel="icon" type="image/svg+xml" href="https://nji-louis.github.io/Cocoa-export/favicon.svg">
-    <link rel="apple-touch-icon" href="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+    <link rel="canonical" href="https://cocoabridge.com/product.html">
+    <link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
+    <link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
     <meta name="theme-color" content="#4E342E">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="CHOCOCAM S.A.R.L">
+    <meta property="og:site_name" content="COCOABRIDGE Ltd">
     <meta property="og:locale" content="en_CM">
     <meta property="og:title" content="Premium Cocoa &amp; Coffee Products | Cameroon Origin | COCOABRIDGE Ltd">
     <meta property="og:description" content="Explore premium cocoa and coffee products from Cameroon including Forastero, Criollo, Trinitario cocoa varieties and Arabica/Robusta coffee beans for international bulk buyers.">
-    <meta property="og:url" content="https://nji-louis.github.io/Cocoa-export/product.html">
-    <meta property="og:image" content="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+    <meta property="og:url" content="https://cocoabridge.com/product.html">
+    <meta property="og:image" content="https://cocoabridge.com/img/cacao.jpg">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Premium Cocoa &amp; Coffee Products | Cameroon Origin | COCOABRIDGE Ltd">
     <meta name="twitter:description" content="Explore premium cocoa and coffee products from Cameroon including Forastero, Criollo, Trinitario cocoa varieties and Arabica/Robusta coffee beans for international bulk buyers.">
-    <meta name="twitter:image" content="https://nji-louis.github.io/Cocoa-export/img/cacao.jpg">
+    <meta name="twitter:image" content="https://cocoabridge.com/img/cacao.jpg">
     <script type="application/ld+json" data-static-schema="true">
     [
       {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "CHOCOCAM S.A.R.L",
-        "url": "https://nji-louis.github.io/Cocoa-export/",
-        "logo": "https://nji-louis.github.io/Cocoa-export/img/cacao.jpg",
-        "image": "https://nji-louis.github.io/Cocoa-export/img/cacao.jpg",
-        "email": "export@chococam-sarl.com",
+        "name": "COCOABRIDGE Ltd",
+        "url": "https://cocoabridge.com/",
+        "logo": "https://cocoabridge.com/img/cacao.jpg",
+        "image": "https://cocoabridge.com/img/cacao.jpg",
+        "email": "info@cocoabridge.com",
         "telephone": "+237699745546",
         "address": {
           "@type": "PostalAddress",
@@ -41,7 +41,7 @@
         },
         "sameAs": [
           "https://www.facebook.com/profile.php?id=61582469037982",
-          "https://www.linkedin.com/in/chococam-sarl-702208254"
+          "https://www.linkedin.com/company/cocoabridge"
         ]
       },
       {
@@ -49,12 +49,12 @@
         "@type": "WebPage",
         "name": "Premium Cocoa & Coffee Products | Cameroon Origin | COCOABRIDGE Ltd",
         "description": "Explore premium cocoa and coffee products from Cameroon including Forastero, Criollo, Trinitario cocoa varieties and Arabica/Robusta coffee beans for international bulk buyers.",
-        "url": "https://nji-louis.github.io/Cocoa-export/product.html",
+        "url": "https://cocoabridge.com/product.html",
         "inLanguage": "en",
         "isPartOf": {
           "@type": "WebSite",
-          "name": "CHOCOCAM S.A.R.L",
-          "url": "https://nji-louis.github.io/Cocoa-export/"
+          "name": "COCOABRIDGE Ltd",
+          "url": "https://cocoabridge.com/"
         }
       }
     ]
@@ -193,7 +193,6 @@
 	<section id="center" class="center_about clearfix">
   <div class="container">
 
-
    <div class="row">
     <div class="center_about_1 text-center clearfix">
 		  <h1 class="mgt">Premium Cocoa Beans and Export Varieties</h1>
@@ -205,17 +204,9 @@
 <section id="about_page">
  <div class="container">
 
-
-
   <div class="row" id="products-container">
 	<p>Loading Products....</p>
   </div>
-
-
-
-
-
-
 
  </div>
 </section>
@@ -225,9 +216,6 @@
 	<div class="row_1 rmg" >
 	
 	</div>
-
-
-
 
  </div>
 </section>
@@ -533,7 +521,6 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/backend-api.js"></script>
 <script type="module" src="js/blog-forms.js?v=20261001-comments-fix"></script>
 
-
 <script>
 const BACKEND_BASE = 'https://api.cocoabridge.com';
 
@@ -558,7 +545,6 @@ function getImageUrl(imagePath) {
 
     return BACKEND_BASE + '/' + imagePath;
 }
-
 
 async function loadProducts() {
 
@@ -587,15 +573,12 @@ async function loadProducts() {
             return;
         }
 
-
         container.innerHTML = '';
-
 
         data.products.forEach(product => {
 
             const imageUrl =
                 getImageUrl(product.image_url);
-
 
             container.innerHTML += `
                 <div class="col-lg-4 col-md-6 mb-4">
@@ -635,18 +618,15 @@ async function loadProducts() {
                             `
                         }
 
-
                         <div class="card-body">
 
                             <h5 class="card-title">
                                 ${product.name || ''}
                             </h5>
 
-
                             <p class="card-text">
                                 ${product.short_description || ''}
                             </p>
-
 
                             <a
                                 href="product_detail.html?slug=${encodeURIComponent(product.slug)}"
@@ -663,7 +643,6 @@ async function loadProducts() {
             `;
         });
 
-
     } catch (error) {
 
         console.error(
@@ -675,8 +654,6 @@ async function loadProducts() {
             '<p>Error loading products.</p>';
     }
 }
-
-
 
 // Load the independently uploaded website showcase video.
 async function loadProductShowcaseVideo() {

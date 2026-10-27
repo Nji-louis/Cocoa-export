@@ -1,4 +1,4 @@
-const articleAuthor = "CHOCOCAM Export Desk";
+const articleAuthor = "COCOABRIDGE Export Desk";
 
 const posts = [
   {
@@ -96,7 +96,7 @@ const posts = [
     ],
     ctaTitle: "Need a Cameroon cocoa export plan built around your specification?",
     ctaText:
-      "CHOCOCAM supports sourcing, quality control, documentation, and export execution for buyers who need traceable lots and dependable shipment follow-through."
+      "COCOABRIDGE supports sourcing, quality control, documentation, and export execution for buyers who need traceable lots and dependable shipment follow-through."
   },
   {
     slug: "cocoa-grades-explained-grade-1-vs-grade-2",
@@ -193,7 +193,7 @@ const posts = [
     ],
     ctaTitle: "Need cocoa graded to buyer-ready export standards?",
     ctaText:
-      "Use the CHOCOCAM team to align grade, inspection, and shipping documentation before you commit to a container."
+      "Use the COCOABRIDGE team to align grade, inspection, and shipping documentation before you commit to a container."
   },
   {
     slug: "top-cocoa-export-companies-in-cameroon",
@@ -259,7 +259,7 @@ const posts = [
         heading: "5. Use a structured exporter shortlist process",
         paragraphs: [
           "Rather than asking who the top exporters are in the abstract, build a shortlist using objective criteria. Score each supplier on sourcing control, quality procedure, traceability maturity, documentation accuracy, logistics responsiveness, and commercial transparency. That method is more useful than searching for rankings that rarely explain their methodology or stay current over time.",
-          "A buyer that uses a structured shortlist will usually make fewer mistakes, even if the initial quoted price is not the lowest. Cameroon offers serious cocoa export opportunities, but the right supplier is the one that can execute your specification repeatedly. If you want to test that fit with a defined shipment requirement, start by requesting a tailored offer and capability overview through CHOCOCAM's <a href=\"../contact.html\">buyer contact channel</a>."
+          "A buyer that uses a structured shortlist will usually make fewer mistakes, even if the initial quoted price is not the lowest. Cameroon offers serious cocoa export opportunities, but the right supplier is the one that can execute your specification repeatedly. If you want to test that fit with a defined shipment requirement, start by requesting a tailored offer and capability overview through COCOABRIDGE's <a href=\"../contact.html\">buyer contact channel</a>."
         ]
       }
     ],
@@ -282,7 +282,7 @@ const posts = [
     ],
     ctaTitle: "Need help comparing Cameroon cocoa exporters against your buying criteria?",
     ctaText:
-      "Share your target volume, quality profile, and destination market, and CHOCOCAM can outline a buyer-ready export program built around those requirements."
+      "Share your target volume, quality profile, and destination market, and COCOABRIDGE can outline a buyer-ready export program built around those requirements."
   },
   {
     slug: "cocoa-prices-2026-market-trends-forecast",
@@ -379,7 +379,7 @@ const posts = [
     ],
     ctaTitle: "Need a current Cameroon cocoa offer instead of a generic market guess?",
     ctaText:
-      "Request a buyer-ready quote with shipment timing, quality expectations, and export execution detail from CHOCOCAM."
+      "Request a buyer-ready quote with shipment timing, quality expectations, and export execution detail from COCOABRIDGE."
   },
   {
     slug: "how-cocoa-quality-is-tested-before-export",
@@ -453,7 +453,7 @@ const posts = [
         heading: "5. Final shipment approval should combine data and traceability",
         paragraphs: [
           "Before loading, the buyer should ideally review quality results together with traceability and lot-identity information. This confirms that the tested cocoa is the cocoa that will be shipped. Without that link, there is always a risk that the inspected sample and the loaded cargo are not fully aligned.",
-          "A structured exporter should be able to show how the approved lot moved through storage and into the shipment process. That is where testing meets supply-chain control. If you want to understand how CHOCOCAM manages lot identity alongside quality review, the <a href=\"../traceability.html\">traceability page</a> provides the operating context. For a specific lot review, use the <a href=\"../contact.html\">contact page</a> to request a tailored quality and shipment discussion."
+          "A structured exporter should be able to show how the approved lot moved through storage and into the shipment process. That is where testing meets supply-chain control. If you want to understand how COCOABRIDGE manages lot identity alongside quality review, the <a href=\"../traceability.html\">traceability page</a> provides the operating context. For a specific lot review, use the <a href=\"../contact.html\">contact page</a> to request a tailored quality and shipment discussion."
         ]
       }
     ],
@@ -476,7 +476,7 @@ const posts = [
     ],
     ctaTitle: "Need pre-shipment cocoa quality checks tied to export execution?",
     ctaText:
-      "CHOCOCAM helps buyers review lot condition, traceability, and shipping readiness before a container is released."
+      "COCOABRIDGE helps buyers review lot condition, traceability, and shipping readiness before a container is released."
   },
   {
     slug: "cameroon-cocoa-vs-ghana-cocoa-key-differences",
@@ -565,7 +565,7 @@ const posts = [
     ],
     ctaTitle: "Want to compare Cameroon-origin cocoa against your current sourcing baseline?",
     ctaText:
-      "Send your target grade, quantity, and destination market to CHOCOCAM for a practical origin-fit discussion."
+      "Send your target grade, quantity, and destination market to COCOABRIDGE for a practical origin-fit discussion."
   },
   {
     slug: "cocoa-supply-chain-explained-farm-to-buyer",
@@ -654,7 +654,7 @@ const posts = [
     ],
     ctaTitle: "Need a cocoa supply chain that stays visible from source to shipment?",
     ctaText:
-      "CHOCOCAM supports buyer programs that combine sourcing visibility, lot preparation, and export execution in one coordinated process."
+      "COCOABRIDGE supports buyer programs that combine sourcing visibility, lot preparation, and export execution in one coordinated process."
   },
   {
     slug: "bulk-cocoa-buying-guide-for-international-buyers",
@@ -751,7 +751,7 @@ const posts = [
     ],
     ctaTitle: "Need a bulk cocoa offer built around your actual procurement needs?",
     ctaText:
-      "CHOCOCAM can prepare a buyer-ready export response covering quality, lot structure, shipping terms, and documentation."
+      "COCOABRIDGE can prepare a buyer-ready export response covering quality, lot structure, shipping terms, and documentation."
   },
   {
     slug: "cocoa-export-documentation-requirements",
@@ -840,7 +840,7 @@ const posts = [
     ],
     ctaTitle: "Need a Cameroon cocoa shipment file aligned before cargo moves?",
     ctaText:
-      "CHOCOCAM can help structure the commercial and supporting document pack around your buyer and destination requirements."
+      "COCOABRIDGE can help structure the commercial and supporting document pack around your buyer and destination requirements."
   },
   {
     slug: "why-buy-cocoa-from-cameroon",
@@ -929,7 +929,7 @@ const posts = [
     ],
     ctaTitle: "Want to assess Cameroon cocoa against your current supply program?",
     ctaText:
-      "CHOCOCAM can prepare a structured offer with quality, volume, and export-execution detail for your review."
+      "COCOABRIDGE can prepare a structured offer with quality, volume, and export-execution detail for your review."
   }
 ];
 
