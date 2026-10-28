@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "seo": "python3 scripts/validate-sitemap.py && npm run seo:validate",
     "backend:start": "node backend/server.js",
     "seo:sync": "node scripts/seo-head-upgrade.js",
     "seo:validate": "node scripts/validate-seo.js",

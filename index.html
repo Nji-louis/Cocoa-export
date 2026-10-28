@@ -258,14 +258,14 @@
 <section id="export_stats" class="pro-section">
  <div class="container">
   <div class="row" id="counter-container">
-  <p>Loading statistics...</p>
    <div class="col-sm-12">
     <h2 class="pro-section-title">Cocoa Export Statistics</h2>
     <p class="pro-section-subtitle">Our export performance is built on long-term farmer partnerships, strict post-harvest controls, and dependable delivery programs for international buyers.</p>
    </div>
-   
-     
-  
+   <div class="col-sm-3 col-xs-6"><div class="counter-box text-center"><strong class="counter-number">CM</strong><p>Cameroon origin</p></div></div>
+   <div class="col-sm-3 col-xs-6"><div class="counter-box text-center"><strong class="counter-number">B2B</strong><p>Bulk buyer focus</p></div></div>
+   <div class="col-sm-3 col-xs-6"><div class="counter-box text-center"><strong class="counter-number">QC</strong><p>Quality checks</p></div></div>
+   <div class="col-sm-3 col-xs-6"><div class="counter-box text-center"><strong class="counter-number">FOB/CIF</strong><p>Export terms</p></div></div>
     </div>
    </div>
   </div>
@@ -312,7 +312,18 @@
     <div class="col-sm-12">
   <div class="cocoabridge-preview-grid">
     <div id="cocoabridge-team-preview">
-      <!-- Team members will load here -->
+      <article class="cocoabridge-team-card" data-reveal>
+        <div class="cocoabridge-team-photo"><img loading="lazy" src="img/tearm1.jpeg" alt="COCOABRIDGE sourcing team"></div>
+        <div class="cocoabridge-team-body"><h3>Export Sourcing Desk</h3><p>Coordinates farmer-network sourcing, lot selection, and buyer specifications.</p></div>
+      </article>
+      <article class="cocoabridge-team-card" data-reveal>
+        <div class="cocoabridge-team-photo"><img loading="lazy" src="img/tearm.png" alt="COCOABRIDGE quality team"></div>
+        <div class="cocoabridge-team-body"><h3>Quality &amp; Compliance</h3><p>Supports grading, quality checks, traceability, and export documentation.</p></div>
+      </article>
+      <article class="cocoabridge-team-card" data-reveal>
+        <div class="cocoabridge-team-photo"><img loading="lazy" src="img/tearm5.jpeg" alt="COCOABRIDGE logistics team"></div>
+        <div class="cocoabridge-team-body"><h3>Logistics Coordination</h3><p>Helps plan packaging, port handling, and international shipment execution.</p></div>
+      </article>
     </div>
   </div>
 
@@ -328,7 +339,7 @@
  </div>
 </section>
 
-<section class="py-5 bg-light">
+<section class="py-5 bg-light" id="home-partners-section" hidden>
 
   <div class="container">
 
@@ -340,10 +351,6 @@
     </div>
 
     <div class="row justify-content-center align-items-center g-4" id="partnersContainer">
-
-      <div class="col-12 text-center py-4">
-        Loading partners...
-      </div>
 
     </div>
 
@@ -529,14 +536,13 @@
 <section id="home_seo_blog">
  <div class="container">
  <div class="row" id="latest-blog-container">
-  <p>Loading latest articles...</p>
   <div class="col-sm-12">
     <h2 class="pro-section-title">Cocoa Insights &amp; News</h2>
     <p class="pro-section-subtitle">Educational resources designed for cocoa buyers, processors, and sourcing teams evaluating Cameroonian cocoa supply.</p>
    </div>
-   
-   
-     
+   <article class="col-lg-4 col-md-6 mb-4"><div class="blog-preview-card h-100"><div class="blog-preview-card-body"><p class="blog-preview-meta">Cocoa export guide</p><h3>How to Export Cocoa from Cameroon</h3><p>A practical overview of sourcing, quality checks, documentation, and shipping for international cocoa buyers.</p><a href="blog/how-to-export-cocoa-from-cameroon.html" class="button_1">Read the guide</a></div></div></article>
+   <article class="col-lg-4 col-md-6 mb-4"><div class="blog-preview-card h-100"><div class="blog-preview-card-body"><p class="blog-preview-meta">Buyer education</p><h3>How Cocoa Quality is Tested Before Export</h3><p>Learn how moisture, cut tests, defects, grading, and shipment approval support a reliable cocoa purchase.</p><a href="blog/how-cocoa-quality-is-tested-before-export.html" class="button_1">Read the guide</a></div></div></article>
+   <article class="col-lg-4 col-md-6 mb-4"><div class="blog-preview-card h-100"><div class="blog-preview-card-body"><p class="blog-preview-meta">Market insight</p><h3>Cocoa Supply Chain: Farm to Buyer</h3><p>Understand the stages that connect Cameroonian farmer networks with export-ready cocoa supply.</p><a href="blog/cocoa-supply-chain-explained-farm-to-buyer.html" class="button_1">Read the guide</a></div></div></article>
   </div>
  </div>
 </section>
@@ -647,8 +653,10 @@
 
 <section id="category">
  <div class="container">
-  <div class="row" id="featured-products-container">
-    <p>Loading featured products...</p>
+ <div class="row" id="featured-products-container">
+    <div class="col-lg-4 col-md-6 mb-4"><div class="product-card h-100"><img src="img/For5.jpg" alt="Forastero cocoa from Cameroon" class="img-responsive"><h3>Forastero Cocoa</h3><p>Cameroon-origin cocoa for cocoa processing and chocolate production.</p><a href="product_detail.html?slug=forastero-cocoa" class="button_1">View details</a></div></div>
+    <div class="col-lg-4 col-md-6 mb-4"><div class="product-card h-100"><img src="img/Cri3 (1).png" alt="Criollo cocoa from Cameroon" class="img-responsive"><h3>Criollo Cocoa</h3><p>Specialty cocoa for chocolate manufacturing and cocoa applications.</p><a href="product_detail.html?slug=criollo-cocoa" class="button_1">View details</a></div></div>
+    <div class="col-lg-4 col-md-6 mb-4"><div class="product-card h-100"><img src="img/tearm5.jpeg" alt="Trinitario cocoa from Cameroon" class="img-responsive"><h3>Trinitario Cocoa</h3><p>Cameroon-origin cocoa for chocolate manufacturing and commercial buyers.</p><a href="product_detail.html?slug=trinitario-cocoa" class="button_1">View details</a></div></div>
 </div>
 
 	  <div class="row rmg">
@@ -690,7 +698,10 @@
  <div class="container">
 
  <div class="row" id="faq-container">
-  <p>Loading FAQs...</p>
+  <div id="home-faq-items">
+   <div class="panel panel-default faq-item"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#faq-static-1">What cocoa products does COCOABRIDGE supply?</a></h4></div><div id="faq-static-1" class="panel-collapse collapse"><div class="panel-body">COCOABRIDGE supplies Cameroon-origin cocoa varieties and selected cocoa products for qualified international buyers. Contact the export desk for current lot specifications and availability.</div></div></div>
+   <div class="panel panel-default faq-item"><div class="panel-heading"><h4 class="panel-title"><a data-toggle="collapse" href="#faq-static-2">Can you support export documentation and shipping?</a></h4></div><div id="faq-static-2" class="panel-collapse collapse"><div class="panel-body">Yes. The export team can coordinate quality preparation, documentation, packaging, port handling, and shipment planning according to the buyer's requirements.</div></div></div>
+  </div>
    <div class="consultation_1 clearfix">
     
 
@@ -734,11 +745,10 @@
  </div>
 </section>
 
-<section id="supplyer">
+<section id="supplyer" hidden>
  <div class="supplyer_m clearfix">
   <div class="container">
     <div class="row" id="testimonial-container">
-  <p>Loading testimonials...</p>
 </div>
   </div>
  </div>
@@ -763,7 +773,7 @@
 	   <div class="col-sm-4">
 	    <div class="news_h1li1l">
 		 <ul>
-		  <li><span><i class="fa fa-calendar"></i> 28 Mar 2025</span></li>
+		  <li><span><i class="fa fa-calendar"></i> 20 Feb 2026</span></li>
 		  <li><span><i class="fa fa-user"></i> By National Cocoa &amp; Coffee Board</span></li>
 			  <li><span><i class="fa fa-tags"></i> Comments (<span class="blog-detail-comment-inline-count">0</span>)</span></li>
 		 </ul>
@@ -804,7 +814,7 @@
 		</div>
 	   </div>
 
-<div class="news_home_comments clearfix">
+<div class="news_home_comments clearfix" hidden>
 	    <div class="col-sm-12">
 	     <div class="about_h clearfix">
 		  <hr>
@@ -814,7 +824,6 @@
 	     <div class="blog_d_page_li2 clearfix" id="blog-detail-comments">
 		  <div class="blog_d_page_li2i clearfix">
 		   <div class="col-sm-12">
-		    <p>Loading comments...</p>
 		   </div>
 		  </div>
 		 </div>
@@ -1203,8 +1212,7 @@ async function loadFeaturedProducts() {
 
         const data = await response.json();
 
-        if (!data.success) {
-            container.innerHTML = '<p>Failed to load products.</p>';
+        if (!data.success || !Array.isArray(data.products) || !data.products.length) {
             return;
         }
 
@@ -1240,8 +1248,7 @@ async function loadFeaturedProducts() {
 
         console.error(error);
 
-        container.innerHTML =
-            '<p>Error loading featured products.</p>';
+        // Keep the static product cards when the API is unavailable.
     }
 }
 
@@ -1251,15 +1258,14 @@ loadFeaturedProducts();
 <script>
 async function loadFaqs() {
 
-  const container = document.getElementById('faq-container');
+  const container = document.getElementById('home-faq-items');
 
   try {
 
     const response = await fetch('https://api.cocoabridge.com/api/faqs');
     const data = await response.json();
 
-    if (!data.success) {
-      container.innerHTML = '<p>Failed to load FAQs.</p>';
+    if (!data.success || !Array.isArray(data.faqs) || !data.faqs.length) {
       return;
     }
 
@@ -1301,7 +1307,7 @@ async function loadFaqs() {
 
     console.error(error);
 
-    container.innerHTML = '<p>Error loading FAQs.</p>';
+    // Keep the static FAQ fallback when the API is unavailable.
   }
 }
 
@@ -1312,6 +1318,7 @@ loadFaqs();
 async function loadTestimonials() {
 
   const container = document.getElementById('testimonial-container');
+  const section = document.getElementById('supplyer');
 
   try {
 
@@ -1320,8 +1327,8 @@ async function loadTestimonials() {
 
     const data = await response.json();
 
-    if (!data.success) {
-      container.innerHTML = '<p>Failed to load testimonials.</p>';
+    if (!data.success || !Array.isArray(data.testimonials) || !data.testimonials.length) {
+      section.hidden = true;
       return;
     }
 
@@ -1354,12 +1361,13 @@ async function loadTestimonials() {
         </div>
       `;
     });
+    section.hidden = false;
 
   } catch (error) {
 
     console.error(error);
 
-    container.innerHTML = '<p>Error loading testimonials.</p>';
+    section.hidden = true;
   }
 }
 
@@ -1378,8 +1386,7 @@ async function loadCounters() {
 
     const data = await response.json();
 
-    if (!data.success) {
-      container.innerHTML = '<p>Failed to load statistics.</p>';
+    if (!data.success || !Array.isArray(data.counters) || !data.counters.length) {
       return;
     }
 
@@ -1410,7 +1417,7 @@ async function loadCounters() {
 
     console.error(error);
 
-    container.innerHTML = '<p>Error loading statistics.</p>';
+    // Keep the static export proof points when the API is unavailable.
   }
 }
 
@@ -1428,15 +1435,10 @@ async function loadPartners() {
     const data = await response.json();
 
     const container = document.getElementById('partnersContainer');
+    const section = document.getElementById('home-partners-section');
 
-    if (!data.success || !data.partners.length) {
-
-      container.innerHTML = `
-        <div class="col-12 text-center py-4">
-          No partners available
-        </div>
-      `;
-
+    if (!data.success || !Array.isArray(data.partners) || !data.partners.length) {
+      section.hidden = true;
       return;
     }
 
@@ -1463,16 +1465,13 @@ async function loadPartners() {
 
       </div>
     `).join('');
+    section.hidden = false;
 
   } catch (error) {
 
     console.error('Partners error:', error);
 
-    document.getElementById('partnersContainer').innerHTML = `
-      <div class="col-12 text-center text-danger py-4">
-        Failed to load partners
-      </div>
-    `;
+    document.getElementById('home-partners-section').hidden = true;
   }
 }
 
@@ -1490,8 +1489,7 @@ async function loadLatestBlogs() {
     const response = await fetch('https://api.cocoabridge.com/api/blogs');
     const data = await response.json();
 
-    if (!data.success) {
-      container.innerHTML = '<p>Failed to load articles.</p>';
+    if (!data.success || !Array.isArray(data.blogs) || !data.blogs.length) {
       return;
     }
 
@@ -1528,7 +1526,7 @@ async function loadLatestBlogs() {
 
     console.error(error);
 
-    container.innerHTML = '<p>Error loading articles.</p>';
+    // Keep the crawlable static article links when the API is unavailable.
   }
 }
 
@@ -1557,6 +1555,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     const members = data.members || [];
+
+    if (!members.length) return;
 
     teamContainer.innerHTML = '';
 

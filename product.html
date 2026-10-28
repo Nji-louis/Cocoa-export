@@ -239,7 +239,7 @@
  </div>
 </section>
 
-<section id="product_video">
+<section id="product_video" hidden>
  <div class="container">
   <div class="row">
    <div class="about_h text-center clearfix">
@@ -264,7 +264,6 @@
     <div class="col-sm-7">
      <div class="product_video_frame">
       	<video id="productShowcaseVideo" controls playsinline preload="metadata" style="width:100%; height:auto; aspect-ratio:16 / 9; object-fit:contain; display:none;"></video>
-        <p id="productShowcaseMessage">No product video has been uploaded yet.</p>
      </div>
     </div>
    </div>
@@ -690,9 +689,9 @@ function showProductRefreshStatus(container) {
 // Load the independently uploaded website showcase video.
 async function loadProductShowcaseVideo() {
     const video = document.getElementById('productShowcaseVideo');
-    const message = document.getElementById('productShowcaseMessage');
+    const showcase = document.getElementById('product_video');
 
-    if (!video || !message) return;
+    if (!video || !showcase) return;
 
     try {
         const response = await fetch(`${BACKEND_BASE}/api/showcase-video`);
@@ -702,22 +701,18 @@ async function loadProductShowcaseVideo() {
 
         const data = await response.json();
         if (!data.success || !data.videoUrl) {
-            video.removeAttribute('src');
-            video.style.display = 'none';
-            message.textContent = 'The showcase video has not been uploaded yet.';
-            message.style.display = 'block';
+            showcase.hidden = true;
             return;
         }
 
         video.src = getImageUrl(data.videoUrl);
         video.style.display = 'block';
+        showcase.hidden = false;
         video.setAttribute('aria-label', 'COCOABRIDGE website showcase video');
-        message.style.display = 'none';
         video.load();
     } catch (error) {
         console.error('Could not load showcase video:', error);
-        message.textContent = 'The showcase video could not be loaded.';
-        message.style.display = 'block';
+        showcase.hidden = true;
     }
 }
 
