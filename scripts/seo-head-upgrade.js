@@ -71,7 +71,13 @@ function canonicalForRedirect(relativePath, content) {
 function isPrivatePage(relativePath) {
   if (!relativePath) return false;
   const normalized = relativePath.replace(/\\/g, '/').toLowerCase();
-  return normalized.startsWith('admin/') || normalized.startsWith('mcp/') || normalized === 'test-connection.html';
+  return normalized.startsWith('admin/')
+    || normalized.startsWith('mcp/')
+    || normalized === 'test-connection.html'
+    || normalized === 'google-site-verification-template.html'
+    || normalized === 'search_results.html'
+    || normalized === 'blog_detail.html'
+    || normalized === 'product_detail.html';
 }
 
 function trimTitleSuffix(title, suffixPattern, fallbackValue) {

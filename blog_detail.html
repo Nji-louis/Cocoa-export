@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords" content="Cameroon cocoa exporter, bulk cocoa beans supplier, African cocoa beans exporter, premium cocoa Cameroon">
-    <meta name="description" content="Detailed cocoa education and market insights for exporters, processors, and international buyers.">
-    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="keywords" content="Cameroon cocoa export, Cameroon coffee export, cocoa and coffee buyer guides">
+    <meta name="description" content="Read CocoaBridge articles about cocoa and coffee products, sourcing, and exports from Cameroon.">
+    <meta name="robots" content="noindex,follow">
     <link rel="canonical" href="https://cocoabridge.com/blog_detail.html">
     <link rel="icon" type="image/svg+xml" href="https://cocoabridge.com/favicon.svg">
     <link rel="apple-touch-icon" href="https://cocoabridge.com/img/cacao.jpg">
@@ -13,13 +13,13 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="COCOABRIDGE Ltd">
     <meta property="og:locale" content="en_CM">
-    <meta property="og:title" content="Blog &amp;amp; News - Cocoa Insights &amp;amp; Resources | COCOABRIDGE Ltd">
-    <meta property="og:description" content="Detailed cocoa education and market insights for exporters, processors, and international buyers.">
+    <meta property="og:title" content="CocoaBridge Blog Article | COCOABRIDGE Ltd">
+    <meta property="og:description" content="Read CocoaBridge articles about cocoa and coffee products, sourcing, and exports from Cameroon.">
     <meta property="og:url" content="https://cocoabridge.com/blog_detail.html">
     <meta property="og:image" content="https://cocoabridge.com/img/cacao.jpg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Blog &amp;amp; News - Cocoa Insights &amp;amp; Resources | COCOABRIDGE Ltd">
-    <meta name="twitter:description" content="Detailed cocoa education and market insights for exporters, processors, and international buyers.">
+    <meta name="twitter:title" content="CocoaBridge Blog Article | COCOABRIDGE Ltd">
+    <meta name="twitter:description" content="Read CocoaBridge articles about cocoa and coffee products, sourcing, and exports from Cameroon.">
     <meta name="twitter:image" content="https://cocoabridge.com/img/cacao.jpg">
     <script type="application/ld+json" data-static-schema="true">
     [
@@ -47,8 +47,8 @@
       {
         "@context": "https://schema.org",
         "@type": "WebPage",
-        "name": "Blog &amp; News - Cocoa Insights &amp; Resources | COCOABRIDGE Ltd",
-        "description": "Detailed cocoa education and market insights for exporters, processors, and international buyers.",
+        "name": "CocoaBridge Blog Article | COCOABRIDGE Ltd",
+        "description": "Read CocoaBridge articles about cocoa and coffee products, sourcing, and exports from Cameroon.",
         "url": "https://cocoabridge.com/blog_detail.html",
         "inLanguage": "en",
         "isPartOf": {
@@ -60,7 +60,7 @@
     ]
     </script>
 
-    <title>Blog &amp; News - Cocoa Insights &amp; Resources | COCOABRIDGE Ltd </title>
+    <title>CocoaBridge Blog Article | COCOABRIDGE Ltd</title>
 	<link href="https://fonts.googleapis.com/css?family=Righteous&display=swap" rel="stylesheet">
 	<link href="css/bootstrap.min.css" rel="stylesheet">
 	<link href="css/global.min.css" rel="stylesheet">
@@ -391,29 +391,21 @@
 	    <div class="news_h1li1l">
 		 <ul>
 		  <li><a href="#"><i class="fa fa-calendar"></i> <span id="blog-detail-date">Not published</span></a></li>
-		  <li><a href="#"><i class="fa fa-user"></i> By <span id="blog-detail-author"> National Cocoa & Coffee Board</span> </a></li>
+		  <li><a href="#"><i class="fa fa-user"></i> By <span id="blog-detail-author">COCOABRIDGE Ltd</span> </a></li>
 		  <li><a href="#"><i class="fa fa-tags"></i> Comments (<span class="blog-detail-comment-inline-count">0</span>)</a></li>
 		 </ul>
 		</div>
 	   </div>
 	   <div class="col-sm-9">
 	    <div class="news_h1li1r">
-		 <p id="blog-detail-title">Blog &amp; News - Cocoa Insights &amp; Resources</p>
+		 <h1 id="blog-detail-title">Choose a published CocoaBridge article</h1>
 			 <h6 id="blog-detail-excerpt"><a href="blog.html">Open the blog listing to choose a published article.</a></h6>
 		</div>
 	   </div>
 	  </div>
 	 </div>
 	   <div class="blog_d_page_li clearfix" id="blog-detail-content">
-		    <p>Published blog content will load here once a blog post slug is selected.</p>
-		    <p>Use the blog listing page to open a published article.</p>
-	   </div>
-	   <div class="blog_d_page_li4 clearfix" id="blog-detail-source">
-	     <div class="about_h clearfix">
-			 <h3 class="mgt">Original Coverage</h3>
-			 <hr>
-       </div>
-	     <p id="blog-detail-source-copy">The original news source will appear here once the article loads.</p>
+		    <p>This article view requires a valid published article. Visit the <a href="blog.html">CocoaBridge blog</a> to browse published cocoa and coffee export guides.</p>
 	   </div>
 	   <div class="blog_d_page_li5 clearfix" id="blog-detail-assets">
 	     <div class="about_h clearfix">
@@ -779,8 +771,14 @@ s0.parentNode.insertBefore(s1,s0);
 <script src="js/backend-config.js"></script>
 <script src="js/backend-api.js"></script>
 <script src="../js/comments.js?v=20261009-comments-cleanup"></script>
+<script type="application/ld+json" id="blog-posting-schema">{}</script>
 
 <script>
+function setBlogMeta(selector, value) {
+  const element = document.querySelector(selector);
+  if (element && value) element.setAttribute('content', value);
+}
+
 async function loadBlogDetail() {
 
   const params = new URLSearchParams(window.location.search);
@@ -790,86 +788,139 @@ async function loadBlogDetail() {
 
   try {
 
-    const response = await fetch(`https://api.cocoabridge.com/api/blogs/${slug}`);
+    const response = await fetch(
+      `https://api.cocoabridge.com/api/blogs/${encodeURIComponent(slug)}`
+    );
+    if (!response.ok) {
+      throw new Error(`Blog article request failed (${response.status})`);
+    }
     const data = await response.json();
 
-    if (!data.success) {
+    if (!data.success || !data.blog || !data.blog.title || !String(data.blog.content || '').trim()) {
 
-      document.getElementById('blog-detail-title').innerText =
+      document.getElementById('blog-detail-title').textContent =
         'Article not found';
 
-      document.getElementById('blog-detail-content').innerHTML =
-        '<p>The requested article could not be found.</p>';
+      document.getElementById('blog-detail-content').textContent =
+        'The requested article could not be found. Browse published articles on the blog page.';
 
       return;
     }
 
     const blog = data.blog;
+    const canonicalUrl =
+      `https://cocoabridge.com/blog_detail.html?slug=${encodeURIComponent(blog.slug || slug)}`;
+    const articleContent = String(blog.content || '');
+    const description = String(blog.excerpt || articleContent.replace(/\s+/g, ' '))
+      .trim()
+      .slice(0, 160);
+    const imageUrl = blog.featured_image
+      ? new URL(blog.featured_image, 'https://api.cocoabridge.com').toString()
+      : 'https://cocoabridge.com/img/blog-D.jpg';
 
     // Cover image
-    document.getElementById('blog-detail-cover').src =
-      blog.featured_image
-        ? `https://api.cocoabridge.com${blog.featured_image}`
-        : 'img/blog-D.jpg';
-
-    document.getElementById('blog-detail-cover').alt = blog.title;
+    const cover = document.getElementById('blog-detail-cover');
+    cover.src = imageUrl;
+    cover.alt = blog.title;
 
     // Title
-    document.getElementById('blog-detail-title').innerText = blog.title;
+    document.getElementById('blog-detail-title').textContent = blog.title;
 
     // Excerpt
-    document.getElementById('blog-detail-excerpt').innerText =
-      blog.excerpt || '';
+    document.getElementById('blog-detail-excerpt').textContent = blog.excerpt || '';
 
     // Author
-    document.getElementById('blog-detail-author').innerText =
+    document.getElementById('blog-detail-author').textContent =
       blog.author || 'COCOABRIDGE Ltd';
 
     // Date
-    const publishedDate = new Date(blog.published_at).toLocaleDateString(
+    const published = blog.published_at ? new Date(blog.published_at) : null;
+    const publishedDate = published && !Number.isNaN(published.getTime())
+      ? published.toLocaleDateString(
       'en-US',
       { year: 'numeric', month: 'long', day: 'numeric' }
-    );
+      )
+      : 'Publication date not provided';
 
-    document.getElementById('blog-detail-date').innerText =
-      publishedDate;
+    document.getElementById('blog-detail-date').textContent = publishedDate;
 
     // Main content
-    document.getElementById('blog-detail-content').innerHTML =
-      `<p>${blog.content.replace(/\\n/g, '</p><p>')}</p>`;
-
-    // Source section
-    document.getElementById('blog-detail-source-copy').innerText =
-      'Source: COCOABRIDGE Ltd Market Intelligence Desk';
+    const content = document.getElementById('blog-detail-content');
+    content.replaceChildren();
+    articleContent.split(/\r?\n/).map((paragraph) => paragraph.trim()).filter(Boolean)
+      .forEach((paragraph) => {
+        const element = document.createElement('p');
+        element.textContent = paragraph;
+        content.append(element);
+      });
 
     // Tags section
-    document.getElementById('blog-detail-tags').innerHTML =
-      '<span class="label label-default">Cocoa</span> ' +
-      '<span class="label label-default">Export</span> ' +
-      '<span class="label label-default">Cameroon</span>';
+    document.getElementById('blog-detail-tags').textContent =
+      blog.category || 'Cocoa and coffee export';
 
     // Related links
-    document.getElementById('blog-detail-related').innerHTML = `
-      <ul>
-        <li><a href="blog_detail.html?slug=forastero-vs-trinitario">
-          Forastero vs Trinitario
-        </a></li>
+    const related = document.getElementById('blog-detail-related');
+    related.innerHTML =
+      '<ul><li><a href="blog/arabica-vs-robusta-coffee.html">Arabica vs Robusta Coffee</a></li>' +
+      '<li><a href="blog/how-to-export-cocoa-from-cameroon.html">How to Export Cocoa from Cameroon</a></li></ul>';
 
-        <li><a href="blog_detail.html?slug=arabica-and-robusta-coffee-sourcing-cameroon">
-          Arabica and Robusta Coffee Sourcing
-        </a></li>
-      </ul>
-    `;
+    document.title = `${blog.title} | COCOABRIDGE Ltd`;
+    const descriptionElement = document.querySelector('meta[name="description"]');
+    if (descriptionElement && description) {
+      descriptionElement.setAttribute('content', description);
+    }
+    const canonicalElement = document.querySelector('link[rel="canonical"]');
+    if (canonicalElement) canonicalElement.setAttribute('href', canonicalUrl);
+    setBlogMeta('meta[property="og:type"]', 'article');
+    setBlogMeta('meta[property="og:title"]', blog.title);
+    setBlogMeta('meta[property="og:description"]', description);
+    setBlogMeta('meta[property="og:url"]', canonicalUrl);
+    setBlogMeta('meta[property="og:image"]', imageUrl);
+    setBlogMeta('meta[name="twitter:title"]', blog.title);
+    setBlogMeta('meta[name="twitter:description"]', description);
+    setBlogMeta('meta[name="twitter:image"]', imageUrl);
 
-    // Browser tab title
-    document.title = blog.title + ' | COCOABRIDGE Ltd';
+    const schema = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: blog.title,
+      description,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+      image: imageUrl,
+      publisher: {
+        '@type': 'Organization',
+        name: 'COCOABRIDGE Ltd',
+        url: 'https://cocoabridge.com/'
+      }
+    };
+    if (published && !Number.isNaN(published.getTime())) {
+      schema.datePublished = published.toISOString();
+    }
+    document.getElementById('blog-posting-schema').textContent =
+      JSON.stringify(schema);
+
+    const staticSchemaElement =
+      document.querySelector('script[data-static-schema="true"]');
+    if (staticSchemaElement) {
+      const staticSchema = JSON.parse(staticSchemaElement.textContent);
+      const webPageSchema = staticSchema.find((item) => item['@type'] === 'WebPage');
+      if (webPageSchema) {
+        webPageSchema.name = blog.title;
+        webPageSchema.description = description;
+        webPageSchema.url = canonicalUrl;
+        staticSchemaElement.textContent = JSON.stringify(staticSchema);
+      }
+    }
+
+    const robotsElement = document.querySelector('meta[name="robots"]');
+    if (robotsElement) robotsElement.setAttribute('content', 'index,follow,max-image-preview:large');
 
   } catch (error) {
 
     console.error('Error loading blog:', error);
 
-    document.getElementById('blog-detail-content').innerHTML =
-      '<p>Failed to load article.</p>';
+    document.getElementById('blog-detail-content').textContent =
+      'The article could not be loaded right now. Browse published articles on the blog page.';
   }
 }
 

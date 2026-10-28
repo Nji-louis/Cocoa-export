@@ -70,6 +70,15 @@
 	<link href="css/newsletter.min.css" rel="stylesheet">
 	<link href="css/dark-mode.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css" />
+  <style>
+    #products-container img.card-img-top {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+  </style>
 	<script src="js/jquery-2.1.1.min.js" defer></script>
     <script src="js/bootstrap.min.js" defer></script>
   </head>
@@ -196,6 +205,8 @@
    <div class="row">
     <div class="center_about_1 text-center clearfix">
 		  <h1 class="mgt">Premium Cocoa Beans and Export Varieties</h1>
+		  <p>Compare Cameroon-origin cocoa and coffee products for bulk purchasing. Review product specifications and availability, or contact our export team with your target quality, volume, packaging, and destination.</p>
+		  <p><a href="cameroon-cocoa-exporter/">Cameroon cocoa supply</a> · <a href="arabica-coffee-supplier/">Arabica coffee</a> · <a href="robusta-coffee-supplier/">Robusta coffee</a> · <a href="contact.html">Request product details</a></p>
 	</div>
    </div>
   </div>
@@ -204,8 +215,16 @@
 <section id="about_page">
  <div class="container">
 
-  <div class="row" id="products-container">
-	<p>Loading Products....</p>
+  <div class="row" id="products-container" aria-live="polite">
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1792955827143-963659975.jpeg" class="card-img-top" alt="Cameroon Robusta coffee" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Robusta Coffee</h2><p class="card-text">Robusta coffee sourced from Cameroon for coffee roasters, distributors, and commercial buyers.</p><a href="product_detail.html?slug=robusta-coffee" class="btn btn-primary">View Robusta Coffee details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791905211532-308738108.jpeg" class="card-img-top" alt="Cameroon Arabica coffee" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Arabica Coffee</h2><p class="card-text">Arabica coffee sourced from Cameroon for coffee roasters, distributors, and commercial buyers.</p><a href="product_detail.html?slug=arabica-coffee" class="btn btn-primary">View Arabica Coffee details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791903034670-703060025.jpg" class="card-img-top" alt="Cocoa powder for food processing" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Cocoa Powder</h2><p class="card-text">Cocoa powder for chocolate manufacturing, food processing, and other suitable commercial applications.</p><a href="product_detail.html?slug=cocoa-powder" class="btn btn-primary">View Cocoa Powder details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791900729277-214652124.png" class="card-img-top" alt="Cocoa butter for food manufacturing" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Cocoa Butter</h2><p class="card-text">Cocoa butter for food manufacturing, chocolate production, and other suitable commercial applications.</p><a href="product_detail.html?slug=cocoa-butter" class="btn btn-primary">View Cocoa Butter details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791898354037-461445630.png" class="card-img-top" alt="Criollo cocoa" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Criollo Cocoa</h2><p class="card-text">Criollo cocoa beans for buyers seeking cocoa products for chocolate manufacturing and specialty cocoa applications.</p><a href="product_detail.html?slug=criollo-cocoa" class="btn btn-primary">View Criollo Cocoa details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791898163476-776169279.png" class="card-img-top" alt="Trinitario cocoa from Cameroon" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Trinitario Cocoa</h2><p class="card-text">Trinitario cocoa beans sourced from Cameroon for chocolate manufacturing and other cocoa-based applications.</p><a href="product_detail.html?slug=trinitario-cocoa" class="btn btn-primary">View Trinitario Cocoa details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791897161495-190388190.jpg" class="card-img-top" alt="Forastero cocoa from Cameroon" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Forastero Cocoa</h2><p class="card-text">Forastero cocoa beans sourced from Cameroon for cocoa processing and chocolate production.</p><a href="product_detail.html?slug=forastero-cocoa" class="btn btn-primary">View Forastero Cocoa details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791896854556-144795063.png" class="card-img-top" alt="Bresilien cocoa from Cameroon" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Bresilien Cocoa</h2><p class="card-text">Bresilien cocoa beans sourced from Cameroon for cocoa processing and chocolate production.</p><a href="product_detail.html?slug=bresilien-cocoa" class="btn btn-primary">View Bresilien Cocoa details</a></div></div></div>
+	<div class="col-lg-4 col-md-6 mb-4"><div class="card h-100 shadow-sm"><img src="https://api.cocoabridge.com/uploads/products/1791893511733-941400984.png" class="card-img-top" alt="Amelonado cocoa from Cameroon" loading="lazy" width="640" height="420" style="height:220px;object-fit:cover"><div class="card-body"><h2 class="card-title">Amelonado Cocoa</h2><p class="card-text">Amelonado cocoa beans sourced from Cameroon for cocoa processing and chocolate production.</p><a href="product_detail.html?slug=amelonado-cocoa" class="btn btn-primary">View Amelonado Cocoa details</a></div></div></div>
   </div>
 
  </div>
@@ -403,24 +422,26 @@
 </div>
 </section>
 
-<div id="toTop" class="btn btn-info" style="display: block; background:#000; color:#fff; border:none;"><span class="fa fa-chevron-up"></span></div>
+<div id="toTop" class="btn btn-info" role="button" tabindex="0" aria-label="Scroll to top" style="display: none; background:#000; color:#fff; border:none;"><span class="fa fa-chevron-up"></span> Back to Top</div>
 
 <script>
-$(document).ready(function(){
-  $('body').append('<div id="toTop" class="btn btn-info"><span class="glyphicon glyphicon-chevron-up"></span> Back to Top</div>');
-	$(window).scroll(function () {
-		if ($(this).scrollTop() != 0) {
-			$('#toTop').fadeIn();
-		} else {
-			$('#toTop').fadeOut();
-		}
-	});
-$('#toTop').click(function(){
-	$("html, body").animate({ scrollTop: 0 }, 600);
-	return false;
-});
-});
-
+(() => {
+  const toTop = document.getElementById('toTop');
+  if (!toTop) return;
+  const updateVisibility = () => {
+    toTop.style.display = window.scrollY > 0 ? 'block' : 'none';
+  };
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.addEventListener('scroll', updateVisibility, { passive: true });
+  toTop.addEventListener('click', scrollToTop);
+  toTop.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      scrollToTop();
+    }
+  });
+  updateVisibility();
+})();
 </script>
 
 <script src="js/site-search.min.js"></script>
@@ -565,17 +586,18 @@ async function loadProducts() {
         const data =
             await response.json();
 
-        if (!data.success) {
-
-            container.innerHTML =
-                '<p>Failed to load products.</p>';
-
+        const products = Array.isArray(data.products)
+            ? data.products.filter(product => product && product.slug && product.name)
+            : [];
+        if (!data.success || !products.length) {
+            console.error('Product catalogue response did not contain usable product records.');
+            showProductRefreshStatus(container);
             return;
         }
 
         container.innerHTML = '';
 
-        data.products.forEach(product => {
+        products.forEach(product => {
 
             const imageUrl =
                 getImageUrl(product.image_url);
@@ -592,6 +614,9 @@ async function loadProducts() {
                                     src="${imageUrl}"
                                     class="card-img-top"
                                     alt="${product.name || 'Product'}"
+                                    loading="lazy"
+                                    width="640"
+                                    height="420"
                                     style="
                                         height:220px;
                                         object-fit:cover;
@@ -632,7 +657,7 @@ async function loadProducts() {
                                 href="product_detail.html?slug=${encodeURIComponent(product.slug)}"
                                 class="btn btn-primary"
                             >
-                                View Details
+                                View ${product.name} details
                             </a>
 
                         </div>
@@ -650,9 +675,16 @@ async function loadProducts() {
             error
         );
 
-        container.innerHTML =
-            '<p>Error loading products.</p>';
+        showProductRefreshStatus(container);
     }
+}
+
+function showProductRefreshStatus(container) {
+    const notice = document.createElement('p');
+    notice.setAttribute('role', 'status');
+    notice.textContent =
+        'Live product availability could not be refreshed. Contact COCOABRIDGE to confirm current availability and specifications.';
+    container.prepend(notice);
 }
 
 // Load the independently uploaded website showcase video.

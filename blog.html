@@ -192,7 +192,7 @@
   <div class="container">
    <div class="row">
     <div class="center_about_1 text-center clearfix">
-	  <h1 class="mgt">Cameroon Cocoa Export Insights and Market News</h1>
+	  <h1 class="mgt">Cameroon Cocoa and Coffee Export Insights</h1>
 	</div>
    </div>
   </div>
@@ -202,7 +202,25 @@
  <div class="container">
 
   <div class="blog-hub-grid" id="blog-container">
-  <p>Loading articles...</p>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/how-to-export-cocoa-from-cameroon.html">How to Export Cocoa from Cameroon</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/why-buy-cocoa-from-cameroon.html">Why Buy Cocoa from Cameroon</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/top-cocoa-export-companies-in-cameroon.html">Top Cocoa Export Companies in Cameroon</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cocoa-export-documentation-requirements.html">Cocoa Export Documentation Requirements</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/bulk-cocoa-buying-guide-for-international-buyers.html">Bulk Cocoa Buying Guide for International Buyers</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cocoa-supply-chain-explained-farm-to-buyer.html">Cocoa Supply Chain: From Farm to Buyer</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/how-cocoa-quality-is-tested-before-export.html">How Cocoa Quality Is Tested Before Export</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cameroon-cocoa-vs-ghana-cocoa-key-differences.html">Cameroon Cocoa vs Ghana Cocoa</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cocoa-grades-explained-grade-1-vs-grade-2.html">Cocoa Grades Explained: Grade 1 vs Grade 2</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cameroon-coffee-industry-guide.html">Cameroon Coffee Industry Guide</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cameroon-cocoa-industry-overview.html">Cameroon Cocoa Industry Overview</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cocoa-prices-2026-market-trends-forecast.html">Cocoa Prices: 2026 Market Trends and Forecast</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/coffee-export-process-in-cameroon.html">Coffee Export Process in Cameroon</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/bulk-cocoa-bean-purchasing-guide.html">Bulk Cocoa Bean Purchasing Guide</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/how-to-import-coffee-beans-from-africa.html">How to Import Coffee Beans from Africa</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/how-cocoa-is-exported-from-cameroon.html">How Cocoa Is Exported from Cameroon</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/coffee-quality-standards-for-buyers.html">Coffee Quality Standards for Buyers</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/arabica-vs-robusta-coffee.html">Arabica vs Robusta Coffee</a></h2></div></article>
+    <article class="blog-hub-card"><div class="blog-hub-card-body"><h2><a href="blog/cocoa-quality-standards-explained.html">Cocoa Quality Standards Explained</a></h2></div></article>
 </div>
 
   </div>
@@ -509,81 +527,51 @@ async function loadBlogs() {
   try {
 
     const response = await fetch('https://api.cocoabridge.com/api/blogs');
+    if (!response.ok) {
+      throw new Error(`Blog list request failed (${response.status})`);
+    }
     const data = await response.json();
 
-    if (!data.success) {
-      container.innerHTML = '<p>Failed to load articles.</p>';
+    if (!data.success || !Array.isArray(data.blogs)) {
+      console.error('Blog list response did not contain an article list.');
+      showBlogRefreshStatus(container);
       return;
     }
 
-    container.innerHTML = '';
-
     data.blogs.forEach(blog => {
-
-    
-
-      container.innerHTML += `
-  <article class="blog-hub-card">
-
-    <a class="blog-hub-card-image"
-     href="blog_detail.html?slug=${encodeURIComponent(blog.slug)}">
-
-    <img src="${blog.featured_image ? `https://api.cocoabridge.com${blog.featured_image}` : 'img/blog-placeholder.jpg'}"
-         alt="${blog.title}"
-         loading="lazy">
-
-  </a>
-
-    <div class="blog-hub-card-body">
-
-      <div class="blog-card-meta">
-        <span class="blog-card-category">
-          Cocoa & Trade
-        </span>
-
-        <span class="blog-card-date">
-          ${
-            blog.published_at
-              ? new Date(blog.published_at).toLocaleDateString()
-              : ''
-          }
-        </span>
-      </div>
-
-      <h2>
-        <a href="blog_detail.html?slug=${encodeURIComponent(blog.slug)}">
-          ${blog.title}
-        </a>
-      </h2>
-
-      <p>${blog.excerpt || ''}</p>
-
-      <div class="blog-card-footer">
-
-        <span class="blog-card-reading">
-          COCOABRIDGE Ltd
-        </span>
-
-        <a href="blog_detail.html?slug=${encodeURIComponent(blog.slug)}"
-           class="button_1 blog-card-button">
-          Read More
-        </a>
-
-      </div>
-
-    </div>
-
-  </article>
-`;
-
+      if (!blog.slug || !blog.title) return;
+      const article = document.createElement('article');
+      article.className = 'blog-hub-card';
+      const body = document.createElement('div');
+      body.className = 'blog-hub-card-body';
+      const heading = document.createElement('h2');
+      const link = document.createElement('a');
+      link.href = `blog_detail.html?slug=${encodeURIComponent(blog.slug)}`;
+      link.textContent = `Read article: ${blog.title}`;
+      heading.append(link);
+      body.append(heading);
+      if (blog.excerpt) {
+        const excerpt = document.createElement('p');
+        excerpt.textContent = blog.excerpt;
+        body.append(excerpt);
+      }
+      article.append(body);
+      container.append(article);
     });
 
   } catch (err) {
 
     console.error(err);
-
-    container.innerHTML = '<p>Error loading articles.</p>';
+    showBlogRefreshStatus(container);
   }
+}
+
+function showBlogRefreshStatus(container) {
+  const notice = document.createElement('p');
+  notice.setAttribute('role', 'status');
+  notice.textContent =
+    'Live article updates are unavailable. Browse the published articles listed above.';
+  container.prepend(notice);
 }
 
 loadBlogs();
