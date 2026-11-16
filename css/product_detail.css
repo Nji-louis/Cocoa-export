@@ -483,3 +483,47 @@ margin-bottom:20px;
 
 
 
+/* Product detail refresh */
+#blog{background:var(--page-bg);}
+.blog_left_1,.blog_left_2,.article_page_left_inner_5{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--surface);
+  box-shadow:0 10px 28px rgba(38,48,44,.06);
+  padding:22px;
+}
+.blog_left_2{margin-top:20px;margin-bottom:34px;}
+.blog_left_1 h3{margin-bottom:22px;padding-bottom:14px;color:var(--brand);}
+.blog_left_1 p a,.blog_left_2 p a{color:var(--ink-soft);font-weight:600;}
+.blog_left_1 p a:hover,.blog_left_2 p a:hover,.blog_left_1 p a.active-variety{color:var(--brand);}
+.blog_right{margin-bottom:32px;}
+.blog_right_inner{overflow:hidden;border-radius:18px;box-shadow:var(--shadow-card);background:#ece6dc;}
+.blog_right_inner img{display:block;margin:0;aspect-ratio:16/9;object-fit:cover;}
+.blog_right_1{margin-top:20px;}
+.blog_right_1 h3{font-size:clamp(1.65rem,3vw,2.25rem);}
+.blog_right_1 p{color:var(--ink-soft);}
+.product-specs{border:1px solid var(--line);border-radius:18px;padding:26px;background:var(--surface);box-shadow:var(--shadow-card);}
+.product-specs .section-subtitle{max-width:760px;}
+.spec-table{border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.spec-table th{background:var(--brand);color:#fff;font-size:14px;letter-spacing:.02em;}
+.spec-table td{border-color:var(--line);color:var(--ink-soft);}
+.spec-table td:first-child{width:32%;color:var(--brand);background:var(--surface-tint);}
+.product-extra-card{border-color:var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(38,48,44,.06);padding:20px;}
+.product-extra-card h4{color:var(--brand);}
+@media(max-width:767px){
+  .blog_left_1,.blog_left_2,.article_page_left_inner_5{padding:18px;text-align:left;}
+  .blog_right_inner{border-radius:14px;}
+  .product-specs{padding:20px 16px;border-radius:14px;}
+  .spec-table{min-width:0;}
+  .spec-table thead{display:none;}
+  .spec-table,.spec-table tbody,.spec-table tr,.spec-table td{display:block;width:100%;}
+  .spec-table tr{border-bottom:1px solid var(--line);padding:12px 0;}
+  .spec-table tr:first-child{display:none;}
+  .spec-table tr:last-child{border-bottom:0;}
+  .spec-table td{border:0!important;padding:3px 12px!important;background:transparent!important;}
+  .spec-table td:first-child{font-weight:800;color:var(--brand);}
+  .product-extra-card{padding:18px;}
+}
+
+
+

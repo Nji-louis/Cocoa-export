@@ -1,0 +1,4 @@
+RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^www\.cocoabridge\.com$ [NC]
+RewriteRule ^ https://cocoabridge.com%{REQUEST_URI} [R=301,L]

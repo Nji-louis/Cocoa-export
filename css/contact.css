@@ -97,3 +97,17 @@ Licence: <a href="http://www.templateonweb.com/terms.php?v=content&contentid=152
 
 
 
+/* Contact experience refresh */
+#contact_page{background:var(--page-bg);padding-top:52px;padding-bottom:68px;}
+.contact_page_1i{height:100%;border-color:var(--line);border-radius:16px;background:var(--surface);box-shadow:0 10px 28px rgba(38,48,44,.06);padding:26px 20px;}
+.contact_page_1i span i{color:var(--accent);font-size:38px;}
+.contact_page_2i{border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow-card);padding:28px;}
+.contact_page_2ii{border-radius:14px;background:var(--brand);}
+@media(max-width:767px){
+  #contact_page{padding-top:32px;padding-bottom:44px;}
+  .contact_page_1i{padding:22px 18px;}
+  .contact_page_2i{padding:20px 16px;}
+}
+
+
+

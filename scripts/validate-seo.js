@@ -16,7 +16,11 @@ const failures = [];
 
 function walkHtml(directory, results = []) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (entry.name === '.git' || entry.name === 'node_modules') continue;
+    if (
+      entry.name === '.git' ||
+      entry.name === 'node_modules' ||
+      /(?:^|[-_])backup(?:[-_]|$)/i.test(entry.name)
+    ) continue;
     const fullPath = path.join(directory, entry.name);
     if (entry.isDirectory()) {
       walkHtml(fullPath, results);
@@ -52,6 +56,7 @@ function isPrivate(relativePath, html) {
   const normalized = relativePath.split(path.sep).join('/').toLowerCase();
   return normalized.startsWith('admin/')
     || normalized.startsWith('mcp/')
+    || /^google[a-z0-9-]*\.html$/i.test(path.basename(normalized))
     || PRIVATE_PATHS.has(normalized)
     || /<meta\s+http-equiv=["']refresh["']/i.test(html)
     || /window\.location\.replace\(/i.test(html)

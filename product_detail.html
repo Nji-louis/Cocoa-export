@@ -326,7 +326,7 @@
 		<div class="blog_right_inner clearfix">
 
 		<div class="blog_right_inner_1" >
-			<img loading="lazy" id="product-detail-image" src="img/cacao.jpg" class="iw" alt="COCOABRIDGE product information">
+			<img loading="lazy" id="product-detail-image" src="img/cacao.jpg" class="iw" alt="COCOABRIDGE product information" width="960" height="640">
 		</div>
 		</div>
 		<div class="blog_right_1">
@@ -344,7 +344,7 @@
 		</div>
 		<div class="product-specs col-sm-12 clearfix">
 		  <h2 class="section-title" id="product-detail-spec-title">Product Information</h2>
-		  <p class="section-subtitle">Request current product documentation and confirm the requirements applicable to your destination market.</p>
+			  <p class="section-subtitle">Published targets guide buyer evaluation. The allocated lot is released only against its certificate of analysis (COA), pre-shipment inspection, and destination-market requirements.</p>
 		  <div class="spec-table-wrapper">
 		    <table class="spec-table">
 		      <tr>
@@ -776,6 +776,7 @@ async function loadProductDetail() {
         cameroon_arabica: 'arabica-coffee',
         bresilien: 'bresilien-cocoa',
         cocoa_butter: 'cocoa-butter',
+        cocoa_shells: 'cocoa-shells',
         criollo: 'criollo-cocoa',
         forastero: 'forastero-cocoa',
         robusta: 'robusta-coffee',
@@ -1087,124 +1088,9 @@ if (productSchemaElement) {
       };
 
     // =====================================================
-    // MAIN TITLE
-    // =====================================================
+    // Product title, introduction, and specifications are managed
+    // by product-detail-switcher.js to preserve product-specific content.
 
-    document
-      .getElementById(
-        'product-detail-title-text'
-      )
-      .innerText =
-        product.name || '';
-
-    document
-      .getElementById('product-detail-page-title')
-      .textContent = product.name || '';
-
-    // =====================================================
-    // INTRO
-    // =====================================================
-
-    document
-      .getElementById(
-        'product-detail-intro'
-      )
-      .innerText =
-        product.short_description || '';
-
-    // =====================================================
-    // MAIN DESCRIPTION
-    // =====================================================
-
-    document
-      .getElementById(
-        'product-detail-spec-1'
-      )
-      .innerText =
-        product.description || '';
-
-    document
-      .getElementById(
-        'product-detail-spec-2'
-      )
-      .innerText =
-        'Contact COCOABRIDGE for relevant lot-specific quality parameters and supporting documents.';
-
-    document
-      .getElementById(
-        'product-detail-spec-3'
-      )
-      .innerText =
-        'Product availability, quantities, packaging, and shipping arrangements require confirmation.';
-
-    // =====================================================
-    // SPECIFICATION SECTION TITLE
-    // =====================================================
-
-    document
-      .getElementById(
-        'product-detail-spec-title'
-      )
-      .innerText =
-        product.name +
-        ' - Export Specifications';
-
-    // =====================================================
-    // SPECIFICATION TABLE
-    // =====================================================
-
-    document
-      .getElementById(
-        'product-detail-variety'
-      )
-      .innerText =
-        product.name || 'N/A';
-
-    document
-      .getElementById(
-        'product-detail-origin'
-      )
-      .innerText =
-        product.origin ||
-        product.origin_country ||
-        'Confirm origin documentation for selected lot';
-
-    document
-      .getElementById(
-        'product-detail-moisture'
-      )
-      .innerText =
-        product.moisture_content ||
-        'N/A';
-
-    document
-      .getElementById(
-        'product-detail-bean-count'
-      )
-      .innerText =
-        product.bean_count ||
-        'N/A';
-
-    document
-      .getElementById(
-        'product-detail-packaging'
-      )
-      .innerText =
-        product.packaging ||
-        'N/A';
-
-    // =====================================================
-    // EXTRA INFORMATION
-    // =====================================================
-
-    document
-      .getElementById(
-        'product-detail-flavor-profile'
-      )
-      .innerText =
-        product.description || '';
-
-    // =====================================================
     // MARKET VIEW LINK
     // =====================================================
 

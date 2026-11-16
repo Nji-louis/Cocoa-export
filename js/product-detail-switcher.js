@@ -205,18 +205,102 @@
   };
 
   var defaultSpecs = {
-    originSpec: "Confirm origin documentation for selected lot",
-    moistureSpec: "Confirm for selected lot",
-    beanCountSpec: "Confirm for selected lot, if applicable",
-    fermentationSpec: "Confirm for selected lot, if applicable",
-    dryingMethodSpec: "Confirm for selected lot, if applicable",
-    packagingSpec: "Confirm for selected lot",
-    minimumOrderSpec: "Confirm for buyer enquiry",
-    shippingPortsSpec: "Confirm routing for buyer enquiry",
-    harvestSeason: "Confirm current availability with COCOABRIDGE.",
-    exportPackaging: "Confirm available packaging for the selected lot.",
-    shippingInfo: "Confirm shipping terms and documentation for the buyer enquiry.",
+    originSpec: "Cameroon — origin certificate and lot reference supplied with the shipment file",
+    moistureSpec: "Lot result shown on the pre-shipment certificate of analysis (COA)",
+    beanCountSpec: "Recorded in the pre-shipment quality report where applicable",
+    fermentationSpec: "Recorded by cut test or processing record, as applicable",
+    dryingMethodSpec: "Declared in the lot preparation record",
+    packagingSpec: "Food-grade export packaging matched to the confirmed order",
+    minimumOrderSpec: "Commercial minimum confirmed with the quotation",
+    shippingPortsSpec: "Douala or Kribi, Cameroon; final routing agreed before booking",
+    harvestSeason: "Availability is released only after lot allocation and quality review.",
+    exportPackaging: "Packaging, marks, palletization, and container protection are stated on the packing list.",
+    shippingInfo: "FOB or CIF terms and the document set are stated in the signed sales contract.",
   };
+
+  // Published specification targets. Final values are verified against the
+  // allocated lot's COA and pre-shipment inspection report. Cocoa targets use
+  // ICCO post-harvest guidance; green-coffee moisture uses ICO Resolution 420.
+  var cocoaBeanExportSpecs = {
+    originSpec: "Cameroon — cooperative/lot traceable; certificate of origin included in the export file",
+    moistureSpec: "≤ 7.5% at dispatch; verified on the lot COA",
+    beanCountSpec: "90–110 beans per 100 g; verified by pre-shipment count",
+    fermentationSpec: "Good fermented (GF) target; cut-test report provided for the allocated lot",
+    dryingMethodSpec: "Sun-dried and/or controlled mechanical drying after fermentation",
+    packagingSpec: "65 kg new jute bags; food-grade liner available when specified in the contract",
+    minimumOrderSpec: "One 20 ft container program or agreed consolidated quantity",
+    shippingPortsSpec: "Douala or Kribi, Cameroon",
+    harvestSeason: "Main crop: September–March; mid-crop: April–July. Allocation is confirmed after quality review.",
+    exportPackaging: "New jute bags with lot marks; container liner, desiccants, pallets, or stretch wrap supplied when contractually specified.",
+    shippingInfo: "FOB Douala/Kribi or CIF destination port. COA, packing list, certificate of origin, and shipping documents are issued per contract.",
+  };
+
+  ["forastero", "amelonado", "cundeamor", "criollo", "trinitario", "bresilien"].forEach(function (key) {
+    Object.assign(products[key], cocoaBeanExportSpecs);
+  });
+
+  Object.assign(products.cameroon_arabica, {
+    intro: "COCOABRIDGE supplies green Arabica coffee from Cameroon for roasters and importers, with quality, processing, packaging, and shipment details documented per allocated lot.",
+    spec1: "Green-coffee lots are evaluated for moisture, screen size, defects, odor, processing condition, and lot identity before shipment.",
+    spec2: "Moisture follows the ICO 8.0–12.5% export range; the final result, screen distribution, and defects are stated in the lot COA.",
+    spec3: "Availability is allocated after sample and quality review; packing, shipment window, and documentation are confirmed on the sales contract.",
+    specTitle: "Cameroon Arabica Coffee — Export Specifications",
+    flavorSpec: "Balanced acidity, cocoa and fruit notes; cup profile varies by processing and lot",
+    flavorProfile: "Western Highlands Arabica, offered subject to lot availability and sample approval.",
+    originSpec: "Cameroon — Western Highlands sourcing area and lot reference documented in the export file",
+    moistureSpec: "8.0–12.5%; verified on the lot COA before container stuffing",
+    beanCountSpec: "Screen-size grading replaces cocoa bean count; screen 15+ or buyer-agreed screen distribution",
+    fermentationSpec: "Processing declared per lot (washed or natural); fermentation is not used as a green-coffee grade",
+    dryingMethodSpec: "Raised-bed/patio or controlled mechanical drying, declared on the lot record",
+    packagingSpec: "60 kg new jute bags; GrainPro or food-grade liner available on request",
+    minimumOrderSpec: "One 20 ft container program or agreed consolidated quantity",
+    shippingPortsSpec: "Douala or Kribi, Cameroon",
+    harvestSeason: "Primary availability: November–February; final availability is confirmed after lot allocation.",
+    exportPackaging: "New jute bags with buyer bag marks; liner, desiccants, and container moisture protection available by contract.",
+    shippingInfo: "FOB Douala/Kribi or CIF destination port. COA, packing list, certificate of origin, and phytosanitary documentation are supplied as applicable.",
+  });
+
+  Object.assign(products.cameroon_robusta, {
+    intro: "COCOABRIDGE supplies green Robusta coffee from Cameroon for commercial roasters, soluble coffee programs, and traders, with lot-specific quality and logistics records.",
+    spec1: "Green-coffee lots are evaluated for moisture, screen size, defects, odor, processing condition, and lot identity before shipment.",
+    spec2: "Moisture follows the ICO 8.0–12.5% export range; the final result, screen distribution, and defects are stated in the lot COA.",
+    spec3: "Availability is allocated after sample and quality review; packing, shipment window, and documentation are confirmed on the sales contract.",
+    specTitle: "Cameroon Robusta Coffee — Export Specifications",
+    flavorSpec: "Full body, cocoa and cereal notes, pronounced crema potential; cup profile varies by lot",
+    flavorProfile: "Cameroon Robusta supplied subject to lot availability and sample approval.",
+    originSpec: "Cameroon — origin area and lot reference documented in the export file",
+    moistureSpec: "8.0–12.5%; verified on the lot COA before container stuffing",
+    beanCountSpec: "Screen-size grading replaces cocoa bean count; screen 16+ or buyer-agreed screen distribution",
+    fermentationSpec: "Processing declared per lot (natural or washed); fermentation is not used as a green-coffee grade",
+    dryingMethodSpec: "Patio, raised-bed, or controlled mechanical drying, declared on the lot record",
+    packagingSpec: "60 kg new jute bags; GrainPro or food-grade liner available on request",
+    minimumOrderSpec: "One 20 ft container program or agreed consolidated quantity",
+    shippingPortsSpec: "Douala or Kribi, Cameroon",
+    harvestSeason: "Primary availability: November–February; final availability is confirmed after lot allocation.",
+    exportPackaging: "New jute bags with buyer bag marks; liner, desiccants, and container moisture protection available by contract.",
+    shippingInfo: "FOB Douala/Kribi or CIF destination port. COA, packing list, certificate of origin, and phytosanitary documentation are supplied as applicable.",
+  });
+
+  Object.assign(products.cocoa_powder, {
+    intro: "COCOABRIDGE supplies natural or alkalized cocoa powder for food manufacturing, with composition and microbiological requirements agreed before allocation.",
+    spec1: "Powder grade, fat content, alkalization, color, particle size, and microbiological requirements are agreed against the buyer specification.",
+    spec2: "Moisture, fat content, pH, and microbiological results are supplied on the batch COA before shipment.",
+    spec3: "Production and dispatch availability are confirmed only after the agreed grade, packaging, and destination requirements are reviewed.",
+    specTitle: "Cocoa Powder — Export Specifications",
+    flavorSpec: "Natural cocoa or alkalized profile, selected to the agreed food application",
+    flavorProfile: "Food-grade cocoa powder supplied to the agreed technical specification and batch COA.",
+    originSpec: "Processed in Cameroon from cocoa beans with batch traceability",
+    moistureSpec: "≤ 5.0%; verified on the batch COA",
+    beanCountSpec: "Not applicable — powder is a processed cocoa ingredient",
+    fermentationSpec: "Made from fermented cocoa beans; no finished-powder fermentation rate applies",
+    dryingMethodSpec: "Mechanically processed and packed under controlled conditions",
+    packagingSpec: "25 kg food-grade paper bags with inner liner; alternative pack sizes by agreement",
+    minimumOrderSpec: "Pallet quantity or container program, agreed with the quotation",
+    shippingPortsSpec: "Douala or Kribi, Cameroon",
+    harvestSeason: "Year-round production subject to factory schedule and raw-material allocation.",
+    exportPackaging: "Sealed food-grade inner liner, outer bag, palletization, and stretch wrap as specified in the packing list.",
+    shippingInfo: "FOB Douala/Kribi or CIF destination port with COA, packing list, certificate of origin, and food-safety documents as applicable.",
+  });
 
   function getNode(id) {
     return document.getElementById(id);
@@ -251,6 +335,7 @@
     "bresilien-cocoa": "bresilien",
     "cocoa-powder": "cocoa_powder",
     "cocoa-butter": "cocoa_butter",
+    "cocoa-shells": "cocoa_shells",
     "criollo-cocoa": "criollo",
     "forastero-cocoa": "forastero",
     "robusta-coffee": "cameroon_robusta",
@@ -268,33 +353,28 @@
     return;
   }
 
-  product.title =
-    product.pageTitle.replace(" Product Detail", "") + " from Cameroon";
-  product.intro =
-    "Contact COCOABRIDGE to confirm product availability, origin documentation, and specifications for a current lot.";
-  product.spec1 =
-    "Request the current product description and lot-specific technical information from COCOABRIDGE.";
-  product.spec2 =
-    "Quality parameters and supporting documents should be confirmed for the selected lot before purchase.";
-  product.spec3 =
-    "Availability, order quantities, packaging, and shipping terms are subject to confirmation.";
-  product.specTitle = product.title + " - Product Information";
-  product.varietySpec =
-    product.title.replace(" from Cameroon", "");
-  product.flavorSpec = "Confirm product characteristics for the selected lot.";
-  product.flavorProfile =
-    "Confirm product characteristics and intended application for the selected lot.";
-  product.originSpec = "Confirm origin documentation for selected lot";
-  product.moistureSpec = "Confirm for selected lot";
-  product.beanCountSpec = "Confirm for selected lot, if applicable";
-  product.fermentationSpec = "Confirm for selected lot, if applicable";
-  product.dryingMethodSpec = "Confirm for selected lot, if applicable";
-  product.packagingSpec = "Confirm for selected lot";
-  product.minimumOrderSpec = "Confirm for buyer enquiry";
-  product.shippingPortsSpec = "Confirm routing for buyer enquiry";
-  product.harvestSeason = "Confirm current availability with COCOABRIDGE.";
-  product.exportPackaging = "Confirm available packaging for the selected lot.";
-  product.shippingInfo = "Confirm shipping terms and documentation for the buyer enquiry.";
+  // Preserve the product-specific content defined in the catalogue.
+  // Only provide safe fallbacks when a field is genuinely missing.
+  product.title = product.title || product.pageTitle.replace(" Product Detail", "") + " from Cameroon";
+  product.intro = product.intro || "Contact COCOABRIDGE to confirm product availability and specifications.";
+  product.spec1 = product.spec1 || "Request current product specifications from COCOABRIDGE.";
+  product.spec2 = product.spec2 || "Quality parameters and supporting documents are confirmed for each lot.";
+  product.spec3 = product.spec3 || "Availability, packaging, quantities, and shipping terms are subject to confirmation.";
+  product.specTitle = product.specTitle || product.title + " - Product Information";
+  product.varietySpec = product.varietySpec || product.title;
+  product.flavorSpec = product.flavorSpec || "Confirm product characteristics for the selected lot.";
+  product.flavorProfile = product.flavorProfile || product.flavorSpec;
+  product.originSpec = product.originSpec || "Cameroon";
+  product.moistureSpec = product.moistureSpec || "Confirm for selected lot";
+  product.beanCountSpec = product.beanCountSpec || "Confirm for selected lot, if applicable";
+  product.fermentationSpec = product.fermentationSpec || "Confirm for selected lot, if applicable";
+  product.dryingMethodSpec = product.dryingMethodSpec || "Confirm for selected lot, if applicable";
+  product.packagingSpec = product.packagingSpec || "Confirm for selected lot";
+  product.minimumOrderSpec = product.minimumOrderSpec || "Confirm for buyer enquiry";
+  product.shippingPortsSpec = product.shippingPortsSpec || "Confirm routing for buyer enquiry";
+  product.harvestSeason = product.harvestSeason || "Confirm current availability with COCOABRIDGE.";
+  product.exportPackaging = product.exportPackaging || "Confirm available packaging for the selected lot.";
+  product.shippingInfo = product.shippingInfo || "Confirm shipping terms and documentation for the buyer enquiry.";
 
   var image = getNode("product-detail-image");
   if (image) {

@@ -10,7 +10,7 @@ Licence: <a href="http://www.templateonweb.com/terms.php?v=content&contentid=152
 .center_home{
    background-image:
    linear-gradient(120deg,rgba(24,15,11,0.72) 0%,rgba(24,15,11,0.5) 44%,rgba(24,15,11,0.82) 100%),
-   url("../img/ga9.png");
+   url("../img/webp-optimized/ga9.webp");
    background-position:center;
    background-size:cover;
    background-repeat:no-repeat;
@@ -119,7 +119,7 @@ margin:16px 0 0;
 
 /*********************keywords****************/
 #keywords{
-   background-image: url(../img/val1.jpg);
+   background-image: url(../img/webp-optimized/val1.webp);
    background-position:center;
   }
 .keywords_m{
@@ -661,7 +661,7 @@ margin-top:25px;
 
 /*********************timeline****************/
 #timeline{
-   background-image: url(../img/ga9.png);
+   background-image: url(../img/webp-optimized/ga9.webp);
    background-position:center;
   }
 #timeline .about_h h2,

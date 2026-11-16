@@ -143,3 +143,43 @@ Licence: <a href="http://www.templateonweb.com/terms.php?v=content&contentid=152
 
 
 
+/* Product catalogue refresh */
+#about_page{background:var(--page-bg);}
+#products-container{margin-top:10px;}
+#products-container .card{
+  height:100%;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--surface);
+  box-shadow:0 10px 28px rgba(38,48,44,.07);
+  transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease;
+}
+#products-container .card:hover{transform:translateY(-5px);box-shadow:var(--shadow-card);border-color:rgba(200,150,46,.46);}
+#products-container .card-img-top{margin:0!important;aspect-ratio:16/10;height:auto!important;object-fit:cover;}
+#products-container .card-body{display:flex;flex-direction:column;padding:22px;}
+#products-container .card-title{font-size:23px;margin:0 0 8px;color:var(--brand);}
+#products-container .card-text{margin:0 0 20px;line-height:1.6;}
+#products-container .btn-primary{
+  width:max-content;
+  max-width:100%;
+  margin-top:auto;
+  padding:10px 15px;
+  border:1px solid var(--brand);
+  border-radius:9px;
+  background:var(--brand);
+  font-weight:700;
+}
+#products-container .btn-primary:hover,#products-container .btn-primary:focus{background:var(--brand-deep);border-color:var(--brand-deep);}
+.cat_1im{border-radius:18px;box-shadow:var(--shadow-card);}
+.cat_1i img{height:320px;}
+.product_video_text{border-radius:18px;border-color:var(--line);box-shadow:var(--shadow-card);}
+.product_video_frame{border-radius:18px;overflow:hidden;border-color:var(--line);box-shadow:var(--shadow-card);}
+@media(max-width:767px){
+  #products-container .card-body{padding:18px;}
+  #products-container .btn-primary{width:100%;}
+  .cat_1i img{height:260px;}
+}
+
+
+
